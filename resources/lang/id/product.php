@@ -11,7 +11,7 @@ return [
     |
     */
 
-    'title' => 'Produk / Layanan',
+    'title' => 'Produk/Layanan',
     'table' => [
         'name'  => 'Nama',
         'price' => 'Harga'

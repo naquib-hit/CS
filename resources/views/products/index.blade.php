@@ -19,7 +19,11 @@
                             </tr>
                         </thead>
                         <tbody></tbody>
-                        <tfoot></tfoot>
+                        <tfoot>
+                            <td>
+
+                            </td>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -29,4 +33,8 @@
 
     </div>
 </div>
+@endsection
+
+@section('js')
+<script src="{{ asset('js/products.js') }}"></script>
 @endsection

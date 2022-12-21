@@ -20,9 +20,9 @@
         <li class="nav-item">
           <a class="nav-link text-white " href="../pages/tables.html">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              
+                <i class="fas fa-microchip"></i>
             </div>
-            <span class="nav-link-text ms-1 text-uppercase h6 m-0">{{ __('product.title') }}</span>
+            <span class="nav-link-text ms-1">{{ __('product.title') }}</span>
           </a>
         </li>
       </ul>
