@@ -1,13 +1,26 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => __('product.title')])
+
+@section('css')
+<style>
+    .btn-circle {
+        height: 3em;
+        width: 3em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+    }
+</style>
+@endsection
 
 @section('content')
 <div class="row h-100">
     <div class="col-12 col-lg-8">
         <div class="card h-100">
-            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                    <h6 class="text-white text-capitalize ps-3">{{ __('product.title') }}</h6>
-                </div>
+            <div class="card-header pb-1">
+                <button class="btn btn-sm p-0 btn-circle btn-primary">
+                    <i class="fas fa-plus-circle fa-lg" style="font-size: 22px"></i>
+                </button>
             </div>
             <div class="card-body mx-0 px-0 h-100">
                 <div class="table-responsive">
@@ -36,5 +49,5 @@
 @endsection
 
 @section('js')
-<script src="{{ asset('js/products.js') }}"></script>
+<script src="{{ asset('js/pages/product.js') }}"></script>
 @endsection

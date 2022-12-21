@@ -39,7 +39,7 @@
 <body class="g-sidenav-show  bg-gray-200">
     @include('layouts.sidebar')
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    @include('layouts.topbar')
+    @include('layouts.topbar', ['title' => $title])
    
     <div class="container-fluid py-4">
       <div class="row min-vh-80 h-100">
