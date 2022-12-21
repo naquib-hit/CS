@@ -12,17 +12,17 @@
         <li class="nav-item">
           <a class="nav-link text-white " href="">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">dashboard</i>
+                <i class="fas fa-home"></i>
             </div>
-            <span class="nav-link-text ms-1">First page</span>
+            <span class="nav-link-text ms-1">Home</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white " href="../pages/tables.html">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">table_view</i>
+              
             </div>
-            <span class="nav-link-text ms-1">Second Page</span>
+            <span class="nav-link-text ms-1 text-uppercase h6 m-0">{{ __('product.title') }}</span>
           </a>
         </li>
       </ul>

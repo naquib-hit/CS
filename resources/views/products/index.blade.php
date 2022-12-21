@@ -6,7 +6,7 @@
         <div class="card h-100">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                    <h6 class="text-white text-capitalize ps-3">{{ __('Products/Services') }}</h6>
+                    <h6 class="text-white text-capitalize ps-3">{{ __('product.title') }}</h6>
                 </div>
             </div>
             <div class="card-body mx-0 px-0 h-100">
@@ -14,8 +14,8 @@
                     <table id="tbl-product" class="table table-striped rounded-lg">
                         <thead>
                             <tr>
-                                <th>{{__("Name")}}</th>
-                                <th>{{__("Price")}}</th>
+                                <th>{{__('product.table.name')}}</th>
+                                <th>{{__("product.table.price")}}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>

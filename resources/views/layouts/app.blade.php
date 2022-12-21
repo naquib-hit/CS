@@ -26,7 +26,7 @@
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
   <!-- Nucleo Icons -->
-  <link href=" {{ asset('vendor/fontawesome/all.min.css') }}" rel="stylesheet" />
+  <link href=" {{ asset('vendor/fontawesome/css/all.min.css') }}" rel="stylesheet" />
    <!-- Scripts -->
    <script src="{{ asset('js/core/bootstrap.bundle.min.js') }}" defer></script>
 
@@ -69,7 +69,7 @@
     </script>
 
   <script src="{{ asset('js/material-dashboard.min.js?v=3.0.0') }}"></script>
-  
+
   @yield('js')
 </body>
 
