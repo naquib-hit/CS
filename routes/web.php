@@ -18,6 +18,7 @@ Auth::routes([
     'registration' => false
 ]);
 
+Route::get('products/get', [ProductController::class, 'get']);
 Route::resource('products', ProductController::class);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

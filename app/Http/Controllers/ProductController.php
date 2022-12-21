@@ -89,4 +89,22 @@ class ProductController extends Controller
     {
         //
     }
+
+    /**
+     * get data and return to json format
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function get()
+    {
+        try
+        {
+            $data = Product::orderBy('created_at');
+            return $data->cursorPaginate(10);
+        }
+        catch(\Exception $e)
+        {
+            echo $e->getMesssage();
+        }
+    }
 }
