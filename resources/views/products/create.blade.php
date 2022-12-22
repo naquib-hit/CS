@@ -23,14 +23,15 @@
                     </div>
                   </div>
                 <div class="card-body">
-                    <form class="d-flex flex-column">
+                    <form action="{{ url('products') }}" class="d-flex flex-column" method="post">
+                        @csrf
                         <span class="input-group input-group-outline">
                             <label class="form-label">{{ __('product.form.fields.name') }}</label>
-                            <input type="text" class="form-control"/>
+                            <input type="text" class="form-control" name="product_name"/>
                         </span>
                         <span class="input-group input-group-outline mt-4">
                             <label class="form-label">{{ __('product.form.fields.price') }}</label>
-                            <input type="number" min="0" class="form-control"/>
+                            <input type="number" min="0" class="form-control" name="product_price"/>
                         </span>
                         <span class="d-flex flex-nowrap mt-5 w-100">
                             <a href="{{ route('products.index') }}"  class="btn btn-primary p-0 btn-circle">

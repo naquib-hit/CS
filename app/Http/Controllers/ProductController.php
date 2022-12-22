@@ -44,6 +44,14 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         //
+        try
+        {
+            $validated = $request->validated();
+        }
+        catch(\Exception $e)
+        {
+            echo $e->getMessage();
+        }
     }
 
     /**
