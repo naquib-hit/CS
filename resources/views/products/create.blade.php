@@ -26,13 +26,19 @@
                     <form action="{{ url('products') }}" class="d-flex flex-column" method="post">
                         @csrf
                         <span class="input-group input-group-outline">
-                            <label class="form-label">{{ __('product.form.fields.name') }}</label>
-                            <input type="text" class="form-control" name="product_name"/>
+                            <label class="form-label">{{ __('product.form.fields.name') }} <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('product_name') is-invalid @enderror" name="product_name"/>
                         </span>
+                        @error('product_name')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                         <span class="input-group input-group-outline mt-4">
-                            <label class="form-label">{{ __('product.form.fields.price') }}</label>
-                            <input type="number" min="0" class="form-control" name="product_price"/>
+                            <label class="form-label">{{ __('product.form.fields.price') }} <span class="text-danger">*</span></label>
+                            <input type="number" min="0" class="form-control @error('product_name') is-invalid @enderror" name="product_price"/>
                         </span>
+                        @error('product_price')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                         <span class="d-flex flex-nowrap mt-5 w-100">
                             <a href="{{ route('products.index') }}"  class="btn btn-primary p-0 btn-circle">
                                 <i class="fas fa-hand-point-left font-reset"></i>
