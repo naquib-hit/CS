@@ -13,7 +13,8 @@ return [
 
     'title' => 'Products / Services',
     'table' => [
-      'name'  => 'Name',
-      'price'  => 'Price'
+      'name'    => 'Name',
+      'price'   => 'Price',
+      'option'  => 'Option'
     ]
 ];

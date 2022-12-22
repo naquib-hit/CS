@@ -13,7 +13,8 @@ return [
 
     'title' => 'Produk/Layanan',
     'table' => [
-        'name'  => 'Nama',
-        'price' => 'Harga'
+        'name'      => 'Nama',
+        'price'     => 'Harga',
+        'option'    => 'Opsi'
     ]
 ];

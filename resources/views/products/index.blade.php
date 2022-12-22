@@ -31,19 +31,22 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table id="tbl-product" class="table table-striped rounded-lg">
-                        <thead>
+                    <table id="tbl-product" class="table rounded-lg">
+                        <thead class="border-bottom bg-warning text-white">
                             <tr>
-                                <th>{{__('product.table.name')}}</th>
-                                <th>{{__("product.table.price")}}</th>
+                                <th class="ps-1">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="check-all" id="check-all" class="form-check-input"/>
+                                        <label class="form-check-label"></label>
+                                    </div>
+                                </th>
+                                <th class="d-none">ID</th>
+                                <th class="ps-1">{{__('product.table.name')}}</th>
+                                <th class="ps-1">{{__("product.table.price")}}</th>
+                                <th class="ps-1">{{__("product.table.option")}}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
-                        <tfoot>
-                            <td>
-
-                            </td>
-                        </tfoot>
                     </table>
                 </div>
             </div>

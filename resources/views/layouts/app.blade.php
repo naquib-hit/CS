@@ -33,6 +33,17 @@
    <!-- Styles -->
    <link href="{{ asset('css/material-dashboard.min.css') }}" rel="stylesheet">
 
+  <style>
+    .btn-circle {
+        height: 2.8em;
+        width: 2.8em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+    }
+  </style>
+
    @yield('css')
 </head>
 
