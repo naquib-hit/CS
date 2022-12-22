@@ -24,7 +24,16 @@
 
   <title>{{ config('app.name', 'CustomerInvoice') }}</title>
   <!--     Fonts and icons     -->
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+  <style>
+    @font-face {
+      font-family: 'Roboto';
+      src: url("{{ asset('fonts/Roboto/Roboto-Light.ttf') }}") format('truetype');
+      font-style: normal;
+      font-weight: normal;
+    }
+
+  </style>
+  {{-- <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" /> --}}
   <!-- Nucleo Icons -->
   <link href=" {{ asset('vendor/fontawesome/css/all.min.css') }}" rel="stylesheet" />
    <!-- Scripts -->
@@ -60,10 +69,6 @@
 
         </div>
     </div>
-    <footer class="footer pt-5">
-     
-    </footer>
-  </div>
   </main>
 
   <!--   Core JS Files   -->
