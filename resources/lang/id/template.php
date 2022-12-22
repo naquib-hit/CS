@@ -4,6 +4,12 @@ return [
 
     // Menu
     // Toolbar
-    'add'        => 'Tambah',
-    'delete_all' => 'Hapus Semua'
+    'toolbar' => [
+        'add'        => 'Tambah',
+        'delete_all' => 'Hapus Semua',
+    ],
+    'form' => [
+        'save'  => 'Simpan',
+        'reset' => 'Ulangi'
+    ]
 ];

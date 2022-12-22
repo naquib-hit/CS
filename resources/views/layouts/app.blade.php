@@ -27,7 +27,7 @@
   <style>
     @font-face {
       font-family: 'Roboto';
-      src: url("{{ asset('fonts/Roboto/Roboto-Light.ttf') }}") format('truetype');
+      src: url("{{ asset('fonts/Roboto/Roboto-Light.ttf') }}"S) format('truetype');
       font-style: normal;
       font-weight: normal;
     }
@@ -37,7 +37,6 @@
   <!-- Nucleo Icons -->
   <link href=" {{ asset('vendor/fontawesome/css/all.min.css') }}" rel="stylesheet" />
    <!-- Scripts -->
-   <script src="{{ asset('js/core/bootstrap.bundle.min.js') }}" defer></script>
 
    <!-- Styles -->
    <link href="{{ asset('css/material-dashboard.min.css') }}" rel="stylesheet">
@@ -72,6 +71,7 @@
   </main>
 
   <!--   Core JS Files   -->
+  <script src="{{ asset('js/core/bootstrap.bundle.min.js') }}" ></script>
   <script src="{{ asset('js/plugins/perfect-scrollbar.min.js') }}"></script>
   <script src="{{ asset('js/plugins/smooth-scrollbar.min.js') }}"></script>
   <script>

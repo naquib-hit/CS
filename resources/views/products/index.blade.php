@@ -19,13 +19,13 @@
                 <div class="row ">
                     <div class="col-12 px-4">
                         <div class="btn-group btn-group-sm btn-group-primary">
-                            <button type="button" class="btn btn-primary">
+                            <a href="{{ route('products.create') }}" class="btn btn-primary">
                                 <i class="fas fa-plus-circle font-reset"></i>&nbsp;
-                                {{__('template.add')}}
-                            </button>
+                                {{__('template.toolbar.add')}}
+                            </a>
                             <button type="button" class="btn btn-primary">
                                 <i class="fas fa-trash font-reset"></i>&nbsp;
-                                {{__('template.delete_all')}}
+                                {{__('template.toolbar.delete_all')}}
                             </button>
                         </div>
                     </div>

@@ -4,6 +4,12 @@ return [
 
     // Menu
     // Toolbar
-    'add'        => 'Add',
-    'delete_all' => 'Delete All'
+    'toolbar' => [
+        'add'        => 'Add',
+        'delete_all' => 'Delete All',
+    ],
+    'form' => [
+        'save'  => 'Save',
+        'reset' => 'Reset'
+    ]
 ];

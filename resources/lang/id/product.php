@@ -16,5 +16,14 @@ return [
         'name'      => 'Nama',
         'price'     => 'Harga',
         'option'    => 'Opsi'
-    ]
+    ],
+    'form' => [
+        'title' => 'Form Produk / Layanan',
+        'fields' => [
+            'name'  => 'Nama Produk',
+            'price' => 'Harga Produk'
+        ],
+       
+    ],
+    'back' => 'kembali ke halaman produk / layanan'
 ];
