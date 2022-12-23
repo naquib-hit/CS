@@ -51,7 +51,6 @@ class ProductController extends Controller
             $valid = $request->validated();
 
             $prod = Product::create([
-                'product_code'  => Str::random(),
                 'product_name'  => $valid['product_name'],
                 'product_price' => $valid['product_price']
             ]);

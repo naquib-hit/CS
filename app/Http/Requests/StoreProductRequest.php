@@ -26,7 +26,6 @@ class StoreProductRequest extends FormRequest
     {
         return [
             //
-            //'product_code'  => 'required|unique:products, product_code',
             'product_name'  => ['required', Rule::unique('products', 'product_name')->whereNull('deleted_at')],
             'product_price' => 'required|numeric|min:0'
         ];
