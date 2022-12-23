@@ -19,7 +19,7 @@ class ProductFactory extends Factory
     {
         return [
             //
-            'product_code'  => $this->faker->regexify('[A-Za-z0-9]{16}'),
+            //'product_code'  => $this->faker->regexify('[A-Za-z0-9]{16}'),
             'product_name'  => $this->faker->unique()->randomElement(['woowtime', 'woowaccess']),
             'product_price' => $this->faker->numberBetween('200000', '800000')
         ];
