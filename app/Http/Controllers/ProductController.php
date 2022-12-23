@@ -33,8 +33,8 @@ class ProductController extends Controller
     public function create()
     {
         //
-        $uuid = Str::uuid();
-        return view('products.create', ['code' => $uuid]);
+        $random = Str::random();
+        return view('products.create', ['str_random' => $random]);
     }
 
     /**
@@ -49,20 +49,22 @@ class ProductController extends Controller
         try
         {
             $valid = $request->validated();
-            Product::create([
-                'product_code'  => Str::uuid(),
+
+            $prod = Product::create([
+                'product_code'  => Str::random(),
                 'product_name'  => $valid['product_name'],
                 'product_price' => $valid['product_price']
             ]);
 
+            if(!$prod)
+                return redirect()->back()->with('error', __('validation.failed.create'));
+
+            return redirect()->route('products.index')->with('success', __('validation.success.create'));
         }
         catch(\Exception $e)
         {
-            echo $e->getMessage();
-
+            return redirect()->back()->with('error', __('validation.failed.create'));
         }
-
-        return redirect()->route('products.index')->with('success', __('validation.success.create'));
     }
 
     /**

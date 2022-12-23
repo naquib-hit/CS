@@ -164,6 +164,11 @@ return [
         'update'    => 'Data updated successfully',
         'delete'    => 'Data deleted successfully'
     ],
+    'failed'   => [
+        'create'    => 'Failed to save data',
+        'update'    => 'Failed to update data',
+        'delete'    => 'Failed to delete data'
+    ],
     'delete' => [ 
         'text'      => "The deleted data cannot be recovered.",
         'confirm'   => 'Are you sure !?'

@@ -152,6 +152,11 @@ return [
         'update'    => 'Data berhasil di ubah',
         'delete'    => 'Data berhasil di hapus'
     ],
+    'failed'    => [
+        'create'    => 'Data gagal di simpan',
+        'update'    => 'Data gagal di ubah',
+        'delete'    => 'Data gagal di hapus'
+    ],
     'delete' => [ 
         'text'      => "Data yang telah di hapus tidak dapat de kembalikan.",
         'confirm'   => 'Apakah Anda Yakin !?'
