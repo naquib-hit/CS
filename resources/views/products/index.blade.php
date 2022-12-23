@@ -42,7 +42,6 @@
                                     </div>
                                 </th>
                                 <th class="d-none">ID</th>
-                                <th class="d-none">Code</th>
                                 <th class="ps-1">{{__('product.table.name')}}</th>
                                 <th class="ps-1">{{__("product.table.price")}}</th>
                                 <th class="ps-1">{{__("product.table.option")}}</th>

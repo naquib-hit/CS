@@ -66,16 +66,11 @@ const setTable = async data => {
         cell_3.classList.add('ps-1');
         // Column 5
         const cell_4 = row.insertCell(4);
-        cell_4.dataset.name = keys[3];
-        cell_4.innerText = intToCurrency(item[keys[3]]);
-        cell_4.classList.add('ps-1');
-        // Column 6
-        const cell_5 = row.insertCell(5);
-        cell_5.innerHTML =  `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
+        cell_4.innerHTML =  `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
                                 `<button type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit"><i class="fas fa-edit font-reset"></i></button>` +
                                 `<button type="button" class="btn btn-sm btn-danger btn-circle p-0 m-0 ms-1 delete_data" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="deleteConfirmation(event)"><i class="fas fa-trash font-reset"></i></button>` + 
                             `</span>`;
-        cell_5.classList.add('ps-1');
+        cell_4.classList.add('ps-1');
     });
 }
 
