@@ -82,9 +82,36 @@
       }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-    </script>
+
+    const getCookie = name => {
+        var cookies = document.cookie.split(';');
+
+        var obj = cookies.reduce((prev, curr) => {
+            var split = curr.split('=');
+            return Object.assign(prev, {[split[0]]:split[1]});
+        }, {});
+
+        return obj[name];
+    }
+</script>
 
   <script src="{{ asset('js/material-dashboard.min.js?v=3.0.0') }}"></script>
+
+  <script id="lang" type="application/json">
+    {
+      "confirmation": {
+        "yes": "{{ __('template.confirmation.yes') }}",
+        "no": "{{ __('template.confirmation.no') }}",
+        "ok": "{{ __('template.confirmation.ok') }}",
+        "cancel": "{{ __('template.confirmation.cancel') }}"
+      },
+      "delete": {
+        "text": "{{ __('validation.delete.text') }}",
+        "confirm": "{{ __('validation.delete.confirm') }}",
+        "success": "{{ __('validation.success.delete') }}"
+      }
+    }
+  </script>
 
   @yield('js')
 </body>

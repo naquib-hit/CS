@@ -15,6 +15,7 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->string('transaction_code', 100);
             $table->string('sales_name', 245);
             $table->date('start_date')->default((new DateTime())->format('Y-m-d'));
             $table->date('expiration_date')->nullable();

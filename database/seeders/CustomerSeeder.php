@@ -18,7 +18,7 @@ class CustomerSeeder extends Seeder
     {
         //
         Customer::factory()
-                    ->count(12)
+                    ->count(24)
                     ->create();
     }
 }

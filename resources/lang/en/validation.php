@@ -159,5 +159,13 @@ return [
     */
 
     'attributes' => [],
-
+    'success'   => [
+        'create'    => 'Data saved successfully',
+        'update'    => 'Data updated successfully',
+        'delete'    => 'Data deleted successfully'
+    ],
+    'delete' => [ 
+        'text'      => "The deleted data cannot be recovered.",
+        'confirm'   => 'Are you sure !?'
+    ]
 ];

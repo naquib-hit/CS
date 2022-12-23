@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Illuminate\Support\Str;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 
@@ -32,7 +33,8 @@ class ProductController extends Controller
     public function create()
     {
         //
-        return view('products.create');
+        $uuid = Str::uuid();
+        return view('products.create', ['code' => $uuid]);
     }
 
     /**
@@ -44,13 +46,11 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         //
-        $red = NULL;
         try
         {
-
             $valid = $request->validated();
-
             Product::create([
+                'product_code'  => Str::uuid(),
                 'product_name'  => $valid['product_name'],
                 'product_price' => $valid['product_price']
             ]);
@@ -62,7 +62,7 @@ class ProductController extends Controller
 
         }
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')->with('success', __('validation.success.create'));
     }
 
     /**
@@ -108,6 +108,8 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+        $product->delete();
+        return redirect()->route('products.index')->with('success', __('validation.success.delete'));
     }
 
     /**

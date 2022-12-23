@@ -42,6 +42,7 @@
                                     </div>
                                 </th>
                                 <th class="d-none">ID</th>
+                                <th class="d-none">Code</th>
                                 <th class="ps-1">{{__('product.table.name')}}</th>
                                 <th class="ps-1">{{__("product.table.price")}}</th>
                                 <th class="ps-1">{{__("product.table.option")}}</th>
@@ -70,9 +71,25 @@
 
     </div>
 </div>
+
+
 @endsection
 
 @section('js')
 <script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
+
+@if(session()->has('success'))
+<script>
+    Swal.fire({
+        title: '<h4 class="text-success">SUCCESS</h4>',
+        html: '<h5 class="text-success">{{ session('success') }}</h5>',
+        icon: 'success',
+        timer: 1200,
+        timerProgressBar: true,
+        showConfirmButton: false
+    })
+</script>
+@endif
+
 <script src="{{ asset('js/pages/product.js') }}"></script>
 @endsection

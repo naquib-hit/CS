@@ -2,6 +2,7 @@
 
 const table = document.getElementById('tbl-product');
 const tbody = table.tBodies[0];
+const lang = JSON.parse(document.getElementById('lang').textContent);
 
 // INIT
 const getData = async options => {
@@ -57,18 +58,54 @@ const setTable = async data => {
         const cell_2 = row.insertCell(2);
         cell_2.dataset.name = keys[1];
         cell_2.innerText = item[keys[1]];
-        cell_2.classList.add('ps-1');
+        cell_2.classList.add('ps-1', 'd-none');
         // Column 4
         const cell_3 = row.insertCell(3);
         cell_3.dataset.name = keys[2];
-        cell_3.innerText = intToCurrency(item[keys[2]]);
+        cell_3.innerText = item[keys[2]];
         cell_3.classList.add('ps-1');
         // Column 5
         const cell_4 = row.insertCell(4);
-        cell_4.innerHTML =  `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
-                                `<button type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit"><i class="fas fa-edit font-reset"></i></button>` +
-                                `<button type="button" class="btn btn-sm btn-danger btn-circle p-0 m-0 ms-1 delete_data" data-bs-toggle="tooltip" data-bs-title="Delete"><i class="fas fa-trash font-reset"></i></button>` + 
-                            `</span>`;
+        cell_4.dataset.name = keys[3];
+        cell_4.innerText = intToCurrency(item[keys[3]]);
         cell_4.classList.add('ps-1');
+        // Column 6
+        const cell_5 = row.insertCell(5);
+        cell_5.innerHTML =  `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
+                                `<button type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit"><i class="fas fa-edit font-reset"></i></button>` +
+                                `<button type="button" class="btn btn-sm btn-danger btn-circle p-0 m-0 ms-1 delete_data" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="deleteConfirmation(event)"><i class="fas fa-trash font-reset"></i></button>` + 
+                            `</span>`;
+        cell_5.classList.add('ps-1');
+    });
+}
+
+const deleteConfirmation = e => {
+    const tr = e.target.parentNode.closest('tr');
+    const props = [...tr.cells].filter(x => x.dataset.hasOwnProperty('name')).reduce((prev, curr) => Object.assign(prev, {[curr.dataset.name] : curr.innerHTML}), {});
+
+    Swal.fire({
+        title: '<h4 class="text-warning">'+ lang.delete.confirm +'</h4>',
+        html: '<h5 class="text-warning">' +lang.delete.text+ '</h5>',
+        icon: 'warning',
+        confirmButtonText: lang.confirmation.yes,
+        showCancelButton: true,
+        cancelButtonText: lang.confirmation.no
+    })
+    .then(t => {
+        if(!t.value)
+            return;
+        fetch(`${window.location.origin}/products/${props.id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector("meta[name='csrf-token']").content
+            }
+        })
+        .then(res => {
+            
+            window.location.reload();
+        })
+        .catch(err => {
+            console.log(err);
+        }) 
     });
 }

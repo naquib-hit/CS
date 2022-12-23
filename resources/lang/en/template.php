@@ -11,5 +11,11 @@ return [
     'form' => [
         'save'  => 'Save',
         'reset' => 'Reset'
+    ],
+    'confirmation' => [
+        'ok'        => 'OK',
+        'no'        => 'No',
+        'yes'       => 'Yes',
+        'cancel'    => 'Cancel'
     ]
 ];

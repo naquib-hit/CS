@@ -19,6 +19,7 @@ class CustomerFactory extends Factory
     {
         return [
             //
+            'customer_code'     => $this->faker->regexify('[A-Za-z0-9]{16}'),
             'customer_name'     => $this->faker->unique()->company(),
             'customer_address'  => $this->faker->unique()->address(),
             'customer_email'    => $this->faker->unique()->safeEmail(),

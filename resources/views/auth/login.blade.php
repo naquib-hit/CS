@@ -19,6 +19,16 @@
    <script src="{{ asset('vendor/tinyfade/tinyfade.min.js') }}" defer></script>
    <!-- Styles -->
    <link href="{{ asset('css/material-dashboard.min.css') }}" rel="stylesheet">
+   <style>
+    .panel-circle {
+      width: 5rem;
+      height: 5rem;
+      border-radius: 50% !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+   </style>
 </head>
 <body class="bg-gray-200">
     <main class="main-content  mt-0">
@@ -27,22 +37,28 @@
         <div class="container my-auto">
           <div class="row">
             <div class="col-lg-4 col-md-8 col-12 mx-auto">
-              <div class="card z-index-0 fadeIn3 fadeInBottom">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                  <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                    <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">{{ __('Login') }}</h4>
+              <div class="card z-index-0 px-2 fadeIn3 fadeInBottom" style="border-top-left-radius: 35px !important; border-top-right-radius: 35px !important;">
+                <div class="card-header p-0 position-relative mt-n4 pt-1 z-index-2 rounded-circle my-2">
+                  <div class="bg-gradient-primary shadow-primary border-radius-lg panel-circle p-0 mx-auto">
+                    <i class="fas fa-user-tie fa-2xl text-white" style="font-size: calc(1em*3); text-shadow: 0px 1px 2px rgba(0,0,0, 0.2), 0px 1px 2px rgba(0,0,0,0.2);"></i>
                   </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body" >
                   <form role="form" method="POST" action="{{ route('login') }}" class="text-start">
-                    <div class="input-group input-group-outline my-3">
+                    <div class="input-group input-group-outline my-3 @error('username') is-invalid @enderror">
                       <label class="form-label">{{ __('Username') }}</label>
-                      <input type="text" class="form-control @error('username') is-invalid @enderror">
+                      <input type="text" class="form-control ">
                     </div>
-                    <div class="input-group input-group-outline mb-3">
+                    @error('username')  
+                      <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                    <div class="input-group input-group-outline mb-3 @error('password') is-invalid @enderror">
                       <label class="form-label">{{ __('Password') }}</label>
-                      <input type="password" class="form-control @error('password') is-invalid @enderror">
+                      <input type="password" class="form-control ">
                     </div>
+                    @error('password')  
+                      <small class="text-danger">{{ $message }}</small>
+                    @enderror
                     <div class="form-check form-switch d-flex align-items-center mb-3">
                       <input class="form-check-input" type="checkbox" id="rememberMe" >
                       <label class="form-check-label mb-0 ms-3" for="rememberMe">{{ __('Remember me') }}</label>

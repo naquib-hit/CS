@@ -147,5 +147,13 @@ return [
     */
 
     'attributes' => [],
-
+    'success'   => [
+        'create'    => 'Data berhasil di simpan',
+        'update'    => 'Data berhasil di ubah',
+        'delete'    => 'Data berhasil di hapus'
+    ],
+    'delete' => [ 
+        'text'      => "Data yang telah di hapus tidak dapat de kembalikan.",
+        'confirm'   => 'Apakah Anda Yakin !?'
+    ]
 ];
