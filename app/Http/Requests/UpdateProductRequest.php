@@ -25,6 +25,8 @@ class UpdateProductRequest extends FormRequest
     {
         return [
             //
+            'product_name'  => 'required',
+            'product_price' => 'required|numeric|min:0'
         ];
     }
 }
