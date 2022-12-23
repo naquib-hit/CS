@@ -25,16 +25,16 @@
                 <div class="card-body">
                     <form action="{{ url('products') }}" class="d-flex flex-column" method="post">
                         @csrf
-                        <span class="input-group input-group-outline">
+                        <span class="input-group input-group-outline @error('product_name') is-invalid @enderror">
                             <label class="form-label">{{ __('product.form.fields.name') }} <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('product_name') is-invalid @enderror" name="product_name"/>
+                            <input type="text" class="form-control" name="product_name" value="{{ old('product_name') }}" @error('product_name') autofocus @enderror/>
                         </span>
                         @error('product_name')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
-                        <span class="input-group input-group-outline mt-4">
+                        <span class="input-group input-group-outline @error('product_price') is-invalid @enderror mt-4">
                             <label class="form-label">{{ __('product.form.fields.price') }} <span class="text-danger">*</span></label>
-                            <input type="number" min="0" class="form-control @error('product_name') is-invalid @enderror" name="product_price"/>
+                            <input type="number" min="0" class="form-control" name="product_price" value="{{ old('product_price') }}" @error('product_price') autofocus @enderror/>
                         </span>
                         @error('product_price')
                             <small class="text-danger">{{ $message }}</small>

@@ -44,14 +44,25 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         //
+        $red = NULL;
         try
         {
-            $validated = $request->validated();
+
+            $valid = $request->validated();
+
+            Product::create([
+                'product_name'  => $valid['product_name'],
+                'product_price' => $valid['product_price']
+            ]);
+
         }
         catch(\Exception $e)
         {
             echo $e->getMessage();
+
         }
+
+        return redirect()->route('products.index');
     }
 
     /**

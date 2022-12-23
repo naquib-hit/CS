@@ -9,6 +9,7 @@
         font-size: var(--fas-custom-size) !important;
     }
 </style>
+<link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/sweetalert2.min.css') }}"/>
 @endsection
 
 @section('content')
@@ -72,5 +73,6 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
 <script src="{{ asset('js/pages/product.js') }}"></script>
 @endsection
