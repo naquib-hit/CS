@@ -25,7 +25,7 @@ class UpdateProductRequest extends FormRequest
     {
         return [
             //
-            'product_name'  => 'required',
+            'product_name'  => ['required', Rule::unique('products')->],
             'product_price' => 'required|numeric|min:0'
         ];
     }
