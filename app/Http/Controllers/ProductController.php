@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 
@@ -86,6 +87,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         //
+        return view('products.edit', compact('product', 'product'));
     }
 
     /**
@@ -97,7 +99,21 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        try
+        {
+            $valid = $request->validated();
+            $rs = $product->update($valid);
+
+            if(!$rs)
+                return redirect()->back()->with('error', __('validation.failed.update'));
+
+            return redirect()->route('products.index')->with('success', __('validation.success.create'));
+        }
+        catch(\Exception $e)
+        {
+            Log::error($e->getMessage());
+            return redirect()->back()->with('error', __('validation.failed.update'));
+        }
     }
 
     /**
