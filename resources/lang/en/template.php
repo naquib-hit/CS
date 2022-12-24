@@ -9,8 +9,9 @@ return [
         'delete_all' => 'Delete All',
     ],
     'form' => [
-        'save'  => 'Save',
-        'reset' => 'Reset'
+        'save'      => 'Save',
+        'reset'     => 'Reset',
+        'search'    => 'Search'
     ],
     'confirmation' => [
         'ok'        => 'OK',

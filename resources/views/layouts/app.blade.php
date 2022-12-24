@@ -95,7 +95,7 @@
     }
 </script>
 
-  <script src="{{ asset('js/material-dashboard.min.js?v=3.0.0') }}"></script>
+  <script src="{{ asset('js/material-dashboard.min.js') }}"></script>
 
   <script id="lang" type="application/json">
     {

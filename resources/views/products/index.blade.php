@@ -67,7 +67,33 @@
         </div>
     </div>
     <div class="col-12 col-lg-4">
-
+        <div class="card">
+            <div class="card-header mb-1 py-2">
+                <h4 class="mb-0">Filter</h4>
+            </div>
+            <div class="card-body">
+                <span class="input-group input-group-static">
+                    <label class="form-label">{{ __('product.form.fields.name') }} </label>
+                    <input type="text" class="form-control" name="s_product_name" value="{{ old('product_name') }}" />
+                </span>
+                <span class="input-group input-group-static mt-3">
+                    <label class="form-label">{{ __('product.form.fields.price') }} </label>
+                    <input type="text" class="form-control" name="s_product_price" value="{{ old('product_name') }}" />
+                </span>
+                <span class="mt-5 d-flex flex-nowrap justify-content-end w-100">
+                    <button type="button" class="btn btn-secondary" id="reset-search">
+                        <i class="fas fa-redo"></i>
+                        {{ __('template.form.reset') }}
+                    </button>
+                    <button type="button" class="btn btn-primary ms-1" id="btn-search">
+                        <i class="fas fa-search"></i>
+                        {{ __('template.form.search') }} 
+                    </button>
+                </span>
+               
+            </div>           
+        </div>
+        
     </div>
 </div>
 

@@ -10,8 +10,9 @@ return [
     ],
     // Form
     'form' => [
-        'save'  => 'Simpan',
-        'reset' => 'Ulangi'
+        'save'      => 'Simpan',
+        'reset'     => 'Ulangi',
+        'search'    => 'Cari'
     ],
     // Confirmation
     'confirmation' => [
