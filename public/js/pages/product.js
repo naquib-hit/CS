@@ -95,6 +95,9 @@ const deleteConfirmation = e => {
     .then(t => {
         if(!t.value)
             return;
+
+        
+
         fetch(`${window.location.origin}/products/${props.id}`, {
             method: 'DELETE',
             headers: {
@@ -102,7 +105,7 @@ const deleteConfirmation = e => {
             }
         })
         .then(res => {
-            
+            Swal.close();
             window.location.reload();
         })
         .catch(err => {

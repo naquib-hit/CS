@@ -97,6 +97,8 @@
 
         return obj[name];
     }
+
+    const progressBar = document.getElementById('progress-bar');
 </script>
 
   <script src="{{ asset('js/material-dashboard.min.js') }}"></script>

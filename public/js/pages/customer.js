@@ -33,8 +33,7 @@ const getData = async (url, options) => {
     // check all table
     checkAll.addEventListener('click', checkAllRows);
     
-
-})()
+})();
 
 
 const setTable = async data => {
@@ -99,14 +98,16 @@ const deleteConfirmation = e => {
     .then(t => {
         if(!t.value)
             return;
+
+        loading();
         fetch(`${window.location.origin}/customers/${props.id}`, {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector("meta[name='csrf-token']").content
             }
         })
-        .then(res => {
-            
+        .then(async res => {
+            Swal.close();
             window.location.reload();
         })
         .catch(err => {
@@ -137,4 +138,15 @@ const checkAllRows = () => {
             });
             break;
     }
+}
+
+const loading = async () => {
+    Swal.fire({
+        html: 	'<div class="d-flex flex-column align-items-center">'
+        + '<span class="spinner-border text-primary"></span>'
+        + '<h3 class="mt-2">Loading...</h3>'
+        + '<div>',
+        showConfirmButton: false,
+        width: '13rem'
+    });
 }
