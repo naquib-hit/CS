@@ -52,7 +52,7 @@
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                         <span class="input-group input-group-static @error('customer_address') is-invalid @enderror mt-4">
-                            <label class="form-label">{{ __('customer.form.fields.address') }} </label>
+                            <label>{{ __('customer.form.fields.address') }} </label>
                             <textarea  class="form-control" name="customer_address" value="{{ old('customer_address') }}"></textarea>
                         </span>
                         @error('customer_address')
