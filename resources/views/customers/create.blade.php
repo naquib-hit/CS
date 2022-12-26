@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => __('product.title')])
+@extends('layouts.app', ['title' => __('customer.title')])
 
 @section('css')
 <style>

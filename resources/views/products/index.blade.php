@@ -16,7 +16,7 @@
 <div class="row h-100">
     <div class="col-12 col-lg-8">
         <div class="card h-100">
-            <div class="card-body mx-0 px-0 pt-0 h-100">
+            <div class="card-body mx-0 px-0 pt-3 h-100">
                 <div class="row ">
                     <div class="col-12 px-4">
                         <div class="btn-group btn-group-sm btn-group-primary">

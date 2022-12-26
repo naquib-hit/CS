@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => __('product.title')])
+@extends('layouts.app', ['title' => __('customer.title')])
 
 @section('css')
 <style>
@@ -15,12 +15,12 @@
 @section('content')
     
     <div class="row h-100 justify-content-center align-items-center">
+        @if(session()->has('error'))
+        <div class="alert alert-danger">
+            <h4>{{ session('error') }}</h4>
+        </div>
+        @endif
         <div class="col-12 col-md-8 col-lg-5">
-            @if(session()->has('error'))
-            <div class="alert alert-danger">
-                <h4>{{ session('error') }}</h4>
-            </div>
-            @endif
             <div class="card fadeIn3 fadeInBottom">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                     <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
@@ -28,25 +28,40 @@
                     </div>
                   </div>
                 <div class="card-body">
-                    <form action="{{ route('products.update', ['product' => $product]) }}" class="d-flex flex-column" method="post">
+                    <form action="{{ route('customers.update', ['customer' => $customer]) }}" class="d-flex flex-column" method="post">
                         @csrf
-                        @method('PUT')
-                        <span class="input-group input-group-outline @error('product_name') is-invalid @enderror">
-                            <label class="form-label">{{ __('product.form.fields.name') }} <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="product_name" value="{{ old('product_name') ?? $product->product_name }}" placeholder=" "/>
+                        <span class="input-group input-group-outline @error('customer_name') is-invalid @enderror">
+                            <label class="form-label">{{ __('customer.form.fields.name') }} <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="customer_name" value="{{ old('customer_name') ?? $customer->customer_name }}" @error('customer_name') autofocus @enderror/>
                         </span>
-                        @error('product_name')
+                        @error('customer_name')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
-                        <span class="input-group input-group-outline @error('product_price') is-invalid @enderror mt-4">
-                            <label class="form-label">{{ __('product.form.fields.price') }} <span class="text-danger">*</span></label>
-                            <input type="number" min="0" step="0.01" class="form-control" name="product_price" value="{{ old('product_price') ?? $product->product_price }}" placeholder=" "/>
+                        <span class="input-group input-group-outline @error('customer_email') is-invalid @enderror mt-4">
+                            <label class="form-label">{{ __('customer.form.fields.email') }} <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" name="customer_email" value="{{ old('customer_email') ?? $customer->customer_email }}" @error('customer_email') autofocus @enderror/>
                         </span>
-                        @error('product_price')
+                        @error('customer_email')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                        <span class="input-group input-group-outline @error('customer_phone') is-invalid @enderror mt-4">
+                            <label class="form-label">{{ __('customer.form.fields.phone') }} <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" name="customer_phone" value="{{ old('customer_phone') ?? $customer->customer_phone }}" @error('customer_phone') autofocus @enderror/>
+                        </span>
+                        @error('customer_phone')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                        <span class="input-group input-group-static @error('customer_address') is-invalid @enderror mt-4">
+                            <label class="form-label">{{ __('customer.form.fields.address') }} </label>
+                            <textarea  class="form-control" name="customer_address" >
+                                {{ old('customer_address') ?? $customer->customer_address }}
+                            </textarea>
+                        </span>
+                        @error('customer_address')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                         <span class="d-flex flex-nowrap mt-5 w-100">
-                            <a href="{{ route('products.index') }}"  class="btn btn-primary p-0 btn-circle">
+                            <a href="{{ route('customers.index') }}"  class="btn btn-primary p-0 btn-circle">
                                 <i class="fas fa-hand-point-left font-reset"></i>
                             </a>
                             <span class="ms-auto">

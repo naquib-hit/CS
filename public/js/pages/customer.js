@@ -89,8 +89,6 @@ const deleteConfirmation = e => {
     const tr = e.target.parentNode.closest('tr');
     const props = [...tr.cells].filter(x => x.dataset.hasOwnProperty('name')).reduce((prev, curr) => Object.assign(prev, {[curr.dataset.name] : curr.innerHTML}), {});
 
-    console.log(props);
-
     Swal.fire({
         title: '<h4 class="text-warning">'+ lang.delete.confirm +'</h4>',
         html: '<h5 class="text-warning">' +lang.delete.text+ '</h5>',

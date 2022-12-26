@@ -14,15 +14,23 @@
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="fas fa-home"></i>
             </div>
-            <span class="nav-link-text ms-1">Home</span>
+            <span class="nav-link-text ms-1">{{ __('template.menu.home') }}</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/tables.html">
+          <a class="nav-link text-white " href="{{ route('products.index') }}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="fas fa-microchip"></i>
             </div>
-            <span class="nav-link-text ms-1">{{ __('product.title') }}</span>
+            <span class="nav-link-text ms-1">{{ __('template.menu.product') }}</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="{{ route('customers.index') }}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="fas fa-users"></i>
+            </div>
+            <span class="nav-link-text ms-1">{{ __('template.menu.customer') }}</span>
           </a>
         </li>
       </ul>
