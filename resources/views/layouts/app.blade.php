@@ -27,7 +27,7 @@
   <style>
     @font-face {
       font-family: 'Roboto';
-      src: url("{{ asset('fonts/Roboto/Roboto-Light.ttf') }}"S) format('truetype');
+      src: url("{{ asset('fonts/Roboto/Roboto-Light.ttf') }}") format('truetype');
       font-style: normal;
       font-weight: normal;
     }
@@ -49,6 +49,10 @@
         justify-content: center;
         align-items: center;
         border-radius: 50%;
+    }
+
+    .table {
+      font-size: 13px;
     }
   </style>
 

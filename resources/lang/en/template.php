@@ -3,6 +3,11 @@
 return [
 
     // Menu
+    'menu' => [
+        'home'      => 'Home',
+        'product'   => 'Products / Services',
+        'customer'  => 'Customer',
+    ],
     // Toolbar
     'toolbar' => [
         'add'        => 'Add',

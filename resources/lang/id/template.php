@@ -3,6 +3,11 @@
 return [
 
     // Menu
+    'menu' => [
+        'home'      => 'Beranda',
+        'product'   => 'Produk / Layanan',
+        'customer'  => 'Pelanggan',
+    ],
     // Toolbar
     'toolbar' => [
         'add'        => 'Tambah',

@@ -8,6 +8,14 @@
     .font-reset {
         font-size: var(--fas-custom-size) !important;
     }
+
+    .table tr th:first-child, 
+    .table td:first-child,
+    .table tr th:nth-child(2),
+    .table td:nth-child(2) {
+        position: sticky !important;
+        z-index: 5 !important;
+    }
 </style>
 <link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/sweetalert2.min.css') }}"/>
 @endsection
@@ -16,11 +24,11 @@
 <div class="row h-100">
     <div class="col-12 col-lg-8">
         <div class="card h-100">
-            <div class="card-body mx-0 px-0 pt-0 h-100">
+            <div class="card-body mx-0 px-0 pb-0 h-100">
                 <div class="row ">
                     <div class="col-12 px-4">
                         <div class="btn-group btn-group-sm btn-group-primary">
-                            <a href="{{ route('products.create') }}" class="btn btn-primary">
+                            <a href="{{ route('customers.create') }}" class="btn btn-primary">
                                 <i class="fas fa-plus-circle font-reset"></i>&nbsp;
                                 {{__('template.toolbar.add')}}
                             </a>
@@ -42,25 +50,28 @@
                                     </div>
                                 </th>
                                 <th class="d-none">ID</th>
-                                <th class="ps-1">{{__('product.table.name')}}</th>
-                                <th class="ps-1">{{__("product.table.price")}}</th>
-                                <th class="ps-1">{{__("product.table.option")}}</th>
+                                <th class="ps-1">{{__('customer.table.name')}}</th>
+                                <th class="ps-1">{{__("customer.table.email")}}</th>
+                                <th class="ps-1">{{__("customer.table.phone")}}</th>
+                                <th class="ps-1">{{__("customer.table.option")}}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
                 </div>
-                <div class="row px-4 position-absolute bottom-0 w-100">
-                    <div class="col-12 d-flex flex-nowrap justify-content-end align-items-center">
-                        <span class="d-flex flex-nowrap">
-                            <button type="button" class="btn btn-sm btn-primary btn-circle">
+                <div class="row px-4 py-1 position-relative bottom-0 w-100">
+                    <div class="col-12 d-flex flex-nowrap justify-content-end align-items-end">
+                        <div class="d-flex flex-nowrap">
+                            <button type="button" class="btn btn-sm btn-primary btn-circle" id="previous-page">
                                 <i class="fas fa-arrow-left font-reset"></i>
                             </button>
-                            <span></span>
-                            <button type="button" class="btn btn-sm btn-primary btn-circle">
+                            <div class="px-1">
+
+                            </div>
+                            <button type="button" class="btn btn-sm btn-primary btn-circle" id="next-page">
                                 <i class="fas fa-arrow-right font-reset"></i>
                             </button>
-                        </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -73,28 +84,21 @@
             </div>
             <div class="card-body">
                 <span class="input-group input-group-static">
-                    <label class="form-label">{{ __('product.filter.fields.name') }} </label>
+                    <label class="form-label">{{ __('customer.filter.fields.name') }} </label>
                     <input type="text" class="form-control" name="s_product_name" value="{{ old('product_name') }}" />
                 </span>
-                <div class="row mt-3">
-                    <div class="col">
-                        <span class="input-group input-group-static">
-                            <label class="form-label ms-0">{{ __('product.filter.fields.price_start') }} </label>
-                            <input type="number" min="0" class="form-control" name="s_product_price" value="{{ old('product_name') }}" />
-                        </span>
-                    </div>
-                    <div class="col-1">
-                        <span>-</span>
-                    </div>
-                    <div class="col">
-                        <span class="input-group input-group-static">
-                            <label class="form-label ms-0">{{ __('product.filter.fields.price_end') }} </label>
-                            <input type="number" min="0" class="form-control" name="s_product_price" value="{{ old('product_name') }}" />
-                        </span>
-                    </div>
+                <span class="input-group input-group-static mt-3">
+                    <label class="form-label">{{ __('customer.filter.fields.email') }} </label>
+                    <input type="text" class="form-control" name="s_product_name" value="{{ old('product_name') }}" />
+                </span>
+                <span class="input-group input-group-static mt-3">
+                    <label class="form-label">{{ __('customer.filter.fields.phone') }} </label>
+                    <input type="text" class="form-control" name="s_product_name" value="{{ old('product_name') }}" />
+                </span>
+                
                 </div>
                 
-                <span class="mt-5 d-flex flex-nowrap justify-content-end w-100">
+                <span class="mt-5 d-flex flex-nowrap justify-content-end w-100 px-3">
                     <button type="button" class="btn btn-secondary" id="reset-search">
                         <i class="fas fa-redo"></i>
                         {{ __('template.form.reset') }}
@@ -130,5 +134,5 @@
 </script>
 @endif
 
-<script src="{{ asset('js/pages/product.js') }}"></script>
+<script src="{{ asset('js/pages/customer.js') }}"></script>
 @endsection

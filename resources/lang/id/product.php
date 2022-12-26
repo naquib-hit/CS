@@ -15,7 +15,7 @@ return [
     'table' => [
         'name'      => 'Nama',
         'price'     => 'Harga',
-        'option'    => 'Opsi'
+        'option'    => 'Operasi'
     ],
     'form' => [
         'title' => 'Form Produk / Layanan',
@@ -23,7 +23,14 @@ return [
             'name'  => 'Nama Produk',
             'price' => 'Harga Produk'
         ],
-       
+        
+    ],
+    'filter' => [
+        'fields' => [
+            'name'  => 'Nama Produk',
+            'price_start' => 'Harga Awal',
+            'price_end'   => 'Harga Akhir'
+        ],
     ],
     'back' => 'kembali ke halaman produk / layanan'
 ];

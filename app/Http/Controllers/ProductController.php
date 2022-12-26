@@ -138,8 +138,8 @@ class ProductController extends Controller
     {
         try
         {
-            $data = Product::orderBy('created_at');
-            return $data->cursorPaginate(10);
+            $data = Product::orderBy('created_at', 'desc');
+            return $data->cursorPaginate(10)->withQueryString();
         }
         catch(\Exception $e)
         {

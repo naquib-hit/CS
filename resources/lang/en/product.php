@@ -15,7 +15,7 @@ return [
     'table' => [
       'name'    => 'Name',
       'price'   => 'Price',
-      'option'  => 'Option'
+      'option'  => 'Operation'
     ],
     'form' => [
         'title' => 'Products / Services Form',
@@ -24,6 +24,13 @@ return [
           'price' => 'Product\'s Price'
         ],
        
+    ],
+    'filter' => [
+      'fields' => [
+          'name'  => 'Product\'s Name',
+          'price_start' => 'Price Start',
+          'price_end'   => 'Price End'
+      ],
     ],
     'back' => 'Back To Products / Services Page'
 ];

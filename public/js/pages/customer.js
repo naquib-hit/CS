@@ -10,7 +10,7 @@ const getData = async options => {
     try
     {
         let opt = options ?? {};
-        let req = await fetch(`${window.location.origin}/products/get`, opt);
+        let req = await fetch(`${window.location.origin}/customers/get`, opt);
         const j = await req.json();
 
         return j;
@@ -60,29 +60,36 @@ const setTable = async data => {
         cell_1.classList.add('d-none');
         // Column 3
         const cell_2 = row.insertCell(2);
-        cell_2.dataset.name = keys[1];
-        cell_2.innerText = item[keys[1]];
+        cell_2.dataset.name = 'customer_name';
+        cell_2.innerText = item['customer_name'];
         cell_2.classList.add('ps-1');
         // Column 4
         const cell_3 = row.insertCell(3);
-        cell_3.dataset.name = keys[2];
-        cell_3.innerText = intToCurrency(item[keys[2]]);
+        cell_3.dataset.name = 'customer_email';
+        cell_3.innerText = item['customer_email'];
         cell_3.classList.add('ps-1');
         // Column 5
         const cell_4 = row.insertCell(4);
-        cell_4.innerHTML =  `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
-                                `<a type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="${window.location.origin}/products/${item.id}/edit">` + 
+        cell_4.dataset.name = 'customer_phone';
+        cell_4.innerText = item['customer_phone'];
+        cell_4.classList.add('ps-1');
+        // Column 6
+        const cell_5 = row.insertCell(5);
+        cell_5.innerHTML =  `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
+                                `<a type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="${window.location.origin}/customers/${item.id}/edit">` + 
                                     `<i class="fas fa-edit font-reset"></i>` +
                                 `</a>` +
                                 `<button type="button" class="btn btn-sm btn-danger btn-circle p-0 m-0 ms-1 delete_data" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="deleteConfirmation(event)"><i class="fas fa-trash font-reset"></i></button>` + 
                             `</span>`;
-        cell_4.classList.add('ps-1');
+        cell_5.classList.add('ps-1');
     });
 }
 
 const deleteConfirmation = e => {
     const tr = e.target.parentNode.closest('tr');
     const props = [...tr.cells].filter(x => x.dataset.hasOwnProperty('name')).reduce((prev, curr) => Object.assign(prev, {[curr.dataset.name] : curr.innerHTML}), {});
+
+    console.log(props);
 
     Swal.fire({
         title: '<h4 class="text-warning">'+ lang.delete.confirm +'</h4>',
@@ -95,7 +102,7 @@ const deleteConfirmation = e => {
     .then(t => {
         if(!t.value)
             return;
-        fetch(`${window.location.origin}/products/${props.id}`, {
+        fetch(`${window.location.origin}/customers/${props.id}`, {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector("meta[name='csrf-token']").content

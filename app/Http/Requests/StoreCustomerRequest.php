@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCustomerRequest extends FormRequest
@@ -13,7 +14,7 @@ class StoreCustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +26,9 @@ class StoreCustomerRequest extends FormRequest
     {
         return [
             //
+            'customer_name'     => ['required', Rule::unique('customers')->whereNull('deleted_at')],
+            'customer_email'    => ['required', 'email', Rule::unique('customers', 'customer_email')->whereNull('deleted_at')],
+            'customer_phone'    => ['required', 'numeric', Rule::unique('customers', 'customer_phone')->whereNull('deleted_at')]
         ];
     }
 }

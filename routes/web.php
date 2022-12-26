@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\{ ProductController, CustomerController };
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +18,11 @@ Auth::routes([
     'registration' => false
 ]);
 
+// Product
 Route::get('products/get', [ProductController::class, 'get']);
 Route::resource('products', ProductController::class);
+// Customers
+Route::get('customers/get', [CustomerController::class, 'get'])->name('products.get');
+Route::resource('customers', CustomerController::class);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
