@@ -128,9 +128,10 @@ class CustomerController extends Controller
         $pages = floor(Customer::count() / $itemsPerPage);
         $customers = Customer::orderBy('id', 'desc')->orderBy('created_at', 'desc');
 
-        $customers = $customers->cursorPaginate($itemsPerPage);
-        $customers->appends(['total_pages' => $pages]);
+        $customers = $customers->cursorPaginate($itemsPerPage)->withQueryString();
 
+        $customers->appends(['total_pages' => $pages]);
+        
         return $customers;
     }
 }

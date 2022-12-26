@@ -5,12 +5,12 @@ const tbody = table.tBodies[0];
 const lang = JSON.parse(document.getElementById('lang').textContent);
 const checkAll = document.getElementById('check-all');
 
-// INIT
-const getData = async options => {
+// INIT DATA
+const getData = async (url, options) => {
     try
     {
         let opt = options ?? {};
-        let req = await fetch(`${window.location.origin}/customers/get`, opt);
+        let req = await fetch(url, opt);
         const j = await req.json();
 
         return j;
@@ -21,11 +21,14 @@ const getData = async options => {
     }
 }
 
+// 
+
 
 (async () => {
 
-    const data = await getData();
-    await setTable(data.data);
+    const data = await getData(`${window.location.origin}/customers/get`);
+    
+    await setTable(data);
 
     // check all table
     checkAll.addEventListener('click', checkAllRows);
@@ -33,14 +36,10 @@ const getData = async options => {
 
 })()
 
-const intToCurrency = angka => {
-    const lokal = new Intl.NumberFormat('id', { style: 'currency', currency: 'IDR'}).format(angka);
-    return lokal;
-}
 
 const setTable = async data => {
 
-    Array.from(data, item => {
+    Array.from(data.data, item => {
         const row = tbody.insertRow();
         const keys = Object.keys(item);
 
