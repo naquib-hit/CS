@@ -83,17 +83,17 @@
                 <h4 class="mb-0">Filter</h4>
             </div>
             <div class="card-body">
-                <span class="input-group input-group-static">
+                <span class="input-group input-group-dynamic">
                     <label class="form-label">{{ __('customer.filter.fields.name') }} </label>
-                    <input type="text" class="form-control" name="s_product_name" value="{{ old('product_name') }}" />
+                    <input type="text" class="form-control" name="s_customer_name" value="{{ old('s_customer_name') }}" />
                 </span>
-                <span class="input-group input-group-static mt-3">
+                <span class="input-group input-group-dynamic mt-3">
                     <label class="form-label">{{ __('customer.filter.fields.email') }} </label>
-                    <input type="text" class="form-control" name="s_product_name" value="{{ old('product_name') }}" />
+                    <input type="text" class="form-control" name="s_customer_email" value="{{ old('s_customer_email') }}" />
                 </span>
-                <span class="input-group input-group-static mt-3">
+                <span class="input-group input-group-dynamic mt-3">
                     <label class="form-label">{{ __('customer.filter.fields.phone') }} </label>
-                    <input type="text" class="form-control" name="s_product_name" value="{{ old('product_name') }}" />
+                    <input type="text" class="form-control" name="s_customer_phone" value="{{ old('s_customer_phone') }}" />
                 </span>
                 
                 </div>
