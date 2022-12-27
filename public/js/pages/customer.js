@@ -4,6 +4,8 @@ const table = document.getElementById('tbl-main');
 const tbody = table.tBodies[0];
 const lang = JSON.parse(document.getElementById('lang').textContent);
 const checkAll = document.getElementById('check-all');
+const deleteAllBtn = document.getElementById('delete-all');
+let selectedRows = [];
 
 // INIT DATA
 const getData = async (url, options) => {
@@ -28,12 +30,30 @@ const getData = async (url, options) => {
 
     const data = await getData(`${window.location.origin}/customers/get`);
     
-    await setTable(data);
+    //await setTable(data);
 
     // check all table
     checkAll.addEventListener('click', checkAllRows);
-    
-})();
+    // delete all table
+    deleteAllBtn.addEventListener('click', deleteAllRows);
+    // seacrh
+    const frmSearch = document.forms['search-form'];
+
+    frmSearch.addEventListener('submit', e => {
+        e.preventDefault();
+
+        let frm = new FormData(e.target);
+        let obj = [...frm.entries()].reduce((prev, curr) => Object.assign(prev, {[curr[0]]:curr[1]}), {});
+        let params = new URLSearchParams(obj);
+
+        getData(`${window.location.origin}/customers/get?` + params)
+        .then(res => {
+            console.log(res);
+        })
+        .catch(err => console.log(err));
+    });
+
+})()
 
 
 const setTable = async data => {
@@ -83,6 +103,7 @@ const setTable = async data => {
     });
 }
 
+// Delete
 const deleteConfirmation = e => {
     const tr = e.target.parentNode.closest('tr');
     const props = [...tr.cells].filter(x => x.dataset.hasOwnProperty('name')).reduce((prev, curr) => Object.assign(prev, {[curr.dataset.name] : curr.innerHTML}), {});
@@ -96,8 +117,7 @@ const deleteConfirmation = e => {
         cancelButtonText: lang.confirmation.no
     })
     .then(t => {
-        if(!t.value)
-            return;
+        if(!t.value) return;
 
         loading();
         fetch(`${window.location.origin}/customers/${props.id}`, {
@@ -106,7 +126,7 @@ const deleteConfirmation = e => {
                 'X-CSRF-TOKEN': document.querySelector("meta[name='csrf-token']").content
             }
         })
-        .then(async res => {
+        .then(res => {
             Swal.close();
             window.location.reload();
         })
@@ -116,7 +136,7 @@ const deleteConfirmation = e => {
     });
 }
 
-
+// Check Rowss
 const checkAllRows = () => {
 
     switch(checkAll.checked)
@@ -140,13 +160,43 @@ const checkAllRows = () => {
     }
 }
 
-const loading = async () => {
+// Loading
+const loading = () => {
     Swal.fire({
         html: 	'<div class="d-flex flex-column align-items-center">'
         + '<span class="spinner-border text-primary"></span>'
         + '<h3 class="mt-2">Loading...</h3>'
         + '<div>',
         showConfirmButton: false,
-        width: '13rem'
+        width: '14rem'
     });
+}
+
+// Filter
+const filterData = () => {
+
+}   
+
+// Truncate
+const deleteAllRows = async opt => {
+    opt.method = 'DELETE';
+    opt.headers = {
+        'X-CSRF-TOKEN': document.querySelector("meta[name='csrf-token']").content
+    }
+    let params = {};
+    let url = `${window.location.href}/truncate`;
+
+    if(!checkAll.checked && selectedRows.length === 0) return;
+
+    if(checkAll.checked)
+    {
+        params = {};
+        selectedRows = [];
+        params.rows='all';
+        url += '?' + new URLSearchParams(params); 
+    }
+    
+    url = new URL(url);
+
+    return await getData(url.href, opt);
 }

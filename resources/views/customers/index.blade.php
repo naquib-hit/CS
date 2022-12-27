@@ -24,7 +24,7 @@
 <div class="row h-100">
     <div class="col-12 col-lg-8">
         <div class="card h-100">
-            <div class="card-body mx-0 px-0 pt-3 pb-0 h-100">
+            <div class="card-body position-relative mx-0 px-0 pt-3 pb-0 h-100">
                 <div class="row ">
                     <div class="col-12 px-4">
                         <div class="btn-group btn-group-sm btn-group-primary">
@@ -32,14 +32,14 @@
                                 <i class="fas fa-plus-circle font-reset"></i>&nbsp;
                                 {{__('template.toolbar.add')}}
                             </a>
-                            <button type="button" class="btn btn-primary">
+                            <button type="button" class="btn btn-primary" id="delete-all">
                                 <i class="fas fa-trash font-reset"></i>&nbsp;
                                 {{__('template.toolbar.delete_all')}}
                             </button>
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive">
+                <div class="table-responsive position-relative">
                     <table id="tbl-main" class="table rounded-lg">
                         <thead class="border-bottom bg-warning text-white">
                             <tr>
@@ -56,21 +56,51 @@
                                 <th class="ps-1">{{__("customer.table.option")}}</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                            @foreach ($customers as $customer)
+                            <tr data-id="{{ $customer->id}}">
+                                <td class="ps-1">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input check-row" id="row_{{ $customer->id }}" name="row[]" value="{{ $customer->id }}">
+                                        <label for="row_{{ $customer->id }}" class="form-check-label"></label>
+                                    </div>
+                                </td>
+                                <td data-name="id" class="d-none">{{ $customer->id }}</td>
+                                <td data-name="customer_name" class="ps-1">{{ $customer->customer_name }}</td>
+                                <td data-name="customer_email" class="ps-1">{{ $customer->customer_email }}</td>
+                                <td data-name="customer_phone" class="ps-1">{{ $customer->customer_phone}}</td>
+                                <td class="ps-1">
+                                    <span class="d-flex flex-nowrap flex-grow-0 align-items-center">
+                                        <a type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="http://localhost:8000/customers/23/edit">
+                                            <i class="fas fa-edit font-reset"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-danger btn-circle p-0 m-0 ms-1 delete_data" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="deleteConfirmation(event)">
+                                            <i class="fas fa-trash font-reset"></i>
+                                        </button>
+                                    </span>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
+                    <div class="position-absolute top-50 start-50 translate-middle bg-dark opacity-10 z-3" style="height: 13rem;width: 13rem">
+                        <div class="w-100 h-100 d-flex flex-nowrap justify-content-center align-items-center">
+                            <span class="bg-white" >
+    
+                            </span> 
+                        </div>
+                    </div>
                 </div>
                 <div class="row px-4 py-1 position-relative bottom-0 w-100">
                     <div class="col-12 d-flex flex-nowrap justify-content-end align-items-end">
                         <div class="d-flex flex-nowrap">
-                            <button type="button" class="btn btn-sm btn-primary btn-circle" id="previous-page">
+                            <a type="button" href="{{ $customers->previousPageUrl() }}" class="btn btn-sm @if($customers->onFirstPage()) btn-secondary @else btn-primary @endif btn-circle" 
+                                id="previous-page">
                                 <i class="fas fa-arrow-left font-reset"></i>
-                            </button>
-                            <div class="px-1">
-
-                            </div>
-                            <button type="button" class="btn btn-sm btn-primary btn-circle" id="next-page">
+                            </a>
+                            <a type="button" href="{{ $customers->nextPageUrl() }}" class="btn btn-sm btn-primary btn-circle" id="next-page">
                                 <i class="fas fa-arrow-right font-reset"></i>
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -83,32 +113,33 @@
                 <h4 class="mb-0">Filter</h4>
             </div>
             <div class="card-body">
-                <span class="input-group input-group-dynamic">
-                    <label class="form-label">{{ __('customer.filter.fields.name') }} </label>
-                    <input type="text" class="form-control" name="s_customer_name" value="{{ old('s_customer_name') }}" />
-                </span>
-                <span class="input-group input-group-dynamic mt-3">
-                    <label class="form-label">{{ __('customer.filter.fields.email') }} </label>
-                    <input type="text" class="form-control" name="s_customer_email" value="{{ old('s_customer_email') }}" />
-                </span>
-                <span class="input-group input-group-dynamic mt-3">
-                    <label class="form-label">{{ __('customer.filter.fields.phone') }} </label>
-                    <input type="text" class="form-control" name="s_customer_phone" value="{{ old('s_customer_phone') }}" />
-                </span>
-                
-                </div>
-                
-                <span class="mt-5 d-flex flex-nowrap justify-content-end w-100 px-3">
-                    <button type="button" class="btn btn-secondary" id="reset-search">
-                        <i class="fas fa-redo"></i>
-                        {{ __('template.form.reset') }}
-                    </button>
-                    <button type="button" class="btn btn-primary ms-1" id="btn-search">
-                        <i class="fas fa-search"></i>
-                        {{ __('template.form.search') }} 
-                    </button>
-                </span>
-               
+                <form name="search-form" action="{{ route('customers.index') }}">
+                    <span class="input-group input-group-dynamic">
+                        <label class="form-label">{{ __('customer.filter.fields.name') }} </label>
+                        <input type="text" class="form-control" name="s_customer_name" value="{{ old('s_customer_name') }}" />
+                    </span>
+                    <span class="input-group input-group-dynamic mt-3">
+                        <label class="form-label">{{ __('customer.filter.fields.email') }} </label>
+                        <input type="text" class="form-control" name="s_customer_email" value="{{ old('s_customer_email') }}" />
+                    </span>
+                    <span class="input-group input-group-dynamic mt-3">
+                        <label class="form-label">{{ __('customer.filter.fields.phone') }} </label>
+                        <input type="text" class="form-control" name="s_customer_phone" value="{{ old('s_customer_phone') }}" />
+                    </span>
+                    
+                    </div>
+                    
+                    <span class="mt-5 d-flex flex-nowrap justify-content-end w-100 px-3">
+                        <button type="reset" class="btn btn-secondary" id="reset-search">
+                            <i class="fas fa-redo"></i>
+                            {{ __('template.form.reset') }}
+                        </button>
+                        <button type="submit" class="btn btn-primary ms-1" id="btn-search">
+                            <i class="fas fa-search"></i>
+                            {{ __('template.form.search') }} 
+                        </button>
+                    </span>
+                </form>
             </div>           
         </div>
         

@@ -16,7 +16,22 @@ class CustomerController extends Controller
     public function index()
     {
         //
-        return view('customers.index');
+        try
+        {
+            $itemsPerPage = 6;
+            $pages = floor(Customer::count() / $itemsPerPage);
+            $customers = Customer::orderBy('id', 'desc')->orderBy('created_at', 'desc');
+    
+            $customers = $customers->cursorPaginate($itemsPerPage)->withQueryString();
+    
+            $customers->appends(['total_pages' => $pages]);
+
+            return view('customers.index', compact('customers', 'customers'));
+        }
+        catch(\Exception $e)
+        {
+            Log::error($e->getMessage());
+        }
     }
 
     /**
@@ -133,5 +148,24 @@ class CustomerController extends Controller
         $customers->appends(['total_pages' => $pages]);
         
         return $customers;
+    }
+
+      /**
+     * Mass Delete Alias.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function clean()
+    {
+        //
+        try
+        {
+            return response()->json(['success' => true, 'message' =>  __('validation.success.delete'), 'data' => $_GET], 200, ['Content-Type' => 'application/json']);
+        }
+        catch(\Exception $e)
+        {
+            Log::error($e->getMessage());
+            return response()->json(['success' => false, 'message' =>  __('validation.success.delete')], 422, ['Content-Type' => 'application/json']);
+        }
     }
 }
