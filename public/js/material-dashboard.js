@@ -60,7 +60,7 @@ function setAttributes(el, options) {
 
 // adding on inputs attributes for calling the focused and defocused functions
 if (document.querySelectorAll('.input-group').length != 0) {
-  var allInputs = document.querySelectorAll('input.form-control');
+  var allInputs = document.querySelectorAll('input.form-control, textarea.form-control');
   allInputs.forEach(el => {
 
     setAttributes(el, {

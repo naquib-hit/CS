@@ -51,9 +51,9 @@
                         @error('customer_phone')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
-                        <span class="input-group input-group-static @error('customer_address') is-invalid @enderror mt-4">
+                        <span class="input-group input-group-outline @error('customer_address') is-invalid @enderror mt-4">
                             <label class="form-label">{{ __('customer.form.fields.address') }} </label>
-                            <textarea  class="form-control" name="customer_address" >
+                            <textarea  class="form-control" name="customer_address" row="4">
                                 {{ old('customer_address') ?? $customer->customer_address }}
                             </textarea>
                         </span>

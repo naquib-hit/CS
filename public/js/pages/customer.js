@@ -177,6 +177,11 @@ const filterData = () => {
 
 }   
 
+// UNC
+const tableLoading = () => {
+    
+}
+
 // Truncate
 const deleteAllRows = async opt => {
     opt.method = 'DELETE';
