@@ -83,11 +83,11 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="position-absolute top-50 start-50 translate-middle bg-dark opacity-10 z-3" style="height: 13rem;width: 13rem">
+                    <div class="position-absolute top-50 start-50 translate-middle bg-white opacity-10 z-3 rounded shadow" style="height: 6rem;width: 12rem">
                         <div class="w-100 h-100 d-flex flex-nowrap justify-content-center align-items-center">
-                            <span class="bg-white" >
-    
-                            </span> 
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
