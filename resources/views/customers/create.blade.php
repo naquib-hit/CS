@@ -9,6 +9,8 @@
         font-size: var(--fas-custom-size) !important;
     }
 </style>
+
+<link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/sweetalert2.min.css') }}"/>
 @endsection
 
 
@@ -28,7 +30,7 @@
                     </div>
                   </div>
                 <div class="card-body">
-                    <form action="{{ route('customers.store') }}" class="d-flex flex-column" method="post">
+                    <form name="form-input" action="{{ route('customers.store') }}" class="d-flex flex-column" method="post">
                         @csrf
                         <span class="input-group input-group-outline @error('customer_name') is-invalid @enderror">
                             <label class="form-label">{{ __('customer.form.fields.name') }} <span class="text-danger">*</span></label>
@@ -64,7 +66,7 @@
                             </a>
                             <span class="ms-auto">
                             <button type="reset" class="btn btn-secondary"><i class="fas fa-redo"></i>&nbsp;{{ __('template.form.reset') }}</button>
-                            <button type="submit" class="btn btn-primary ms-1"><i class="fas fa-save"></i>&nbsp;{{ __('template.form.save') }}</button>
+                            <button type="submit" id="btn-submit" class="btn btn-primary ms-1"><i class="fas fa-save"></i>&nbsp;{{ __('template.form.save') }}</button>
                             </span>
                         </span>
                     </form>
@@ -72,4 +74,27 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+<script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
+
+<script>
+    const form = document.forms['form-input'];
+
+    const loading = () => {
+        Swal.fire({
+            html: 	'<div class="d-flex flex-column align-items-center">'
+            + '<span class="spinner-border text-primary"></span>'
+            + '<h3 class="mt-2">Loading...</h3>'
+            + '<div>',
+            showConfirmButton: false,
+            width: '14rem'
+        });
+    }
+
+    document.getElementById('btn-submit').addEventListener('click', e => {
+        loading();
+    });
+</script>
 @endsection

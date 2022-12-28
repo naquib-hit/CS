@@ -18,12 +18,16 @@ Auth::routes([
     'registration' => false
 ]);
 
-// Product
-Route::get('products/get', [ProductController::class, 'get'])->name('products.get');
-Route::resource('products', ProductController::class);
-// Customers
-Route::delete('customers/truncate', [CustomerController::class, 'clean'])->name('customers.truncate');
-Route::get('customers/get', [CustomerController::class, 'get'])->name('customers.get');
-Route::resource('customers', CustomerController::class);
+Route::middleware(['auth'])->group(function () {
+    // Product
+    Route::get('products/get', [ProductController::class, 'get'])->name('products.get');
+    Route::resource('products', ProductController::class);
+    // Customers
+    Route::delete('customers/truncate', [CustomerController::class, 'clean'])->name('customers.truncate');
+    Route::get('customers/get', [CustomerController::class, 'get'])->name('customers.get');
+    Route::resource('customers', CustomerController::class);
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+});
+

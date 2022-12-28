@@ -11,7 +11,7 @@ let selectedRows = [];
 const getData = async (url, options) => {
     try
     {
-        let opt = options ?? {};
+        let opt = options ? options : {};
         let req = await fetch(url, opt);
         const j = await req.json();
 
@@ -53,7 +53,15 @@ const getData = async (url, options) => {
         .catch(err => console.log(err));
     });
 
-})()
+    document.getElementById('previous-page').addEventListener('click', e => {
+        document.getElementById('loading-table').classList.remove('d-none');
+    });
+
+    document.getElementById('next-page').addEventListener('click', e => {
+        document.getElementById('loading-table').classList.remove('d-none');
+    });
+
+})();
 
 
 const setTable = async data => {
@@ -132,7 +140,7 @@ const deleteConfirmation = e => {
         })
         .catch(err => {
             console.log(err);
-        }) 
+        })
     });
 }
 

@@ -9,7 +9,7 @@ const checkAll = document.getElementById('check-all');
 const getData = async options => {
     try
     {
-        let opt = options ?? {};
+        let opt = options ? options : {};
         let req = await fetch(`${window.location.origin}/products/get`, opt);
         const j = await req.json();
 
@@ -30,7 +30,13 @@ const getData = async options => {
     // check all table
     checkAll.addEventListener('click', checkAllRows);
     
+    document.getElementById('previous-page').addEventListener('click', e => {
+        document.getElementById('loading-table').classList.remove('d-none');
+    });
 
+    document.getElementById('next-page').addEventListener('click', e => {
+        document.getElementById('loading-table').classList.remove('d-none');
+    });
 })()
 
 const intToCurrency = angka => {

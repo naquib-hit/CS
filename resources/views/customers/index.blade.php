@@ -71,7 +71,7 @@
                                 <td data-name="customer_phone" class="ps-1">{{ $customer->customer_phone}}</td>
                                 <td class="ps-1">
                                     <span class="d-flex flex-nowrap flex-grow-0 align-items-center">
-                                        <a type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="http://localhost:8000/customers/23/edit">
+                                        <a type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="{{ route('customers.edit', ['customer' => $customer]) }}">
                                             <i class="fas fa-edit font-reset"></i>
                                         </a>
                                         <button type="button" class="btn btn-sm btn-danger btn-circle p-0 m-0 ms-1 delete_data" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="deleteConfirmation(event)">
@@ -83,7 +83,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="position-absolute top-50 start-50 translate-middle bg-white opacity-10 z-3 rounded shadow" style="height: 6rem;width: 12rem">
+                    <div id="loading-table" class="position-absolute top-50 start-50 translate-middle bg-white opacity-10 z-3 rounded shadow d-none" style="height: 6rem;width: 12rem">
                         <div class="w-100 h-100 d-flex flex-nowrap justify-content-center align-items-center">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Loading...</span>

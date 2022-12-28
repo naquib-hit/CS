@@ -107,6 +107,19 @@ class CustomerController extends Controller
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
         //
+        try
+        {
+            $valid = $request->validated();
+            $customer->update($valid);
+
+            return redirect()->route('customers.index')->with('success', __('validation.success.update'));
+        }
+        catch(\Exception $e)
+        {
+            Log::error($e->getMessage());
+            return redirect()->back()->withErrors(__('validation.failed.update'))->withInput();
+        }
+        
     }
 
     /**

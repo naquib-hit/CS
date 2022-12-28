@@ -45,26 +45,27 @@
                 </div>
                 <div class="card-body" >
                   <form role="form" method="POST" action="{{ route('login') }}" class="text-start">
+                    @csrf
                     <div class="input-group input-group-outline my-3 @error('username') is-invalid @enderror">
                       <label class="form-label">{{ __('Username') }}</label>
-                      <input type="text" class="form-control ">
+                      <input type="text" class="form-control" name="username">
                     </div>
                     @error('username')  
                       <small class="text-danger">{{ $message }}</small>
                     @enderror
                     <div class="input-group input-group-outline mb-3 @error('password') is-invalid @enderror">
                       <label class="form-label">{{ __('Password') }}</label>
-                      <input type="password" class="form-control ">
+                      <input type="password" class="form-control" name="password">
                     </div>
                     @error('password')  
                       <small class="text-danger">{{ $message }}</small>
                     @enderror
                     <div class="form-check form-switch d-flex align-items-center mb-3">
-                      <input class="form-check-input" type="checkbox" id="rememberMe" >
+                      <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe">
                       <label class="form-check-label mb-0 ms-3" for="rememberMe">{{ __('Remember me') }}</label>
                     </div>
                     <div class="text-center">
-                      <button type="button" class="btn bg-gradient-primary w-100 my-4 mb-2">Sign in</button>
+                      <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Sign in</button>
                     </div>
                     
                   </form>
