@@ -53,7 +53,7 @@
                 <div class="row px-4 position-absolute bottom-0 w-100">
                     <div class="col-12 d-flex flex-nowrap justify-content-end align-items-center">
                         <span class="d-flex flex-nowrap">
-                            <button type="button" class="btn btn-sm btn-primary btn-circle">
+                            <button type="button" class="btn btn-sm btn-primary btn-circle" >
                                 <i class="fas fa-arrow-left font-reset"></i>
                             </button>
                             <span></span>
