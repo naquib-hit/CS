@@ -57,7 +57,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($customers as $customer)
+                            {{-- @foreach ($customers as $customer)
                             <tr data-id="{{ $customer->id}}">
                                 <td class="ps-1">
                                     <div class="form-check">
@@ -80,7 +80,7 @@
                                     </span>
                                 </td>
                             </tr>
-                            @endforeach
+                            @endforeach --}}
                         </tbody>
                     </table>
                     <div id="loading-table" class="position-absolute top-50 start-50 translate-middle bg-white opacity-10 z-3 rounded shadow d-none" style="height: 6rem;width: 12rem">
@@ -92,16 +92,18 @@
                     </div>
                 </div>
                 <div class="row px-4 py-1 position-relative bottom-0 w-100">
-                    <div class="col-12 d-flex flex-nowrap justify-content-end align-items-end">
-                        <div class="d-flex flex-nowrap">
-                            <a type="button" href="{{ $customers->previousPageUrl() }}" class="btn btn-sm @if($customers->onFirstPage()) btn-secondary @else btn-primary @endif btn-circle" 
-                                id="previous-page">
-                                <i class="fas fa-arrow-left font-reset"></i>
-                            </a>
-                            <a type="button" href="{{ $customers->nextPageUrl() }}" class="btn btn-sm btn-primary btn-circle" id="next-page">
-                                <i class="fas fa-arrow-right font-reset"></i>
-                            </a>
+                    <div class="col-12 d-flex flex-nowrap justify-content-end align-items-center">
+                        <a type="button" href="javascript:void(0);" class="btn btn-sm btn-primary mb-0 btn-circle" id="previous-page">
+                            <i class="fas fa-arrow-left font-reset"></i>
+                        </a>
+                        <div class="px-2 d-flex flex-nowrap align-items-baseline">
+                            <span id="page_no"></span>
+                            <span>/</span>
+                            <span id="total_pages"></span>
                         </div>
+                        <a type="button" href="javascript:void(0);" class="btn btn-sm btn-primary mb-0 btn-circle" id="next-page">
+                            <i class="fas fa-arrow-right font-reset"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -113,7 +115,7 @@
                 <h4 class="mb-0">Filter</h4>
             </div>
             <div class="card-body">
-                <form name="search-form" action="{{ route('customers.index') }}">
+                <form name="search-form">
                     <span class="input-group input-group-dynamic">
                         <label class="form-label">{{ __('customer.filter.fields.name') }} </label>
                         <input type="text" class="form-control" name="s_customer_name" value="{{ old('s_customer_name') }}" />

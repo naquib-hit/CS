@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use Illuminate\Http\Request as Request;
+use Illuminate\Support\Facades\Log as Log;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 
@@ -18,15 +20,8 @@ class CustomerController extends Controller
         //
         try
         {
-            $itemsPerPage = 6;
-            $pages = floor(Customer::count() / $itemsPerPage);
-            $customers = Customer::orderBy('id', 'desc')->orderBy('created_at', 'desc');
-    
-            $customers = $customers->cursorPaginate($itemsPerPage)->withQueryString();
-    
-            $customers->appends(['total_pages' => $pages]);
 
-            return view('customers.index', compact('customers', 'customers'));
+            return view('customers.index');
         }
         catch(\Exception $e)
         {
@@ -149,14 +144,17 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function get()
+    public function get(Request $req)
     {
         // Paging parameters
         $itemsPerPage = 6;
         $pages = floor(Customer::count() / $itemsPerPage);
-        $customers = Customer::orderBy('id', 'desc')->orderBy('created_at', 'desc');
+        $customers = Customer::query()->orderBy('id', 'desc')->orderBy('created_at', 'desc');
 
-        $customers = $customers->cursorPaginate($itemsPerPage)->withQueryString();
+        if(!empty($req->input('s_customer_name')))
+            $customers = $customers->whereRaw('LOWER(customer_name) LIKE \'%'.strtolower($req->input('s_customer_name')).'%\'');
+
+        $customers = $customers->paginate($itemsPerPage)->withQueryString();
 
         $customers->appends(['total_pages' => $pages]);
         

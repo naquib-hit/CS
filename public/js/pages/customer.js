@@ -4,9 +4,13 @@ const table = document.getElementById('tbl-main');
 const tbody = table.tBodies[0];
 const lang = JSON.parse(document.getElementById('lang').textContent);
 const checkAll = document.getElementById('check-all');
-const deleteAllBtn = document.getElementById('delete-all');
-let selectedRows = [];
+const deleteAllBtn = document.getElementById('delete-all'),
+      prevPage = document.getElementById('previous-page'),
+      nextPage = document.getElementById('next-page');
 
+let selectedRows = [],
+    data = null,
+    fetchUrl = `${window.location.origin}/customers/get`;
 // INIT DATA
 const getData = async (url, options) => {
     try
@@ -28,9 +32,10 @@ const getData = async (url, options) => {
 
 (async () => {
 
-    const data = await getData(`${window.location.origin}/customers/get`);
+    data = await getData(fetchUrl);
     
-    //await setTable(data);
+    await setPagination(data);
+    await setTable(data);
 
     // check all table
     checkAll.addEventListener('click', checkAllRows);
@@ -39,33 +44,47 @@ const getData = async (url, options) => {
     // seacrh
     const frmSearch = document.forms['search-form'];
 
-    frmSearch.addEventListener('submit', e => {
-        e.preventDefault();
-
-        let frm = new FormData(e.target);
-        let obj = [...frm.entries()].reduce((prev, curr) => Object.assign(prev, {[curr[0]]:curr[1]}), {});
-        let params = new URLSearchParams(obj);
-
-        getData(`${window.location.origin}/customers/get?` + params)
-        .then(res => {
-            console.log(res);
-        })
-        .catch(err => console.log(err));
+    frmSearch.addEventListener('submit', async e => {
+        await filterData(e);
     });
 
-    document.getElementById('previous-page').addEventListener('click', e => {
+    frmSearch.addEventListener('reset', async e => {
+        fetchUrl = `${window.location.origin}/customers/get`;
+        data = await getData(fetchUrl);
+        await setTable(data);
+    }); 
+
+    document.getElementById('previous-page').addEventListener('click', async e => {
+        if(data.prev_page_url === null) return; 
+
+        e.target.classList.remove('disabled');
         document.getElementById('loading-table').classList.remove('d-none');
+
+        data = await getData(data.prev_page_url);
+        await setTable(data);
+        await setPagination(data);
+
+        document.getElementById('loading-table').classList.add('d-none');
     });
 
-    document.getElementById('next-page').addEventListener('click', e => {
+    document.getElementById('next-page').addEventListener('click', async e => {
+        if(data.next_page_url === null) return; 
+
+        e.target.classList.remove('disabled');
         document.getElementById('loading-table').classList.remove('d-none');
+       
+        data = await getData(data.next_page_url);
+        await setTable(data);
+        await setPagination(data);
+
+        document.getElementById('loading-table').classList.add('d-none');
     });
 
 })();
 
 
 const setTable = async data => {
-
+    tbody.innerHTML = null;
     Array.from(data.data, item => {
         const row = tbody.insertRow();
         const keys = Object.keys(item);
@@ -109,6 +128,16 @@ const setTable = async data => {
                             `</span>`;
         cell_5.classList.add('ps-1');
     });
+}
+
+const setPagination = async data => {
+    var pageNo = document.getElementById('page_no'),
+        totalPage = document.getElementById('total_pages');
+
+    // Current Page
+    pageNo.innerText = data.current_page;
+    // Total Page
+    totalPage.innerText = data.last_page;
 }
 
 // Delete
@@ -181,8 +210,26 @@ const loading = () => {
 }
 
 // Filter
-const filterData = () => {
+const filterData = async e => {
+    e.preventDefault();
 
+    let frm = new FormData(e.target);
+    let obj = [...frm.entries()].reduce((prev, curr) => Object.assign(prev, {[curr[0]]:curr[1]}), {});
+    let params = new URLSearchParams(obj);
+
+    try 
+    {
+        fetchUrl = `${window.location.origin}/customers/get?` + params;
+        data = await getData(fetchUrl);
+        await setTable(data);
+    } 
+    catch (error) 
+    {
+        console.log(error);
+    }
+
+  
+    
 }   
 
 // UNC

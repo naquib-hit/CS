@@ -29,7 +29,7 @@ class UpdateCustomerRequest extends FormRequest
             //
             'customer_name'     => ['required', Rule::unique('customers')->whereNull('deleted_at')->where(fn ($q) => $q->where('id', '<>', $id))],
             'customer_email'    => ['required', 'email', Rule::unique('customers', 'customer_email')->whereNull('deleted_at')->where(fn ($q) => $q->where('id', '<>', $id))],
-            'customer_phone'    => ['required', 'regex:/^(\+62|62)?[\s-]?0?(8|9)[1-9]{1}\d{1}[\s-]?\d{4}[\s-]?\d{2,5}$/', Rule::unique('customers', 'customer_phone')->whereNull('deleted_at')->where(fn ($q) => $q->where('id', '<>', $id))],
+            'customer_phone'    => ['required', 'regex:/^(\(?\+62?\)|62)?[\s-]?0?\d{1}[0-9]{1}\d{1}[\s-]?\d{4}[\s-]?\d{2,5}$/', Rule::unique('customers', 'customer_phone')->whereNull('deleted_at')->where(fn ($q) => $q->where('id', '<>', $id))],
             'customer_address'  => ''
         ];
     }
