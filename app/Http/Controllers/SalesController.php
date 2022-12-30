@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sales;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreSalesRequest;
 use App\Http\Requests\UpdateSalesRequest;
 
@@ -16,6 +17,7 @@ class SalesController extends Controller
     public function index()
     {
         //
+        return view('sales.index');
     }
 
     /**
@@ -82,5 +84,20 @@ class SalesController extends Controller
     public function destroy(Sales $sales)
     {
         //
+    }
+
+    /**
+     * GET All Data.
+     *
+     * @param  \App\Models\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function get(Request $request)
+    {
+        //
+        $sales = Sales::query()->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+        $page = $sales->paginate(6)->withQueryString();
+
+        return $page;
     }
 }

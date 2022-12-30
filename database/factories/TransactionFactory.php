@@ -15,6 +15,10 @@ class TransactionFactory extends Factory
     {
         return [
             //
+            'transaction_code' => Str::random(16),
+            'sales_name'       => $this->faker->name(),
+            'start_date'       => $this->faker->dateTimeBetween('-3 months', '-2 days'),
+
         ];
     }
 }

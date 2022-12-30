@@ -61,6 +61,7 @@ function setAttributes(el, options) {
 // adding on inputs attributes for calling the focused and defocused functions
 if (document.querySelectorAll('.input-group').length != 0) {
   var allInputs = document.querySelectorAll('input.form-control, textarea.form-control');
+  
   allInputs.forEach(el => {
 
     setAttributes(el, {
@@ -70,6 +71,7 @@ if (document.querySelectorAll('.input-group').length != 0) {
 
     if(el.value)
         el.parentElement.classList.add('is-filled');
+      
   });
 }
 
@@ -544,7 +546,7 @@ function getEventTarget(e) {
 
 window.onload = function() {
   // Material Design Input function
-  var inputs = document.querySelectorAll('input');
+  var inputs = document.querySelectorAll('input, textarea');
 
   for (var i = 0; i < inputs.length; i++) {
     inputs[i].addEventListener('focus', function(e) {

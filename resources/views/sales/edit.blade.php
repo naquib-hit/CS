@@ -30,32 +30,35 @@
                     </div>
                   </div>
                 <div class="card-body">
-                    <form name="form-input" action="{{ route('customers.store') }}" class="d-flex flex-column" method="post">
+                    <form action="{{ route('customers.update', ['customer' => $customer]) }}" class="d-flex flex-column" method="post">
                         @csrf
+                        @method('PUT')
                         <span class="input-group input-group-outline @error('customer_name') is-invalid @enderror">
                             <label class="form-label">{{ __('customer.form.fields.name') }} <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="customer_name" value="{{ old('customer_name') }}" @error('customer_name') autofocus @enderror/>
+                            <input type="text" class="form-control" name="customer_name" value="{{ old('customer_name') ?? $customer->customer_name }}" @error('customer_name') autofocus @enderror/>
                         </span>
                         @error('customer_name')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                         <span class="input-group input-group-outline @error('customer_email') is-invalid @enderror mt-4">
                             <label class="form-label">{{ __('customer.form.fields.email') }} <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" name="customer_email" value="{{ old('customer_email') }}" @error('customer_email') autofocus @enderror/>
+                            <input type="email" class="form-control" name="customer_email" value="{{ old('customer_email') ?? $customer->customer_email }}" @error('customer_email') autofocus @enderror/>
                         </span>
                         @error('customer_email')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                         <span class="input-group input-group-outline @error('customer_phone') is-invalid @enderror mt-4">
                             <label class="form-label">{{ __('customer.form.fields.phone') }} <span class="text-danger">*</span></label>
-                            <input type="tel" class="form-control" name="customer_phone" value="{{ old('customer_phone') }}" @error('customer_phone') autofocus @enderror/>
+                            <input type="tel" class="form-control" name="customer_phone" value="{{ old('customer_phone') ?? $customer->customer_phone }}" @error('customer_phone') autofocus @enderror/>
                         </span>
                         @error('customer_phone')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                         <span class="input-group input-group-outline @error('customer_address') is-invalid @enderror mt-4">
                             <label class="form-label">{{ __('customer.form.fields.address') }} </label>
-                            <textarea  class="form-control" name="customer_address" value="{{ old('customer_address') }}"></textarea>
+                            <textarea  class="form-control" name="customer_address" row="4">
+                                {{ old('customer_address') ?? $customer->customer_address }}
+                            </textarea>
                         </span>
                         @error('customer_address')
                             <small class="text-danger">{{ $message }}</small>
@@ -80,7 +83,6 @@
 <script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
 
 <script>
-    const form = document.forms['form-input'];
 
     const loading = () => {
         Swal.fire({

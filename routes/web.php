@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{ ProductController, CustomerController };
+use App\Http\Controllers\{ ProductController, CustomerController, SalesController };
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +26,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('customers/truncate', [CustomerController::class, 'clean'])->name('customers.truncate');
     Route::get('customers/get', [CustomerController::class, 'get'])->name('customers.get');
     Route::resource('customers', CustomerController::class);
+    // Sales
+    //Route::delete('sales/truncate', [CustomerController::class, 'clean'])->name('customers.truncate');
+    Route::get('sales/get', [SalesController::class, 'get'])->name('sales.get');
+    Route::resource('sales', SalesController::class);
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

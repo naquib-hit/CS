@@ -147,16 +147,18 @@ class CustomerController extends Controller
     public function get(Request $req)
     {
         // Paging parameters
-        $itemsPerPage = 6;
-        $pages = floor(Customer::count() / $itemsPerPage);
         $customers = Customer::query()->orderBy('id', 'desc')->orderBy('created_at', 'desc');
 
         if(!empty($req->input('s_customer_name')))
-            $customers = $customers->whereRaw('LOWER(customer_name) LIKE \'%'.strtolower($req->input('s_customer_name')).'%\'');
+            $customers = $customers->whereRaw('LOWER(customer_name) LIKE ?', ['%'.strtolower($req->input('s_customer_name')).'%']);
+        if(!empty($req->input('s_customer_email')))
+            $customers = $customers->whereRaw('LOWER(customer_email) LIKE \'%'.strtolower($req->input('s_customer_email')).'%\'');
+        if(!empty($req->input('s_customer_phone')))
+            $customers = $customers->whereRaw('LOWER(customer_phone) LIKE \'%'.strtolower($req->input('s_customer_phone')).'%\'');
 
-        $customers = $customers->paginate($itemsPerPage)->withQueryString();
+        $customers = $customers->paginate(6)->withQueryString();
 
-        $customers->appends(['total_pages' => $pages]);
+        //$customers->appends(['total_pages' => $pages]);
         
         return $customers;
     }

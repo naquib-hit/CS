@@ -53,11 +53,11 @@
                 <div class="row px-4 position-absolute bottom-0 w-100">
                     <div class="col-12 d-flex flex-nowrap justify-content-end align-items-center">
                         <span class="d-flex flex-nowrap">
-                            <button type="button" class="btn btn-sm btn-primary btn-circle" >
+                            <button type="button" class="btn btn-sm btn-primary btn-circle" id="previous-page">
                                 <i class="fas fa-arrow-left font-reset"></i>
                             </button>
                             <span></span>
-                            <button type="button" class="btn btn-sm btn-primary btn-circle">
+                            <button type="button" class="btn btn-sm btn-primary btn-circle" id="next-page">
                                 <i class="fas fa-arrow-right font-reset"></i>
                             </button>
                         </span>
@@ -72,24 +72,24 @@
                 <h4 class="mb-0">Filter</h4>
             </div>
             <div class="card-body">
-                <span class="input-group input-group-static">
+                <span class="input-group input-group-dynamic">
                     <label class="form-label">{{ __('product.filter.fields.name') }} </label>
                     <input type="text" class="form-control" name="s_product_name" value="{{ old('product_name') }}" />
                 </span>
                 <div class="row mt-3">
                     <div class="col">
-                        <span class="input-group input-group-static">
+                        <span class="input-group input-group-dynamic">
                             <label class="form-label ms-0">{{ __('product.filter.fields.price_start') }} </label>
-                            <input type="number" min="0" class="form-control" name="s_product_price" value="{{ old('product_name') }}" />
+                            <input type="number" min="0" class="form-control" name="s_product_price[start]" value="{{ old('product_name') }}" />
                         </span>
                     </div>
                     <div class="col-1">
                         <span>-</span>
                     </div>
                     <div class="col">
-                        <span class="input-group input-group-static">
+                        <span class="input-group input-group-dynamic">
                             <label class="form-label ms-0">{{ __('product.filter.fields.price_end') }} </label>
-                            <input type="number" min="0" class="form-control" name="s_product_price" value="{{ old('product_name') }}" />
+                            <input type="number" min="0" class="form-control" name="s_product_price[end]" value="{{ old('product_name') }}" />
                         </span>
                     </div>
                 </div>
