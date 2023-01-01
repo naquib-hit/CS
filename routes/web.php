@@ -1,7 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{ ProductController, CustomerController, SalesController };
+use App\Http\Controllers\{ 
+                           ProductController, 
+                           CustomerController, 
+                           SalesController,
+                           TransactionController
+                         };
 
 /*
 |--------------------------------------------------------------------------
@@ -27,9 +32,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('customers/get', [CustomerController::class, 'get'])->name('customers.get');
     Route::resource('customers', CustomerController::class);
     // Sales
-    //Route::delete('sales/truncate', [CustomerController::class, 'clean'])->name('customers.truncate');
+    Route::delete('sales/truncate', [SalesController::class, 'clean'])->name('sales.truncate');
     Route::get('sales/get', [SalesController::class, 'get'])->name('sales.get');
     Route::resource('sales', SalesController::class);
+    // Transactions
+    Route::resource('transactions', TransactionController::class)->only(['index']);
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

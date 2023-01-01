@@ -152,9 +152,9 @@ class CustomerController extends Controller
         if(!empty($req->input('s_customer_name')))
             $customers = $customers->whereRaw('LOWER(customer_name) LIKE ?', ['%'.strtolower($req->input('s_customer_name')).'%']);
         if(!empty($req->input('s_customer_email')))
-            $customers = $customers->whereRaw('LOWER(customer_email) LIKE \'%'.strtolower($req->input('s_customer_email')).'%\'');
+            $customers = $customers->whereRaw('LOWER(customer_email) LIKE ?', ['%'.strtolower($req->input('s_customer_email')).'%']);
         if(!empty($req->input('s_customer_phone')))
-            $customers = $customers->whereRaw('LOWER(customer_phone) LIKE \'%'.strtolower($req->input('s_customer_phone')).'%\'');
+            $customers = $customers->whereRaw('LOWER(customer_phone) LIKE ?', ['%'.strtolower($req->input('s_customer_phone')).'%']);
 
         $customers = $customers->paginate(6)->withQueryString();
 
@@ -179,6 +179,10 @@ class CustomerController extends Controller
             {
                 if(!empty($req->input('customer_name')))
                     $customers = $customers->whereRaw('LOWER(customer_name) LIKE ?', ['%'.strtolower($req->input('customer_name')).'%']);
+                if(!empty($req->input('customer_email')))
+                    $customers = $customers->whereRaw('LOWER(customer_email) LIKE ?', ['%'.strtolower($req->input('customer_email')).'%']);
+                if(!empty($req->input('customer_phone')))
+                    $customers = $customers->whereRaw('LOWER(customer_phone) LIKE ?', ['%'.strtolower($req->input('customer_phone')).'%']);
             }
             else 
             {

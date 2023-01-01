@@ -109,7 +109,7 @@
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-4">
+    <div class="col-12 col-lg-4 offcanvas offcanvas-sm offcanvas-end" id="filter-panel">
         <div class="card">
             <div class="card-header mb-1 py-2">
                 <h4 class="mb-0">Filter</h4>

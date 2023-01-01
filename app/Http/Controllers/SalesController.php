@@ -108,9 +108,19 @@ class SalesController extends Controller
      * @param  \App\Models\Sales  $sales
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Sales $sales)
+    public function destroy($id)
     {
         //
+        try
+        {
+            Sales::destroy($id);
+            return redirect()->back()->with('success', __('validation.success.delete'));
+        }
+        catch(\Throwable $e)
+        {
+            Log::error($e->getMessage());
+            return redirect()->back()->with('error', __('validation.failed.delete'));
+        }
     }
 
     /**
@@ -126,9 +136,52 @@ class SalesController extends Controller
 
         if(!empty($request->input('s_sales_code')))
             $sales = $sales->whereRaw('LOWER(sales_code) LIKE ?', ['%'.strtolower($request->input('s_sales_code')).'%']);
+        if(!empty($request->input('s_sales_name')))
+            $sales = $sales->whereRaw('LOWER(sales_name) LIKE ?', ['%'.strtolower($request->input('s_sales_name')).'%']);
+        if(!empty($request->input('s_sales_email')))
+            $sales = $sales->whereRaw('LOWER(sales_email) LIKE ?', ['%'.strtolower($request->input('s_sales_email')).'%']);
 
         $page = $sales->paginate(6)->withQueryString();
 
         return $page;
+    }
+
+    /**
+     * Truncate Data.
+     *
+     * @param  \App\Models\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function clean(Request $request)
+    {
+        //
+        try
+        {
+            $sales = Sales::query();
+
+            if($request->input('rows') === 'all')
+            {
+                if(!empty($request->input('sales_code')))
+                    $sales = $sales->whereRaw('LOWER(sales_code) LIKE ?', ['%'.strtolower($request->input('sales_code')).'%']);
+                if(!empty($request->input('sales_name')))
+                    $sales = $sales->whereRaw('LOWER(sales_name) LIKE ?', ['%'.strtolower($request->input('sales_name')).'%']);
+                if(!empty($request->input('sales_email')))
+                    $sales = $sales->whereRaw('LOWER(sales_email) LIKE ?', ['%'.strtolower($request->input('sales_email')).'%']);
+            }
+            else
+            {
+                $sales = $sales->whereIn('id', explode(',', $request->input('rows')));
+            }
+
+            $sales->delete();
+
+            return redirect()->back()->with('success', __('validation.success.delete'));
+        }
+        catch(\Throwable $e)
+        {
+            Log::error($e->getMessage());
+            return redirect()->back()->with('error', __('validation.failed.delete'));
+        }
+        
     }
 }

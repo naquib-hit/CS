@@ -102,8 +102,6 @@ const deleteConfirmation = e => {
         if(!t.value)
             return;
 
-        
-
         fetch(`${window.location.origin}/products/${props.id}`, {
             method: 'DELETE',
             headers: {
@@ -142,4 +140,67 @@ const checkAllRows = () => {
             });
             break;
     }
+}
+
+// Truncate
+
+const deleteAllRows = async (e, opt) => {
+    opt.method = 'DELETE';
+    opt.headers = {
+        'X-CSRF-TOKEN': document.querySelector("meta[name='csrf-token']").content
+    }
+    let params = {};
+    let uri = `${window.location.href}/truncate`;
+
+    Swal.fire({
+        title: '<h4 class="text-warning">'+ lang.delete.confirm +'</h4>',
+        html: '<h5 class="text-warning">' +lang.delete.text+ '</h5>',
+        icon: 'warning',
+        confirmButtonText: lang.confirmation.yes,
+        showCancelButton: true,
+        cancelButtonText: lang.confirmation.no
+    })
+    .then(async t => {
+        if(!t.value) return;        
+        if(!checkAll.checked && selectedRows.length === 0) return;
+        
+        loading();
+
+        if(checkAll.checked)
+        {
+            params = {};
+            selectedRows = [];
+            params.rows='all';
+        }
+        else
+        {
+            params = {};
+            params.rows = selectedRows.join(',');
+        }
+    
+        const filter = Object.fromEntries((new URL(fetchUrl).searchParams).entries());
+    
+        if(filter.s_customer_name)
+            params.customer_name = filter.s_customer_name;
+        if(filter.s_customer_email)
+            params.customer_email = filter.s_customer_email;
+        if(filter.s_customer_phone)
+            params.customer_phone  = filter.s_customer_phone;
+    
+        uri += '?' + new URLSearchParams(params); 
+
+    
+        await getData(uri, opt)
+        .then(res => {
+           Swal.close();
+           window.location.reload();
+
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => {
+        console.log(err);
+    });
+    // Klo ga di check abort
+    
 }

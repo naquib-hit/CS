@@ -13,11 +13,13 @@
       <nav aria-label="breadcrumb">
         <h6 class="font-weight-bolder mb-0">{{ $title ?? 'Template'}}</h6>
       </nav>
-      <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+      <div class="mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
         <!-- UL -->
         <ul class="navbar-nav  justify-content-end">
 
-            
+            <li class="nav-item d-none-lg">
+              <a role="button" data-bs-toggle="offcanvas" data-bs-target="#filter-panel"><i class="fas fa-search"></i></a>
+            </li>
            
           </ul>
         <!-- END UL -->
