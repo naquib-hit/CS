@@ -7,6 +7,7 @@ return [
         'home'      => 'Beranda',
         'product'   => 'Produk / Layanan',
         'customer'  => 'Pelanggan',
+        'sales'     => 'Sales'
     ],
     // Toolbar
     'toolbar' => [

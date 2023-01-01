@@ -24,11 +24,13 @@ class UpdateSalesRequest extends FormRequest
      */
     public function rules()
     {
+        $uri = explode('/', $this->path());
+        $id = $uri[count($uri) - 1];
         return [
             //
-            'sales_code'    => ['required', Rule::unique('sales', 'sales_code')->whereNull('deleted_at')],
+            'sales_code'    => ['required', Rule::unique('sales', 'sales_code')->where(fn ($q) => $q->where('id', '<>', $id))],
             'sales_name'    => 'required',
-            'sales_email'   => ['required', Rule::unique('sales', 'sales_email')->whereNull('deleted_at')],
+            'sales_email'   => ['required', Rule::unique('sales', 'sales_email')->where(fn ($q) => $q->where('id', '<>', $id))->whereNull('deleted_at')],
         ];
     }
 }

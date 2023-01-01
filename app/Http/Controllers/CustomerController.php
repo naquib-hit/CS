@@ -168,17 +168,32 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function clean()
+    public function clean(Request $req)
     {
         //
         try
         {
-            return response()->json(['success' => true, 'message' =>  __('validation.success.delete'), 'data' => $_GET], 200, ['Content-Type' => 'application/json']);
+            $customers = Customer::query();
+
+            if($req->input('rows') === 'all') 
+            {
+                if(!empty($req->input('customer_name')))
+                    $customers = $customers->whereRaw('LOWER(customer_name) LIKE ?', ['%'.strtolower($req->input('customer_name')).'%']);
+            }
+            else 
+            {
+                $ids = explode(',', $req->input('rows'));
+                $customers = $customers->whereIn('id', $ids);
+            }    
+
+            $customers->delete();
+
+            return redirect()->back()->with('success' , __('validation.success.delete'));
         }
         catch(\Exception $e)
         {
             Log::error($e->getMessage());
-            return response()->json(['success' => false, 'message' =>  __('validation.success.delete')], 422, ['Content-Type' => 'application/json']);
+            return redirect()->back()->with('error' , __('validation.failed.delete'));       
         }
     }
 }

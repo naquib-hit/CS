@@ -6,7 +6,8 @@ return [
     'menu' => [
         'home'      => 'Home',
         'product'   => 'Products / Services',
-        'customer'  => 'Customer',
+        'customer'  => 'Customers',
+        'sales'     => 'Salesperson',
     ],
     // Toolbar
     'toolbar' => [

@@ -166,5 +166,17 @@
 </script>
 @endif
 
+@if(session()->has('error'))
+<script>
+    Swal.fire({
+        title: '<h4 class="text-danger">Error</h4>',
+        html:  '<h6 class="text-danger">{{ session('error') }}</h6>',
+        icon: 'error',
+        timer: 1500
+    });
+
+</script>
+@endif
+
 <script src="{{ asset('js/pages/customer.js') }}"></script>
 @endsection

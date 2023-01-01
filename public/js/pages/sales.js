@@ -44,9 +44,7 @@ const getData = async (url, options) => {
     // seacrh
     const frmSearch = document.forms['search-form'];
 
-    frmSearch.addEventListener('submit', async e => {
-        await filterData(e);
-    });
+    frmSearch.addEventListener('submit', async e => await filterData(e));
 
     frmSearch.addEventListener('reset', async e => {
         fetchUrl = `${window.location.origin}/sales/get`;
@@ -220,6 +218,7 @@ const filterData = async e => {
     try 
     {
         fetchUrl = `${window.location.origin}/sales/get?` + params;
+        console.log(fetchUrl);
         data = await getData(fetchUrl);
         await setTable(data);
     } 

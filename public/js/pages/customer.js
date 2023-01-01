@@ -40,17 +40,16 @@ const getData = async (url, options) => {
     // check all table
     checkAll.addEventListener('click', checkAllRows);
     // delete all table
-    deleteAllBtn.addEventListener('click', deleteAllRows);
+    deleteAllBtn.addEventListener('click', async e => deleteAllRows(e, {}));
     // seacrh
     const frmSearch = document.forms['search-form'];
 
-    frmSearch.addEventListener('submit', async e => {
-        await filterData(e);
-    });
+    frmSearch.addEventListener('submit', async e => await filterData(e));
 
     frmSearch.addEventListener('reset', async e => {
         fetchUrl = `${window.location.origin}/customers/get`;
         data = await getData(fetchUrl);
+        checkAll.checked = false;
         await setTable(data);
     }); 
 
@@ -62,8 +61,6 @@ const getData = async (url, options) => {
 
         data = await getData(data.prev_page_url);
         await setTable(data);
-        await setPagination(data);
-
         document.getElementById('loading-table').classList.add('d-none');
     });
 
@@ -75,8 +72,6 @@ const getData = async (url, options) => {
        
         data = await getData(data.next_page_url);
         await setTable(data);
-        await setPagination(data);
-
         document.getElementById('loading-table').classList.add('d-none');
     });
 
@@ -94,7 +89,7 @@ const setTable = async data => {
         // Column 1
         const cell_0 = row.insertCell(0);
         cell_0.innerHTML = `<div class="form-check">` +
-                                `<input type="checkbox" class="form-check-input check-row" id="row_${item.id}" name="row[]" value="${item.id}">` + 
+                                `<input type="checkbox" class="form-check-input check-row" id="row_${item.id}" name="row[]" value="${item.id}" onclick="checkRow(event)">` + 
                                 `<label for="row_${item.id}" class="form-check-label"></label>` +
                             `</div>`;
         cell_0.classList.add('ps-1');
@@ -128,6 +123,8 @@ const setTable = async data => {
                             `</span>`;
         cell_5.classList.add('ps-1');
     });
+
+    await setPagination(data);
 }
 
 const setPagination = async data => {
@@ -173,7 +170,7 @@ const deleteConfirmation = e => {
     });
 }
 
-// Check Rowss
+// Block Check Row
 const checkAllRows = () => {
 
     switch(checkAll.checked)
@@ -182,20 +179,35 @@ const checkAllRows = () => {
             Array.from([...tbody.rows], val => {
                 const cb = val.getElementsByClassName('check-row')[0];
                 cb.checked = true;
-                cb.readonly = true;
+                cb.disabled = 'disabled';
                 val.classList.add('bg-light');
             });
+            document.getElementById('next-page').classList.add('disabled');
+            document.getElementById('previous-page').classList.add('disabled');
             break;
         case false:
             Array.from([...tbody.rows], val => {
                 const cb = val.getElementsByClassName('check-row')[0];
                 cb.checked = false;
-                cb.readonly = false;
+                cb.disabled = false;
                 val.classList.remove('bg-light');
             });
+            document.getElementById('next-page').classList.remove('disabled');
+            document.getElementById('previous-page').classList.remove('disabled');
             break;
     }
 }
+
+const checkRow = e => {
+    e.stopPropagation();
+    if(e.target.checked)
+        selectedRows.push(e.target.value);
+    else 
+        selectedRows.splice(selectedRows.indexOf(e.target.value), 1);
+    
+    console.log(selectedRows);
+}
+// end block
 
 // Loading
 const loading = () => {
@@ -214,7 +226,7 @@ const filterData = async e => {
     e.preventDefault();
 
     let frm = new FormData(e.target);
-    let obj = [...frm.entries()].reduce((prev, curr) => Object.assign(prev, {[curr[0]]:curr[1]}), {});
+    let obj = Object.fromEntries(frm.entries());
     let params = new URLSearchParams(obj);
 
     try 
@@ -226,10 +238,7 @@ const filterData = async e => {
     catch (error) 
     {
         console.log(error);
-    }
-
-  
-    
+    }  
 }   
 
 // UNC
@@ -238,25 +247,64 @@ const tableLoading = () => {
 }
 
 // Truncate
-const deleteAllRows = async opt => {
+
+const deleteAllRows = async (e, opt) => {
     opt.method = 'DELETE';
     opt.headers = {
         'X-CSRF-TOKEN': document.querySelector("meta[name='csrf-token']").content
     }
     let params = {};
-    let url = `${window.location.href}/truncate`;
+    let uri = `${window.location.href}/truncate`;
 
-    if(!checkAll.checked && selectedRows.length === 0) return;
+    Swal.fire({
+        title: '<h4 class="text-warning">'+ lang.delete.confirm +'</h4>',
+        html: '<h5 class="text-warning">' +lang.delete.text+ '</h5>',
+        icon: 'warning',
+        confirmButtonText: lang.confirmation.yes,
+        showCancelButton: true,
+        cancelButtonText: lang.confirmation.no
+    })
+    .then(async t => {
+        if(!t.value) return;        
+        if(!checkAll.checked && selectedRows.length === 0) return;
+        
+        loading();
 
-    if(checkAll.checked)
-    {
-        params = {};
-        selectedRows = [];
-        params.rows='all';
-        url += '?' + new URLSearchParams(params); 
-    }
+        if(checkAll.checked)
+        {
+            params = {};
+            selectedRows = [];
+            params.rows='all';
+        }
+        else
+        {
+            params = {};
+            params.rows = selectedRows.join(',');
+        }
     
-    url = new URL(url);
+        const filter = Object.fromEntries((new URL(fetchUrl).searchParams).entries());
+    
+        if(filter.s_customer_name)
+            params.customer_name = filter.s_customer_name;
+        if(filter.s_customer_email)
+            params.customer_email = filter.s_customer_email;
+        if(filter.s_customer_phone)
+            params.customer_phone  = filter.s_customer_phone;
+    
+        uri += '?' + new URLSearchParams(params); 
 
-    return await getData(url.href, opt);
+    
+        await getData(uri, opt)
+        .then(res => {
+           Swal.close();
+           window.location.reload();
+
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => {
+        console.log(err);
+    });
+    // Klo ga di check abort
+    
 }

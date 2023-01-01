@@ -164,5 +164,5 @@
 </script>
 @endif
 
-<script src="{{ asset('js/pages/sales.js') }}"></script>
+<script src="{{ asset('js/pages/sales.min.js') }}"></script>
 @endsection

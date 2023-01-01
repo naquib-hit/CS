@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSalesRequest extends FormRequest
@@ -25,7 +26,7 @@ class StoreSalesRequest extends FormRequest
     {
         return [
             //
-            'sales_code'    => ['required', Rule::unique('sales', 'sales_code')->whereNull('deleted_at')],
+            'sales_code'    => ['required', Rule::unique('sales', 'sales_code')],
             'sales_name'    => 'required',
             'sales_email'   => ['required', Rule::unique('sales', 'sales_email')->whereNull('deleted_at')],
         ];

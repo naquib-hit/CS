@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Sales;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreSalesRequest;
 use App\Http\Requests\UpdateSalesRequest;
 
@@ -28,6 +29,7 @@ class SalesController extends Controller
     public function create()
     {
         //
+        return view('sales.create');
     }
 
     /**
@@ -39,6 +41,17 @@ class SalesController extends Controller
     public function store(StoreSalesRequest $request)
     {
         //
+        $valid = $request->validated();
+        try {
+            
+            Sales::create($request->validated());
+            return redirect()->route('sales.index')->with('success', __('validation.success.create'));
+        }
+        catch(\Exception $e)
+        {
+            Log::error($e->getMessage());
+            return redirect()->back()->with('error', __('validation.failed.create'));
+        }
     }
 
     /**
@@ -58,9 +71,11 @@ class SalesController extends Controller
      * @param  \App\Models\Sales  $sales
      * @return \Illuminate\Http\Response
      */
-    public function edit(Sales $sales)
+    public function edit($id)
     {
         //
+        $sales = Sales::find($id);
+        return view('sales.edit', ['sale' => $sales]);
     }
 
     /**
@@ -70,9 +85,21 @@ class SalesController extends Controller
      * @param  \App\Models\Sales  $sales
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateSalesRequest $request, Sales $sales)
+    public function update(UpdateSalesRequest $request, $id)
     {
         //
+        try
+        {
+            $sales = Sales::find($id);
+            $sales->update($request->validated());
+            return redirect()->route('sales.index')->with('success', __('validation.success.update'));
+        }
+        catch(\Throwable $e)
+        {
+            Log::error(''.$e);
+            return redirect()->back()->with('error', __('validation.failed.update'));
+        }
+        
     }
 
     /**
@@ -96,6 +123,10 @@ class SalesController extends Controller
     {
         //
         $sales = Sales::query()->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+
+        if(!empty($request->input('s_sales_code')))
+            $sales = $sales->whereRaw('LOWER(sales_code) LIKE ?', ['%'.strtolower($request->input('s_sales_code')).'%']);
+
         $page = $sales->paginate(6)->withQueryString();
 
         return $page;
