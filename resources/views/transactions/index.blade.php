@@ -31,11 +31,17 @@
                 </div>
                 <div class="table-responsive">
                     
-                    <table id="tbl-main" class="table table-sm table-striped">
+                    <table id="tbl-main" class="table table-striped">
                         <thead class="bg-danger text-white">
                             <tr>
+                                <th class="d-none">ID</th>
                                 <th>{{ __('transaction.table.code') }}</th>
+                                <th class="d-none">Customer ID</th>
                                 <th>{{ __('transaction.table.customer') }}</th>
+                                <th class="d-none">product ID</th>
+                                <th>{{ __('transaction.table.product') }}</th>
+                                <th class="d-none"></th>
+                                <th>{{ __('transaction.table.sales') }}</th>
                                 <th>{{ __('transaction.table.start_date') }}</th>
                                 <th>{{ __('transaction.table.expiration_date') }}</th>
                                 <th>{{ __('transaction.table.opt') }}</th>
@@ -43,11 +49,16 @@
                         </thead>
                         <tbody></tbody>
                     </table>
-
+                    <div id="loading-table" class="position-absolute top-50 start-50 translate-middle bg-white opacity-10 z-3 rounded shadow d-none" style="height: 6rem;width: 12rem">
+                        <div class="w-100 h-100 d-flex flex-nowrap justify-content-center align-items-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="card-footer">
-                <div class="col-12 d-flex flex-nowrap justify-content-end align-items-center">
+                
+                <div class="col-12 px-3 mt-2 d-flex flex-nowrap justify-content-end align-items-center">
                     <a type="button" href="javascript:void(0);" class="btn btn-sm btn-primary mb-0 btn-circle" id="previous-page">
                         <i class="fas fa-arrow-left font-reset"></i>
                     </a>
@@ -64,5 +75,10 @@
         </div>
 
     </div>
+    
 </div>
+@endsection
+
+@section('js')
+<script src="{{ asset('js/pages/transaction.js') }}"></script>
 @endsection

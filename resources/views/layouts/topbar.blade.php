@@ -17,7 +17,7 @@
         <!-- UL -->
         <ul class="navbar-nav  justify-content-end">
 
-            <li class="nav-item d-none-lg">
+            <li class="nav-item d-lg-none">
               <a role="button" data-bs-toggle="offcanvas" data-bs-target="#filter-panel"><i class="fas fa-search"></i></a>
             </li>
            

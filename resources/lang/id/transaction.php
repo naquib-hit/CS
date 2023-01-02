@@ -10,7 +10,9 @@ return [
 
     'title'    => 'Transaksi Invoice',
     'table'    => [
-        'customer'          => 'Nama Pelanggan',
+        'customer'          => 'Pelanggan',
+        'product'           => 'Produk',
+        'sales'             => 'Sales',
         'code'              => 'No. Transaksi',
         'start_date'        => 'Tanggal Pelunasan',
         'expiration_date'   => 'Kadaluarsa',

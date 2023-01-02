@@ -27,7 +27,7 @@
   <style>
     @font-face {
       font-family: 'Roboto';
-      src: url("{{ asset('fonts/Roboto/Roboto-Light.ttf') }}") format('truetype');
+      src: url("{{ asset('fonts/Roboto/Roboto-Medium.ttf') }}") format('truetype');
       font-style: normal;
       font-weight: normal;
     }
@@ -101,7 +101,7 @@
     const progressBar = document.getElementById('progress-bar');
 </script>
 
-  <script src="{{ asset('js/material-dashboard.js') }}"></script>
+  <script src="{{ asset('js/material-dashboard.min.js') }}"></script>
 
   <script id="lang" type="application/json">
     {

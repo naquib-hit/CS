@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
 
@@ -69,7 +71,7 @@ class TransactionController extends Controller
      * @param  \App\Models\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTransactionRequest $request, Transaction $transaction)
+    public function update(UpdateTransactionRequest $request, Transaction $transaction): Response
     {
         //
     }
@@ -83,5 +85,20 @@ class TransactionController extends Controller
     public function destroy(Transaction $transaction)
     {
         //
+    }
+
+    /**
+     * .
+     *
+     * @param  \App\Models\Transaction  $transaction
+     * @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function get(Request $req): \Illuminate\Pagination\LengthAwarePaginator
+    {
+        //
+        $trans = Transaction::getAll();
+        $page = $trans->paginate(6)->withQueryString();
+
+        return $page;
     }
 }

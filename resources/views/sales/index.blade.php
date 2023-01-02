@@ -110,7 +110,7 @@
         </div>
     </div>
     <div class="col-12 col-lg-4 offcanvas-sm offcanvas-end" id="filter-panel">
-        <button type="button" class="btn-close btn-close-white d-lg-none mt-1 mt-lg-0" data-bs-dismiss="filter-panel" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-white d-lg-none mt-1 mt-lg-0" data-bs-dismiss="offcanvas" data-bs-target="#filter-panel" aria-label="Close"></button>
         <div class="card mt-4 mt-lg-0">
             <div class="card-header mb-1 py-2">
                 <h4 class="mb-0">Filter</h4>

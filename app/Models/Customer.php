@@ -12,4 +12,9 @@ class Customer extends Model
 
     protected $fillable = ['customer_name', 'customer_address', 'customer_email', 'customer_phone'];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function transactions() 
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

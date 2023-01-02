@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('sales/get', [SalesController::class, 'get'])->name('sales.get');
     Route::resource('sales', SalesController::class);
     // Transactions
+    Route::get('transactions/get', [TransactionController::class, 'get'])->name('transactions.get');
     Route::resource('transactions', TransactionController::class)->only(['index']);
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
