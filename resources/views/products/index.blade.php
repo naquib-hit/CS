@@ -31,7 +31,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive">
+                <div class="table-responsive position-relative">
                     <table id="tbl-main" class="table rounded-lg">
                         <thead class="border-bottom bg-warning text-white">
                             <tr>
@@ -49,18 +49,27 @@
                         </thead>
                         <tbody></tbody>
                     </table>
+                    <div id="loading-table" class="position-absolute top-50 start-50 translate-middle bg-white opacity-10 z-3 rounded shadow d-none" style="height: 6rem;width: 12rem">
+                        <div class="w-100 h-100 d-flex flex-nowrap justify-content-center align-items-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="row px-4 position-absolute bottom-0 w-100">
+                <div class="row px-4">
                     <div class="col-12 d-flex flex-nowrap justify-content-end align-items-center">
-                        <span class="d-flex flex-nowrap">
-                            <button type="button" class="btn btn-sm btn-primary btn-circle" id="previous-page">
-                                <i class="fas fa-arrow-left font-reset"></i>
-                            </button>
-                            <span></span>
-                            <button type="button" class="btn btn-sm btn-primary btn-circle" id="next-page">
-                                <i class="fas fa-arrow-right font-reset"></i>
-                            </button>
-                        </span>
+                        <a type="button" href="javascript:void(0);" class="btn btn-sm btn-primary mb-0 btn-circle" id="previous-page">
+                            <i class="fas fa-arrow-left font-reset"></i>
+                        </a>
+                        <div class="px-2 d-flex flex-nowrap align-items-baseline">
+                            <span id="page_no"></span>
+                            <span>/</span>
+                            <span id="total_pages"></span>
+                        </div>
+                        <a type="button" href="javascript:void(0);" class="btn btn-sm btn-primary mb-0 btn-circle" id="next-page">
+                            <i class="fas fa-arrow-right font-reset"></i>
+                        </a>
                     </div>
                 </div>
             </div>

@@ -4,13 +4,14 @@ const table = document.getElementById('tbl-main');
 const tbody = table.tBodies[0];
 const lang = JSON.parse(document.getElementById('lang').textContent);
 const checkAll = document.getElementById('check-all');
+let fetchUrl = `${window.location.origin}/products/get`;
 
 // INIT
-const getData = async options => {
+const getData = async (url, options) => {
     try
     {
         let opt = options ? options : {};
-        let req = await fetch(`${window.location.origin}/products/get`, opt);
+        let req = await fetch(url, opt);
         const j = await req.json();
 
         return j;
@@ -24,20 +25,37 @@ const getData = async options => {
 
 (async () => {
 
-    const data = await getData();
-    await setTable(data.data);
+    let data = await getData(fetchUrl);
+    await setTable(data);
 
     // check all table
     checkAll.addEventListener('click', checkAllRows);
     
-    document.getElementById('previous-page').addEventListener('click', e => {
+    document.getElementById('previous-page').addEventListener('click', async e => {
+        if(data.prev_page_url === null) return; 
+
+        e.target.classList.remove('disabled');
         document.getElementById('loading-table').classList.remove('d-none');
+
+        data = await getData(data.prev_page_url);
+        await setTable(data);
+
+        document.getElementById('loading-table').classList.add('d-none');
     });
 
-    document.getElementById('next-page').addEventListener('click', e => {
+    document.getElementById('next-page').addEventListener('click', async e => {
+        if(data.next_page_url === null) return; 
+
+        e.target.classList.remove('disabled');
         document.getElementById('loading-table').classList.remove('d-none');
+       
+        data = await getData(data.next_page_url);
+        await setTable(data);
+
+        document.getElementById('loading-table').classList.add('d-none');
     });
-})()
+
+})();
 
 const intToCurrency = angka => {
     const lokal = new Intl.NumberFormat('id', { style: 'currency', currency: 'IDR'}).format(angka);
@@ -45,8 +63,9 @@ const intToCurrency = angka => {
 }
 
 const setTable = async data => {
+    tbody.innerHTML = null;
 
-    Array.from(data, item => {
+    Array.from(data.data, item => {
         const row = tbody.insertRow();
         const keys = Object.keys(item);
 
@@ -55,7 +74,7 @@ const setTable = async data => {
         // Column 1
         const cell_0 = row.insertCell(0);
         cell_0.innerHTML = `<div class="form-check">` +
-                                `<input type="checkbox" class="form-check-input check-row" id="row_${item.id}" name="row[]" value="${item.id}">` + 
+                                `<input type="checkbox" class="form-check-input check-row" id="row_${item.id}" name="row[]" value="${item.id}" onclick="checkRow(event)">` + 
                                 `<label for="row_${item.id}" class="form-check-label"></label>` +
                             `</div>`;
         cell_0.classList.add('ps-1');
@@ -84,7 +103,20 @@ const setTable = async data => {
                             `</span>`;
         cell_4.classList.add('ps-1');
     });
+
+    await setPagination(data);
 }
+
+const setPagination = async data => {
+    var pageNo = document.getElementById('page_no'),
+        totalPage = document.getElementById('total_pages');
+
+    // Current Page
+    pageNo.innerText = data.current_page;
+    // Total Page
+    totalPage.innerText = data.last_page;
+}
+
 
 const deleteConfirmation = e => {
     const tr = e.target.parentNode.closest('tr');
@@ -119,6 +151,7 @@ const deleteConfirmation = e => {
 }
 
 
+// Block Check Row
 const checkAllRows = () => {
 
     switch(checkAll.checked)
@@ -127,20 +160,35 @@ const checkAllRows = () => {
             Array.from([...tbody.rows], val => {
                 const cb = val.getElementsByClassName('check-row')[0];
                 cb.checked = true;
-                cb.readonly = true;
+                cb.disabled = 'disabled';
                 val.classList.add('bg-light');
             });
+            document.getElementById('next-page').classList.add('disabled');
+            document.getElementById('previous-page').classList.add('disabled');
             break;
         case false:
             Array.from([...tbody.rows], val => {
                 const cb = val.getElementsByClassName('check-row')[0];
                 cb.checked = false;
-                cb.readonly = false;
+                cb.disabled = false;
                 val.classList.remove('bg-light');
             });
+            document.getElementById('next-page').classList.remove('disabled');
+            document.getElementById('previous-page').classList.remove('disabled');
             break;
     }
 }
+
+const checkRow = e => {
+    e.stopPropagation();
+    if(e.target.checked)
+        selectedRows.push(e.target.value);
+    else 
+        selectedRows.splice(selectedRows.indexOf(e.target.value), 1);
+    
+    console.log(selectedRows);
+}
+// end block
 
 // Truncate
 
