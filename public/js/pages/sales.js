@@ -209,6 +209,7 @@ const checkRow = e => {
     console.log(selectedRows);
 }
 // end block
+
 // Loading
 const loading = () => {
     Swal.fire({
