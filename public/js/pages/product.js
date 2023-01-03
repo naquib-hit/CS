@@ -24,9 +24,11 @@ const getData = async (url, options) => {
 
 
 (async () => {
-
+    // inti table
+    document.getElementById('loading-table').classList.remove('d-none');
     let data = await getData(fetchUrl);
     await setTable(data);
+    document.getElementById('loading-table').classList.add('d-none');
 
     // check all table
     checkAll.addEventListener('click', checkAllRows);

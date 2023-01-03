@@ -21,11 +21,15 @@
                     <div class='btn-group'>
                         <a role="button" class="btn btn-primary btn-sm">
                             <i class="fas fa-sync font-reset"></i>               
-                            &nbsp;{{__('Refresh')}}
+                            &nbsp;{{__('template.toolbar.refresh')}}
+                        </a>
+                        <a role="button" class="btn btn-primary btn-sm" href="#filter-offcanvas" data-bs-toggle="offcanvas">
+                            <i class="fas fa-search font-reset"></i>
+                            &nbsp;{{__('template.toolbar.filter')}}
                         </a>
                         <a role="button" class="btn btn-primary btn-sm">
-                            <i class="fas fa-sync font-reset"></i>
-                            &nbsp;{{__('Refresh')}}
+                            <i class="fas fa-download font-reset"></i>
+                            &nbsp;{{__('template.toolbar.download')}}
                         </a>
                     </div>
                 </div>
@@ -40,7 +44,7 @@
                                 <th>{{ __('transaction.table.customer') }}</th>
                                 <th class="d-none">product ID</th>
                                 <th>{{ __('transaction.table.product') }}</th>
-                                <th class="d-none"></th>
+                                <th class="d-none">Sales ID</th>
                                 <th>{{ __('transaction.table.sales') }}</th>
                                 <th>{{ __('transaction.table.start_date') }}</th>
                                 <th>{{ __('transaction.table.expiration_date') }}</th>
@@ -76,6 +80,43 @@
 
     </div>
     
+</div>
+
+<div id="filter-offcanvas" class="offcanvas offcanvas-end">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">{{ __('template.toolbar.filter') }}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form name="form-search">
+            <span class="input-group input-group-dynamic">
+                <label class="form-label">{{ __('transaction.fields.code') }} </label>
+                <input type="text" class="form-control" name="trans_code" value="{{ old('trans_code') }}" />
+            </span>
+            <span class="input-group input-group-dynamic mt-3">
+                <label class="form-label">{{ __('transaction.fields.customer') }} </label>
+                <input type="text" class="form-control" name="trans_customer" value="{{ old('trans_customer') }}" />
+            </span>
+            <span class="input-group input-group-dynamic mt-3">
+                <label class="form-label">{{ __('transaction.fields.product') }} </label>
+                <input type="text" class="form-control" name="trans_product" value="{{ old('trans_product') }}" />
+            </span>
+            <span class="input-group input-group-dynamic mt-3">
+                <label class="form-label">{{ __('transaction.fields.sales') }} </label>
+                <input type="text" class="form-control" name="trans_sales" value="{{ old('trans_sales') }}" />
+            </span>
+            <span class="mt-5 d-flex flex-nowrap justify-content-end w-100 ps-3">
+                <button type="reset" class="btn btn-secondary" id="reset-search">
+                    <i class="fas fa-redo"></i>
+                    {{ __('template.form.reset') }}
+                </button>
+                <button type="submit" class="btn btn-primary ms-1" id="btn-search">
+                    <i class="fas fa-search"></i>
+                    {{ __('template.form.search') }} 
+                </button>
+            </span>
+        </form>
+    </div>
 </div>
 @endsection
 

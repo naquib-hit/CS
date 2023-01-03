@@ -17,5 +17,11 @@ return [
         'start_date'        => 'Tanggal Pelunasan',
         'expiration_date'   => 'Kadaluarsa',
         'opt'               => 'Operasi'
+    ],
+    'fields'  => [
+        'customer'          => 'Pelanggan',
+        'product'           => 'Produk',
+        'sales'             => 'Sales',
+        'code'              => 'No. Transaksi',
     ] 
 ];

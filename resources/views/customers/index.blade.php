@@ -179,5 +179,5 @@
 </script>
 @endif
 
-<script src="{{ asset('js/pages/customer.js') }}"></script>
+<script src="{{ asset('js/pages/customer.min.js') }}"></script>
 @endsection

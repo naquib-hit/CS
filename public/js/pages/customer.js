@@ -31,11 +31,12 @@ const getData = async (url, options) => {
 
 
 (async () => {
+    document.getElementById('loading-table').classList.remove('d-none');
 
     data = await getData(fetchUrl);
     
-    await setPagination(data);
     await setTable(data);
+    document.getElementById('loading-table').classList.add('d-none');
 
     // check all table
     checkAll.addEventListener('click', checkAllRows);

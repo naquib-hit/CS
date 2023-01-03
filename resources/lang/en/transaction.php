@@ -17,5 +17,11 @@ return [
         'start_date'        => 'Payment\'s Date',
         'expiration_date'   => 'Expired Date',
         'opt'               => 'Operation'
+    ],
+    'fields'  => [
+        'code'              => 'Transaction No.',
+        'customer'          => 'Customer',
+        'product'           => 'Product',
+        'sales'             => 'Sales'
     ] 
 ];

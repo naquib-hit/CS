@@ -2,6 +2,7 @@
 
 const table = document.getElementById('tbl-main');
 const tbody = table.tBodies[0];
+const searchForm = document.forms['form-search'];
 let fetchUrl = `${window.location.href}/get`;
 
 // INIT
@@ -20,10 +21,15 @@ const getData =  async (url, opt={}) => {
 } 
 
 (async () => {
+    document.getElementById('loading-table').classList.remove('d-none');
     let data = await getData(fetchUrl);
     // INIT Table
     await setTable(data);
+    document.getElementById('loading-table').classList.add('d-none');
+    // filter data
+    searchForm.addEventListener('submit', async e => await filterData(e));
 
+    // paging lef and right
     document.getElementById('previous-page').addEventListener('click', async e => {
         if(data.prev_page_url === null) return; 
 
@@ -52,6 +58,7 @@ const getData =  async (url, opt={}) => {
 // Set Table
 const setTable = async data => {
     tbody.innerHTML = null;
+    
     Array.from(data.data, (item, idx) => {
         const row = tbody.insertRow(idx);
         // insert cells
@@ -119,6 +126,26 @@ const setPagination = async data => {
     pageNo.innerText = data.current_page;
     // Total Page
     totalPage.innerText = data.last_page;
+}
+
+// Filter Data
+const filterData = async e => {
+    e.preventDefault();
+
+    const obj = Object.fromEntries((new FormData(e.target)).entries());
+    const param = new URLSearchParams(obj);
+    
+    // ajax
+    try
+    {
+        fetchUrl = `${window.location.href}/get?` + param.toString();
+        let data = await getData(fetchUrl);
+        await setTable(data);
+    }
+    catch(err)
+    {
+
+    }
 }
 
 

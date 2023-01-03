@@ -17,6 +17,9 @@ class TransactionSeeder extends Seeder
         //
 
         Transaction::factory()->count(100)
+                        ->for(Customer::factory()->create())
+                        ->for(Product::factory()->create())
+                        ->for(Sales::factory()->create())
                         ->create();
     }
 }

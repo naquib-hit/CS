@@ -27,6 +27,8 @@ Route::middleware(['auth'])->group(function () {
     // Product
     Route::get('products/get', [ProductController::class, 'get'])->name('products.get');
     Route::resource('products', ProductController::class);
+    // Product Unit
+    Route::resource('product_units', ProductUnitController::class)->only(['index', 'create', 'store']);
     // Customers
     Route::delete('customers/truncate', [CustomerController::class, 'clean'])->name('customers.truncate');
     Route::get('customers/get', [CustomerController::class, 'get'])->name('customers.get');

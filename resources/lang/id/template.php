@@ -4,15 +4,19 @@ return [
 
     // Menu
     'menu' => [
-        'home'      => 'Beranda',
-        'product'   => 'Produk / Layanan',
-        'customer'  => 'Pelanggan',
-        'sales'     => 'Sales'
+        'home'          => 'Beranda',
+        'product'       => 'Produk / Layanan',
+        'customer'      => 'Pelanggan',
+        'sales'         => 'Sales',
+        'transaction'   => 'Transaksi',
     ],
     // Toolbar
     'toolbar' => [
         'add'        => 'Tambah',
         'delete_all' => 'Hapus Semua',
+        'refresh'    => 'Refresh',
+        'download'   => 'Download',
+        'filter'     => 'Filter'    
     ],
     // Form
     'form' => [
