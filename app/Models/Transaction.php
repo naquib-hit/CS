@@ -38,11 +38,18 @@ class Transaction extends Model
         return $this->belongsTo(Sales::class, 'sales_id', 'id');
     }
 
-    public static function getAll(array $filter = NULL) {
+    /**
+     * Get All Data
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public static function getAll(array $filter = NULL): \Illuminate\Database\Query\Builder
+    {
         $trans = DB::table('transactions')
                     ->join('customers', 'customers.id', '=', 'transactions.customer_id')
                     ->join('products', 'products.id', '=', 'transactions.product_id')
-                    ->join('sales', 'sales.id', '=', 'transactions.sales_id');
+                    ->join('sales', 'sales.id', '=', 'transactions.sales_id')
+                    ->whereNull('transactions.deleted_at');
 
         return $trans;
     }
