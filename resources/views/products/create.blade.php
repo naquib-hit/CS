@@ -32,18 +32,30 @@
                 <div class="card-body">
                     <form action="{{ url('products') }}" class="d-flex flex-column" method="post">
                         @csrf
-                        <span class="input-group input-group-outline @error('product_name') is-invalid @enderror">
+                        <span class="input-group input-group-dynamic @error('product_name') is-invalid @enderror">
                             <label class="form-label">{{ __('product.form.fields.name') }} <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="product_name" value="{{ old('product_name') }}" @error('product_name') autofocus @enderror/>
                         </span>
                         @error('product_name')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
-                        <span class="input-group input-group-outline @error('product_price') is-invalid @enderror mt-4">
+                        <span class="input-group input-group-dynamic @error('product_price') is-invalid @enderror mt-4">
                             <label class="form-label">{{ __('product.form.fields.price') }} <span class="text-danger">*</span></label>
                             <input type="number" min="0" step="0.01" class="form-control" name="product_price" value="{{ old('product_price') }}" @error('product_price') autofocus @enderror/>
                         </span>
                         @error('product_price')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                        <span class="input-group input-group-static @error('product_unit') is-invalid @enderror mt-4">
+                            <label class="form-label">{{ __('product.form.fields.unit') }} <span class="text-danger">*</span></label>
+                            <select class="form-control px-1" name="product_unit" value="{{ old('product_unit') }}" @error('product_unit') autofocus @enderror>
+                                <option value="">------------------</option>
+                                @foreach ($units as $unit)
+                                <option value="{{ $unit->id }}">{{ __($unit->unit_name) }}</option>
+                                @endforeach
+                            </select>
+                        </span>
+                        @error('product_unit')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                         <span class="d-flex flex-nowrap mt-5 w-100">
@@ -66,8 +78,9 @@
 <script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
 
 <script>
-    const form = document.forms['form-input'];
+     const form = document.forms['form-input'];
 
+   
     const loading = () => {
         Swal.fire({
             html: 	'<div class="d-flex flex-column align-items-center">'

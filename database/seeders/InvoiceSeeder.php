@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Sales, Product, Customer, Transaction};
 use Illuminate\Database\Seeder;
 
-class TransactionSeeder extends Seeder
+class InvoiceSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,7 +14,5 @@ class TransactionSeeder extends Seeder
     public function run()
     {
         //
-
-        Transaction::factory()->count(100)->create();
     }
 }

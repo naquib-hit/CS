@@ -25,6 +25,7 @@ class StoreProductUnitRequest extends FormRequest
     {
         return [
             //
+            'unit_name' => 'required|unique:product_units,unit_name'
         ];
     }
 }

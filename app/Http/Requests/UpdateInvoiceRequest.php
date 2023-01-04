@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductRequest extends FormRequest
+class UpdateInvoiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +13,7 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -26,9 +25,6 @@ class StoreProductRequest extends FormRequest
     {
         return [
             //
-            'product_name'  => ['required', Rule::unique('products', 'product_name')->whereNull('deleted_at')],
-            'product_price' => 'required|numeric|min:0',
-            'product_unit'  => 'required'
         ];
     }
 }

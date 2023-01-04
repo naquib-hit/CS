@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Product as Product;
 use Illuminate\Database\Seeder;
+use App\Models\{ Product as Product, ProductUnit as ProductUnit };
 
 class ProductSeeder extends Seeder
 {
@@ -15,6 +15,7 @@ class ProductSeeder extends Seeder
     public function run()
     {
         //
-        Product::factory()->count(2)->create();
+        Product::factory()->count(2)
+                        ->create();
     }
 }

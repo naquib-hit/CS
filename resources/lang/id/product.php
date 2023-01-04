@@ -21,7 +21,8 @@ return [
         'title' => 'Form Produk / Layanan',
         'fields' => [
             'name'  => 'Nama Produk',
-            'price' => 'Harga Produk'
+            'price' => 'Harga Produk',
+            'unit'  => 'Satuan'
         ],
         
     ],

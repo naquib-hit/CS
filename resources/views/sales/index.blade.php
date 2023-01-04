@@ -57,30 +57,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($sales as $sales)
-                            <tr data-id="{{ $sales->id}}">
-                                <td class="ps-1">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input check-row" id="row_{{ $sales->id }}" name="row[]" value="{{ $sales->id }}">
-                                        <label for="row_{{ $sales->id }}" class="form-check-label"></label>
-                                    </div>
-                                </td>
-                                <td data-name="id" class="d-none">{{ $sales->id }}</td>
-                                <td data-name="sales_name" class="ps-1">{{ $sales->sales_name }}</td>
-                                <td data-name="sales_email" class="ps-1">{{ $sales->sales_email }}</td>
-                                <td data-name="sales_phone" class="ps-1">{{ $sales->sales_phone}}</td>
-                                <td class="ps-1">
-                                    <span class="d-flex flex-nowrap flex-grow-0 align-items-center">
-                                        <a type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="{{ route('sales.edit', ['sales' => $sales]) }}">
-                                            <i class="fas fa-edit font-reset"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-sm btn-danger btn-circle p-0 m-0 ms-1 delete_data" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="deleteConfirmation(event)">
-                                            <i class="fas fa-trash font-reset"></i>
-                                        </button>
-                                    </span>
-                                </td>
-                            </tr>
-                            @endforeach --}}
+                            
                         </tbody>
                     </table>
                     <div id="loading-table" class="position-absolute top-50 start-50 translate-middle bg-white opacity-10 z-3 rounded shadow d-none" style="height: 6rem;width: 12rem">

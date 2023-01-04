@@ -10,5 +10,13 @@
     */
 
     return [
-        'unit_name' => 'Satuan'
-    ];
+      'title' => 'Satuan',
+      'units' => [
+        'devices' => 'Alat',
+        'pieces'  => 'Buah',
+        'month'   => 'Bulan',
+        'week'    => 'Minggu',
+        'day'     => 'Hari',
+        'hour'    => 'Jam'
+      ]
+  ];

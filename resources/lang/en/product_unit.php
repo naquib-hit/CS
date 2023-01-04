@@ -10,5 +10,13 @@
     */
 
     return [
-        'unit_name' => 'Unit'
+        'title' => 'Product Unit',
+        'units' => [
+          'devices' => 'Devices',
+          'pieces'  => 'Pieces',
+          'month'   => 'Months',
+          'week'    => 'Weeks',
+          'day'     => 'Days',
+          'hour'    => 'Hours'
+        ]
     ];

@@ -11,11 +11,15 @@ class ProductUnitController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         //
+        $_headers = [
+            'Content-Type'  => 'application/json'
+        ];
+        return response()->json(ProductUnit::cursor(), 200, $_headers); 
     }
 
     /**

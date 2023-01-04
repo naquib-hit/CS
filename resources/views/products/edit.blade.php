@@ -33,18 +33,30 @@
                     <form action="{{ route('products.update', ['product' => $product]) }}" class="d-flex flex-column" method="post">
                         @csrf
                         @method('PUT')
-                        <span class="input-group input-group-outline @error('product_name') is-invalid @enderror">
+                        <span class="input-group input-group-dynamic @error('product_name') is-invalid @enderror">
                             <label class="form-label">{{ __('product.form.fields.name') }} <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="product_name" value="{{ old('product_name') ?? $product->product_name }}" placeholder=" "/>
                         </span>
                         @error('product_name')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
-                        <span class="input-group input-group-outline @error('product_price') is-invalid @enderror mt-4">
+                        <span class="input-group input-group-dynamic @error('product_price') is-invalid @enderror mt-4">
                             <label class="form-label">{{ __('product.form.fields.price') }} <span class="text-danger">*</span></label>
                             <input type="number" min="0" step="0.01" class="form-control" name="product_price" value="{{ old('product_price') ?? $product->product_price }}" placeholder=" "/>
                         </span>
                         @error('product_price')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                        <span class="input-group input-group-static @error('product_unit') is-invalid @enderror mt-4">
+                            <label class="form-label">{{ __('product.form.fields.unit') }} <span class="text-danger">*</span></label>
+                            <select class="form-control px-2" name="product_unit" value="{{ old('product_unit') }}" @error('product_unit') autofocus @enderror>
+                                <option value="">------------------</option>
+                                @foreach ($units as $unit)
+                                <option value="{{ $unit->id }}">{{ __($unit->unit_name) }}</option>
+                                @endforeach
+                            </select>
+                        </span>
+                        @error('product_unit')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                         <span class="d-flex flex-nowrap mt-5 w-100">

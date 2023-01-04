@@ -21,7 +21,8 @@ return [
         'title' => 'Products / Services Form',
         'fields' => [
           'name'  => 'Product\'s Name',
-          'price' => 'Product\'s Price'
+          'price' => 'Product\'s Price',
+          'unit'  => 'Product\'s Unit'
         ],
        
     ],

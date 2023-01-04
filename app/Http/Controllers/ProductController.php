@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\{ Product, ProductUnit };
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreProductRequest;
@@ -34,8 +34,8 @@ class ProductController extends Controller
     public function create()
     {
         //
-        $random = Str::random();
-        return view('products.create', ['str_random' => $random]);
+        $units = ProductUnit::cursor();
+        return view('products.create')->with('units', $units);
     }
 
     /**

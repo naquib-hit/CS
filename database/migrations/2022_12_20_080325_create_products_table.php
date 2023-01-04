@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('product_name', 240);
             $table->integer('product_price');
-            $table->string('product_unit');
+            $table->foreignId('product_unit_id')->constrained('product_units')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
         });

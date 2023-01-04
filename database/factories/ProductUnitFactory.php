@@ -6,11 +6,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductUnitFactory extends Factory
 {
-
-    protected $_units = [
-        ''
-    ];
-
     /**
      * Define the model's default state.
      *
@@ -18,10 +13,17 @@ class ProductUnitFactory extends Factory
      */
     public function definition()
     {
-        
+
+        $_units = [
+           'Pieces',
+           'Devices',
+           'Month',
+           'Day',
+           'Week'
+        ];   
         return [
             //
-            'unit_name' => $this->faker->unique()->randomElements()
+            'unit_name' => $this->faker->unique()->randomElement($_units)
         ];
     }
 }
