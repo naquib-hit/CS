@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ Product, ProductUnit };
+use App\Models\{Product, ProductUnit};
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreProductRequest;
@@ -11,7 +11,8 @@ use App\Http\Requests\UpdateProductRequest;
 class ProductController extends Controller
 {
 
-    public function __construct() {
+    public function __construct()
+    {
         //$this->middleware('auth');
     }
 
@@ -47,8 +48,7 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         //
-        try
-        {
+        try {
             $valid = $request->validated();
 
             $prod = Product::create([
@@ -56,13 +56,11 @@ class ProductController extends Controller
                 'product_price' => $valid['product_price']
             ]);
 
-            if(!$prod)
+            if (!$prod)
                 return redirect()->back()->with('error', __('validation.failed.create'));
 
             return redirect()->route('products.index')->with('success', __('validation.success.create'));
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', __('validation.failed.create'));
         }
     }
@@ -99,18 +97,15 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        try
-        {
+        try {
             $valid = $request->validated();
             $rs = $product->update($valid);
 
-            if(!$rs)
+            if (!$rs)
                 return redirect()->back()->with('error', __('validation.failed.update'));
 
             return redirect()->route('products.index')->with('success', __('validation.success.create'));
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             Log::error($e->getMessage());
             return redirect()->back()->with('error', __('validation.failed.update'));
         }
@@ -136,17 +131,14 @@ class ProductController extends Controller
      */
     public function get()
     {
-        try
-        {
+        try {
             $data = Product::orderBy('created_at', 'desc')->orderBy('id', 'desc');
-            
+
             $page = $data->paginate(6)->withQueryString();
 
             return $page;
-        }
-        catch(\Exception $e)
-        {
-            echo $e->getMesssage();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
         }
     }
 }

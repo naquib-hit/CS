@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{ 
-                           ProductUnitController, 
-                           ProductController, 
-                           CustomerController, 
-                           SalesController,
-                           TransactionController
-                         };
+use App\Http\Controllers\{
+    ProductUnitController,
+    ProductController,
+    CustomerController,
+    InvoiceController,
+    TransactionController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -34,15 +34,14 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('customers/truncate', [CustomerController::class, 'clean'])->name('customers.truncate');
     Route::get('customers/get', [CustomerController::class, 'get'])->name('customers.get');
     Route::resource('customers', CustomerController::class);
-    // Sales
-    Route::delete('sales/truncate', [SalesController::class, 'clean'])->name('sales.truncate');
-    Route::get('sales/get', [SalesController::class, 'get'])->name('sales.get');
-    Route::resource('sales', SalesController::class);
+    // // Sales
+    // Route::delete('sales/truncate', [SalesController::class, 'clean'])->name('sales.truncate');
+    // Route::get('sales/get', [SalesController::class, 'get'])->name('sales.get');
+    Route::get('invoices/customers', [InvoiceController::class, 'getCustomers'])->name('invoices.customers');
+    Route::resource('invoices', InvoiceController::class);
     // Transactions
     Route::get('transactions/get', [TransactionController::class, 'get'])->name('transactions.get');
     Route::resource('transactions', TransactionController::class)->only(['index']);
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 });
-

@@ -99,10 +99,11 @@
     }
 
     const progressBar = document.getElementById('progress-bar');
+
+
 </script>
 
-  <script src="{{ asset('js/material-dashboard.min.js') }}"></script>
-
+  <script src="{{ asset('js/material-dashboard.js') }}"></script>
   <script id="lang" type="application/json">
     {
       "confirmation": {

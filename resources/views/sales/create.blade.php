@@ -17,11 +17,7 @@
 @section('content')
     
     <div class="row h-100 justify-content-center align-items-center">
-        @if(session()->has('error'))
-        <div class="alert alert-danger">
-            <h4>{{ session('error') }}</h4>
-        </div>
-        @endif
+      
         <div class="col-12 col-md-8 col-lg-5">
             <div class="card fadeIn3 fadeInBottom">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
@@ -75,6 +71,18 @@
 
 <script>
     const form = document.forms['form-input'];
+
+    @if(session()->has('error'))
+
+    Swal.fire({
+        title: '<h4 class="text-danger">ERROR</h4>',
+        html: '<h5 class="text-danger">{{ session('error') }}</h5>',
+        icon: 'error',
+        timer: 1800,
+        timerProgressBar: true,
+        showConfirmButton: false
+    });
+    @endif
 
     const loading = () => {
         Swal.fire({

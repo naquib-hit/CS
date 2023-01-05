@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Relations\{ BelongsTo, HasMany };
+use Illuminate\Database\Eloquent\Relations\{ BelongsTo, BelongsToMany, HasMany };
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\{ Model, SoftDeletes };
 

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Invoice;
+use App\Models\{Invoice, Customer};
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
 
@@ -16,6 +17,7 @@ class InvoiceController extends Controller
     public function index()
     {
         //
+        return view('invoices.index');
     }
 
     /**
@@ -26,6 +28,7 @@ class InvoiceController extends Controller
     public function create()
     {
         //
+        return view('invoices.create');
     }
 
     /**
@@ -82,5 +85,15 @@ class InvoiceController extends Controller
     public function destroy(Invoice $invoice)
     {
         //
+    }
+
+    /**
+     * get all customers data for selection
+     *
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function getCustomers(): JsonResponse
+    {
+        return response()->json(Customer::cursor(), 200, ['Content-Type' => 'application/json']);
     }
 }

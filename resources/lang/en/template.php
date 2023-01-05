@@ -8,6 +8,10 @@ return [
         'product'       => 'Products / Services',
         'customer'      => 'Customers',
         'sales'         => 'Salesperson',
+        'invoice'       => [
+            'general'   => 'Invoice',
+            'reccuring' => 'Recurring Invoice',
+        ],
         'transaction'   => 'Transaction',
     ],
     // Toolbar
@@ -16,7 +20,7 @@ return [
         'delete_all' => 'Delete All',
         'refresh'    => 'Refresh',
         'download'   => 'Download',
-        'filter'     => 'Filter'    
+        'filter'     => 'Filter'
     ],
     'form' => [
         'save'      => 'Save',

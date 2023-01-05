@@ -9,6 +9,10 @@ return [
         'customer'      => 'Pelanggan',
         'sales'         => 'Sales',
         'transaction'   => 'Transaksi',
+        'invoice'       => [
+            'general'   => 'Faktur',
+            'reccuring' => 'Faktur Berkala',
+        ],
     ],
     // Toolbar
     'toolbar' => [
@@ -16,7 +20,7 @@ return [
         'delete_all' => 'Hapus Semua',
         'refresh'    => 'Refresh',
         'download'   => 'Download',
-        'filter'     => 'Filter'    
+        'filter'     => 'Filter'
     ],
     // Form
     'form' => [

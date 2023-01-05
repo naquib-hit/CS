@@ -61,7 +61,8 @@ function setAttributes(el, options) {
 // adding on inputs attributes for calling the focused and defocused functions
 if (document.querySelectorAll('.input-group').length != 0) {
   var allInputs = document.querySelectorAll('input.form-control, textarea.form-control');
-  
+  var select = document.querySelectorAll('select.form-select');
+
   allInputs.forEach(el => {
 
     setAttributes(el, {
@@ -73,6 +74,9 @@ if (document.querySelectorAll('.input-group').length != 0) {
         el.parentElement.classList.add('is-filled');
       
   });
+
+  console.log(select);
+
 }
 
 

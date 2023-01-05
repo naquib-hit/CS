@@ -17,6 +17,7 @@ class CreateInvoiceProductTable extends Migration
             $table->id();
             $table->foreignId('invoice_id')->constrained('invoices')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained('products')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->integer('quantity');
             $table->timestamps();
         });
     }

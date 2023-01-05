@@ -33,10 +33,10 @@ class Transaction extends Model
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    public function sales(): BelongsTo
-    {
-        return $this->belongsTo(Sales::class, 'sales_id', 'id');
-    }
+    // public function sales(): BelongsTo
+    // {
+    //     return $this->belongsTo(Sales::class, 'sales_id', 'id');
+    // }
 
     /**
      * Get All Data
@@ -48,7 +48,7 @@ class Transaction extends Model
         $trans = DB::table('transactions')
                     ->join('customers', 'customers.id', '=', 'transactions.customer_id')
                     ->join('products', 'products.id', '=', 'transactions.product_id')
-                    ->join('sales', 'sales.id', '=', 'transactions.sales_id')
+                    //->join('sales', 'sales.id', '=', 'transactions.sales_id')
                     ->whereNull('transactions.deleted_at');
 
         return $trans;

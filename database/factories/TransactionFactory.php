@@ -17,12 +17,12 @@ class TransactionFactory extends Factory
     {
         return [
             //
-            'transaction_code'  => $this->faker->unique()->regexify('[A-Za-z0-9]{16}'),
-            'sales_id'          => $this->faker->randomElement(collect(Sales::cursor())->pluck('id')),
-            'start_date'        => $this->faker->dateTimeBetween('-3 months', '-2 days'),
-            'expiration_date'   => $this->faker->dateTimeBetween('now', '+1 months'),
-            'customer_id'       => $this->faker->randomElement(collect(Customer::cursor())->pluck('id')),
-            'product_id'        => $this->faker->randomElement(collect(Product::cursor())->pluck('id')),
+            'invoice_no'       => $this->faker->unique()->regexify('[A-Za-z0-9]{16}'),
+            'sales_name'       => $this->faker->name(),
+            'start_date'       => $this->faker->dateTimeBetween('-3 months', '-2 days'),
+            'expiration_date'  => $this->faker->dateTimeBetween('now', '+1 months'),
+            'customer'         => $this->faker->randomElement(collect(Customer::cursor())->pluck('customer_name')),
+            //'product_id'        => $this->faker->randomElement(collect(Product::cursor())->pluck('id')),
         ];
     }
 }

@@ -15,12 +15,11 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('transaction_code', 40)->unique();
+            $table->string('invoice_no', 40)->unique();
+            $table->string('sales_name', 245);
             $table->date('start_date')->default((new DateTime())->format('Y-m-d'));
             $table->date('expiration_date')->nullable();
-            $table->foreignId('sales_id')->constrained('sales')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('customer_id')->constrained('customers')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('product_id')->constrained('products')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->string('customer', 245);
             $table->timestamps();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
         });

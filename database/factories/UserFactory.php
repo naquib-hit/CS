@@ -24,6 +24,7 @@ class UserFactory extends Factory
     {
         return [
             'username' => 'admin',
+            'fullname'  => 'Administrator',
             'email' => 'admin@admin.com',
             'email_verified_at' => now(),
             'password' => Hash::make('admin'), // password
