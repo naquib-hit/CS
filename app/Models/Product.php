@@ -26,13 +26,23 @@ class Product extends Model
     }
     
     /**
-     * transactions foreign definition
+     * Transaction table relation
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * The invoices that belong to the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function invoices(): BelongsToMany
+    {
+        return $this->belongsToMany(Invoice::class, 'products_invoices', 'product_id', 'invoice_id');
     }
     
     /**
