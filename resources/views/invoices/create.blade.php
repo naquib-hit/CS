@@ -9,12 +9,17 @@
         font-size: var(--fas-custom-size) !important;
     }
 
-    input[type="date"]::-webkit-datetime-edit {
-        color: transparent; 
+    .input-group > input[type="date"]::before
+    { 
+        content: ' ';
+        width: 100%;
     }
 
-    input[type="date"]:focus::-webkit-datetime-edit {
-        color: inherit !important;
+
+    input[type="date"]:focus::before,
+    .input-group.is-filled > input[type="date"]::before
+    { 
+        display: none 
     }
 </style>
 
@@ -124,9 +129,6 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     // });
 
     // Autocomplete
-    
-
-
     const customerElement = document.getElementById('customer');
     const autocomplete = new Autocomplete(customerElement);
     const getCustomer = async () => {
@@ -143,11 +145,26 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
             console.log(err);
         }
     }
+    // End autompolete
+
+    // Input Date
+    const allInputDate = document.querySelectorAll('input[type="date"]');
     
+    for(var el of allInputDate)
+    {
+        el.addEventListener('focus', e => {
+            console.log(e.target.valueAsDate);
+        }, false);
+
+        el.addEventListener('focusout', e => {
+            console.log(e);
+            console.log(e.target.valueAsDate);
+        }, false);
+    }
+    // End input date
+
     (async () => {
         await getCustomer();
     })();
-
-    // End autompolete
 </script>
 @endsection

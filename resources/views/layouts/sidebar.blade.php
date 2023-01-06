@@ -35,7 +35,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" role="button" data-bs-toggle="collapse" data-bs-target="#{{ __('template.menu.invoice.general') }}-children">
+                <a class="nav-link text-white" data-bs-toggle="collapse" data-bs-target="#{{ __('template.menu.invoice.general') }}-children">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-file-invoice"></i>
                     </div>
