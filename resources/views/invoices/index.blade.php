@@ -19,7 +19,7 @@
             <div class="card-body px-0 h-100">
                 <div class="px-3">
                     <div class='btn-group'>
-                        <a role="button" class="btn btn-primary btn-sm">
+                        <a role="button" class="btn btn-primary btn-sm" href="{{ route('invoices.create') }}">
                             <i class="fas fa-plus-circle font-reset"></i>               
                             &nbsp;{{__('template.toolbar.add')}}
                         </a>

@@ -26,6 +26,7 @@ return [
     'fields' => [
       'no'        => 'Invoice Number',
       'date'      => 'Invoice Date',
+      'total'     => 'Total',
       'due_date'  => 'Due Date',
       'customer'  => 'Customer',
       'item'      => 'Items',

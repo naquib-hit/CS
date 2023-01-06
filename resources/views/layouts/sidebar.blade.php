@@ -43,7 +43,7 @@
                 </a>
                 <ul class="navbar-nav collapse" id="{{__('template.menu.invoice.general')}}-children">
                     <li class="nav-item">
-						<a class="nav-link text-white" role="button">
+						<a class="nav-link text-white" href="{{ route('invoices.index') }}">
 							<span class="nav-link-text ms-3">{{ __('template.menu.invoice.general') }}</span>
 						</a>
 					</li>
