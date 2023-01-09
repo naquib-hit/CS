@@ -4,9 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductUnitsTable extends Migration
+class CreateTaxesTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -14,11 +13,12 @@ class CreateProductUnitsTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_units', function (Blueprint $table) {
+        Schema::create('taxes', function (Blueprint $table) {
             $table->id();
-            $table->string('unit_name', 120)->unique();
-            $table->timestamps();
+            $table->string('tax_name', 220);
+            $table->integer('amount');
             $table->integer('created_by')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -29,6 +29,6 @@ class CreateProductUnitsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_units');
+        Schema::dropIfExists('taxes');
     }
 }

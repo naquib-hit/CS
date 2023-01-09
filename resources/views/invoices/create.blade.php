@@ -21,22 +21,28 @@
     { 
         display: none 
     }
+
+    #tax-container, #items-container {
+        overflow-y: auto !important;
+        height: 200px !important;
+    }
 </style>
 
 <link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/sweetalert2.min.css') }}"/>
+<link rel="stylesheet" href="{{ asset('vendor/quill/quill.snow.css') }}"/>
 @endsection
 
 
 @section('content')
     
     <div class="row h-100 justify-content-center">
-        <form class="col-12" autocomplete="off">
+        <form class="col-12" autocomplete="off" name="invoice-form" action="{{ route('invoices.store') }}" method="POST">
            
             <fieldset class="row">
                 <div class="col-12 col-lg-4">
                     <div class="card fadeIn3 fadeInBottom">
                         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 pe-1">
                               <h4 class="text-white font-weight-bolder ms-3 my-0">{{ __('invoice.form.title') }}</h4>
                             </div>
                         </div>
@@ -47,7 +53,8 @@
                             </div>
                             <div class="input-group input-group-outline mt-3">
                                 <label class="form-label">{{ __('invoice.form.fields.customer') }} <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="invoice_customer" id="customer">
+                                <input type="text" class="form-control" name="invoice_customer_text" id="customer">
+                                <input type="text" name="invoice_customer" hidden>
                             </div>
                             <div class="input-group input-group-outline mt-3">
                                 <label class="form-label">{{ __('invoice.form.fields.date') }} <span class="text-danger">*</span></label>
@@ -61,7 +68,7 @@
                     </div>
                     <div class="card fadeIn3 fadeInBottom mt-5">
                         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 pe-1">
                               <h4 class="text-white font-weight-bolder ms-3 my-0">{{ __('invoice.form.fields.discount') }}</h4>
                             </div>
                         </div>
@@ -70,7 +77,7 @@
                                 <div class="col-8">
                                     <div class="input-group input-group-outline">
                                         <label class="form-label">{{ __('invoice.form.fields.discount') }}</label>
-                                        <input type="number" min="0" class="form-control" name="invoice_tax">
+                                        <input type="number" min="0" class="form-control" name="invoice_discount">
                                     </div>
                                 </div>
                                 <div class="col-4">
@@ -86,69 +93,109 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-4">
-                    <div class="card fadeIn3 fadeInBottom">
-                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1 d-flex flex-nowrap align-items-center">
-                              <h4 class="text-white font-weight-bolder ms-3 my-0">{{ __('invoice.form.fields.item') }}</h4>
-                              <div class="ms-auto me-2">
-                                <button type="button" class="btn btn-sm btn-primary mb-0" id="add-item">
-                                    <span class="font-weight-bolder me-1">+</span>
-                                    {{ __('template.toolbar.add') }}
-                                </button>
-                              </div>
+                <div class="col-12 col-lg-8">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <div class="card fadeIn3 fadeInBottom">
+                                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                                    <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 pe-1 d-flex flex-nowrap align-items-center">
+                                      <h4 class="text-white font-weight-bolder ms-3 my-0">{{ __('invoice.form.fields.item') }}</h4>
+                                      <div class="ms-auto me-2">
+                                        <button type="button" class="btn btn-sm btn-primary mb-0" id="add-item">
+                                            <span class="font-weight-bolder me-1">+</span>
+                                            {{ __('template.toolbar.add') }}
+                                        </button>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="items-container">
+                                    <div class="row align-items-baseline">
+                                        <div class="col-12 col-md-6 pe-1">
+                                            <div class="input-group input-group-outline mt-3">
+                                                <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control item-name" name="invoice_item[0][name]">
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="col-12 col-md-4 px-1">
+                                            <div class="input-group input-group-outline mt-3">
+                                                <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
+                                                <input type="number" min="0" step="0.01" class="form-control item-total"  name="invoice_item[0][total]">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-2 ps-1">
+                                            <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body" id="items-container">
-                            <div class="row align-items-baseline">
-                                <div class="col-12 col-md-6 pe-1">
-                                    <div class="input-group input-group-outline mt-3">
-                                        <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control item-name" name="invoice_item[0][name]">
+                        <div class="col-12 col-lg-6">
+                             <!-- PAJAK -->
+                            <div class="card fadeIn3 fadeInBottom">
+                                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                                    <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 pe-1 d-flex flex-nowrap align-items-center">
+                                    <h4 class="text-white font-weight-bolder ms-3 my-0">{{ __('invoice.form.fields.tax') }}</h4>
+                                    <div class="ms-auto me-2">
+                                        <button type="button" class="btn btn-sm btn-primary mb-0" id="add-tax">
+                                            <span class="font-weight-bolder me-1">+</span>
+                                            {{ __('template.toolbar.add') }}
+                                        </button>
                                     </div>
-                                    
-                                </div>
-                                <div class="col-12 col-md-4 px-1">
-                                    <div class="input-group input-group-outline mt-3">
-                                        <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
-                                        <input type="number" min="0" step="0.01" class="form-control item-total"  name="invoice_item[0][total]">
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-2 ps-1">
-                                    <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
+                                <div class="card-body" id="tax-container">
+                                    <div class="row align-items-baseline">
+                                        <div class="col-12 col-md-6 pe-1">
+                                            <div class="input-group input-group-outline mt-3">
+                                                <label class="form-label">{{ __('invoice.form.fields.tax') }}<span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control tax-name" value="PPN" name="invoice_tax[0][name]">
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="col-12 col-md-4 px-1">
+                                            <div class="input-group input-group-outline mt-3">
+                                                <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
+                                                <input type="number" min="0" step="0.01" value="11" class="form-control tax-total"  name="invoice_tax[0][total]">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-2 ps-1">
+                                            <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                </div>
-                <div class="col">
-                    <!-- PAJAK -->
-                    <div class="card fadeIn3 fadeInBottom">
-                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1 d-flex flex-nowrap align-items-center">
-                              <h4 class="text-white font-weight-bolder ms-3 my-0">{{ __('invoice.form.fields.tax') }}</h4>
-                              <div class="ms-auto me-2">
-                                <button type="button" class="btn btn-sm btn-primary mb-0" id="add-tax">
-                                    <span class="font-weight-bolder me-1">+</span>
-                                    {{ __('template.toolbar.add') }}
-                                </button>
-                              </div>
+                    <div class="row pt-5">
+                        <div class="col-12">
+                            <div class="card fadeIn3 fadeInBottom">
+                                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                                    <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 pe-1 d-flex flex-nowrap align-itesm-center">
+                                      <h4 class="text-white font-weight-bolder ms-3 my-0">{{ __('invoice.form.fields.notes') }}</h4>
+                                </div>
+                                <div class="card-body">
+                                    <textarea id="notes-editor" class="form-control"></textarea>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-body" id="tax-container">
-
                         </div>
                     </div>
                 </div>
             </fieldset>
-
+            <fieldset class="row">
+                <div class="col-12 d-flex flex-nowrap justify-content-end pt-3">
+                    <button type="reset" class="btn btn-secondary me-1"><i class="fas fa-undo"></i> {{ __('template.form.reset') }} </button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('template.form.save') }}</button>
+                </div>
+            </fieldset>
         </form>
     </div>
 @endsection
 
 @section('js')
 <script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
+<script src="{{ asset('vendor/quill/quill.min.js') }}"></script>
 
 <script type="module">
 import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}";
@@ -184,7 +231,12 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
 
     // Autocomplete
     const customerElement = document.getElementById('customer');
-    const autocomplete = new Autocomplete(customerElement);
+    const autocomplete = new Autocomplete(customerElement, {
+        threshold: 1,
+        onSelectItem: e => {
+            document.querySelector('input[name="invoice_customer"]').value = e.value;
+        }
+    });
     const getCustomer = async () => {
         try
         {
@@ -199,15 +251,40 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
             console.log(err);
         }
     }
+    
     // End autompolete
+
+    // INIT Observer
+    const configObserver = { attributes: true, childList: true, subtree: true };
+
+    const observer = new MutationObserver(e => {
+        
+        if(e[0].target.id == 'items-container')
+        {
+            const target = e[0].target;
+            const itemNames = target.getElementsByClassName('item-name');
+
+            const setAutoComplete = async () => {
+                try
+                {
+                    
+                }
+                catch(err)
+                {
+                    console.log(err);
+                }
+            }
+            
+        }
+    });
+
+    // End Init
 
     // Items Group
     const itemContainer = document.getElementById('items-container'),
           btnAddItem = document.getElementById('add-item');
-    let elemIndex = 0,
-        lastIndex = document.getElementsByClassName('item-name').length - 1;
+    let lastIndex = document.getElementsByClassName('item-name').length - 1;
     
-    console.log(lastIndex);
     
     const createItem = () => {
         // new row
@@ -283,11 +360,13 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         return row;
     }
 
+    observer.observe(itemContainer, configObserver);
+    // end item group
+
     // tax group
     const taxContainer = document.getElementById('tax-container'),
           btnAddTax = document.getElementById('add-tax');
-    let elemTaxIndex = 0,
-        lastTaxIndex = document.getElementsByClassName('tax-name').length - 1;
+    let lastTaxIndex = document.getElementsByClassName('tax-name').length - 1;
     
     const createTax = () => {
         // new row
@@ -333,8 +412,8 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         faTrash.classList.add('fas', 'fa-trash', 'font-reset');
 
         // LEFT
-        labelLeft.innerText = "{{ __('invoice.form.fields.tax') }}";
-        inputText.name = "invoice_items["+ (+lastTaxIndex + 1) +"][name]";
+        labelLeft.innerHTML = "{{ __('invoice.form.fields.tax') }} <span class=\"text-danger\"></span>";
+        inputText.name = "invoice_tax["+ (+lastTaxIndex + 1) +"][name]";
         inputText.onfocus = async e => await inputOnFocus(e);
         inputText.onblur = async e => await inputOnFocusOut(e);
         inputText.onkeyup = async e => await inputOnKeyup(e);
@@ -344,8 +423,8 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         row.appendChild(colLeft);
         // MIDDLE
         //labelMiddle.innerText = '';
-        labelMiddle.innerText = "{{ __('invoice.form.fields.total') }}";
-        inputNumber.name= "invoice_items["+ (+lastIndex + 1) +"][total]";
+        labelMiddle.innerHTML = "{{ __('invoice.form.fields.total') }} <span class=\"text-danger\"></span>";
+        inputNumber.name= "invoice_tax["+ (+lastIndex + 1) +"][total]";
         inputNumber.onfocus = async e => await inputOnFocus(e);
         inputNumber.onblur = async e => await inputOnFocusOut(e);
         inputNumber.onkeyup = async e => await inputOnKeyup(e);
@@ -362,6 +441,8 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
 
         return row;
     }
+
+    observer.observe(taxContainer, configObserver);
     //end tax group
 
     // check if window is changed
@@ -397,6 +478,21 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     //observer.disconnect();
     // End Items Group
 
+    // editor
+    const editor = new Quill('#notes-editor', {
+        theme: 'snow'
+    });
+    // end editor group
+
+    // form submit
+    const mainForm = document.forms['invoice-form'];
+
+    const submitForm = async e => {
+        e.preventDefault();
+
+    }
+    // end form submit
+
     (async () => {
         await getCustomer();
 
@@ -404,6 +500,8 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
             e.preventDefault();
             lastIndex = document.getElementsByClassName('item-name').length - 1;
             itemContainer.appendChild(createItem());
+
+            
         });
 
        btnAddTax.addEventListener('click', e => {
@@ -411,6 +509,8 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
             lastIndex = document.getElementsByClassName('tax-name').length - 1;
             taxContainer.appendChild(createTax());
        });
+
+       mainForm.addEventListener('submit', async e => await submitForm(e));
 
     })();
 </script>

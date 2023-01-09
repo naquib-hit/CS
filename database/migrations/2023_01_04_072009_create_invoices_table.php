@@ -18,8 +18,10 @@ class CreateInvoicesTable extends Migration
             $table->string('invoice_no', 40);
             $table->date('create_date')->useCurrent();
             $table->date('due_date')->nullable();
+            $table->text('notes');
             $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('customer_id')->constrained('customers')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

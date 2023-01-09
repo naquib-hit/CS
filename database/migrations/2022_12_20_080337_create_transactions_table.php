@@ -21,6 +21,7 @@ class CreateTransactionsTable extends Migration
             $table->date('expiration_date')->nullable();
             $table->string('customer', 245);
             $table->timestamps();
+            $table->integer('created_by')->nullable();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
         });
     }

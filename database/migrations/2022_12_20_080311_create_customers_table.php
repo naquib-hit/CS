@@ -20,6 +20,7 @@ class CreateCustomersTable extends Migration
             $table->text('customer_address')->nullable();
             $table->string('customer_phone', 50)->nullable();
             $table->timestamps();
+            $table->integer('created_by')->nullable();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
         });
     }
