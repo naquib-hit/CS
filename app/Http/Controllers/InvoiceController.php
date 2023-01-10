@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Invoice, Customer, Product};
+use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
+use App\Models\{Invoice, Customer, Product};
 
 class InvoiceController extends Controller
 {
@@ -35,12 +37,27 @@ class InvoiceController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreInvoiceRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreInvoiceRequest $request)
+    public function store(StoreInvoiceRequest $request): \Illuminate\Http\JsonResponse
     {
         //
+        try {
+            $valid = $request->validated();
 
+            return response()->json(
+                ['success' => true, 'message' => __('validation.success.create'), 'token' => csrf_token()],
+                200,
+                ['Content-Type' => 'application/json']
+            );
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+            return response()->json(
+                ['success' => false, 'message' => __('validation.failed.create'), 'token' => csrf_token()],
+                422,
+                ['Content-Type' => 'application/json']
+            );
+        }
     }
 
     /**

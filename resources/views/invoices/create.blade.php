@@ -36,7 +36,9 @@
 @section('content')
     
     <div class="row h-100 justify-content-center">
-        <form class="col-12" autocomplete="off" name="invoice-form" action="{{ route('invoices.store') }}" method="POST">
+        <form class="col-12" 
+              autocomplete="off" name="form-input" 
+              action="{{ route('invoices.store') }}" >
            
             <fieldset class="row">
                 <div class="col-12 col-lg-4">
@@ -53,7 +55,7 @@
                             </div>
                             <div class="input-group input-group-outline mt-3">
                                 <label class="form-label">{{ __('invoice.form.fields.customer') }} <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="invoice_customer_text" id="customer">
+                                <input type="text" class="form-control" name="invoice_customer_text" id="customer_input">
                                 <input type="text" name="invoice_customer" hidden>
                             </div>
                             <div class="input-group input-group-outline mt-3">
@@ -113,14 +115,15 @@
                                         <div class="col-12 col-md-6 pe-1">
                                             <div class="input-group input-group-outline mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control item-name" name="invoice_item[0][name]">
+                                                <input type="text" class="form-control" name="invoice_item[0][name]">
+                                                <input type="text" class="d-none" name="invoice_item[0][value]">
                                             </div>
                                             
                                         </div>
                                         <div class="col-12 col-md-4 px-1">
                                             <div class="input-group input-group-outline mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
-                                                <input type="number" min="0" step="0.01" class="form-control item-total"  name="invoice_item[0][total]">
+                                                <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_item[0][total]">
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-2 ps-1">
@@ -229,14 +232,15 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     //     loading();
     // });
 
-    // Autocomplete
-    const customerElement = document.getElementById('customer');
+    // Customers
+    const customerElement = document.getElementById('customer_input');
     const autocomplete = new Autocomplete(customerElement, {
         threshold: 1,
         onSelectItem: e => {
             document.querySelector('input[name="invoice_customer"]').value = e.value;
         }
     });
+
     const getCustomer = async () => {
         try
         {
@@ -251,8 +255,73 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
             console.log(err);
         }
     }
-    
     // End autompolete
+
+    // Products
+    const getProducts = async () => {
+        try 
+        {
+            const f = await fetch("{{ route('invoices.products') }}");
+            const j = await f.json();
+
+            return j.map(x => ({'label': x.product_name, 'value': x.id}));
+
+        } 
+        catch (error) 
+        {
+            console.error(error);
+        }
+    }
+
+    // buat first product autocomplete
+    async function firstProductAutoComplete() { 
+        const datas = await getProducts();
+        const item = document.querySelector('input[name="invoice_item[0][name]"]'),
+              value = document.querySelector('input[name="invoice_item[0][value]"]');
+        
+        return new Autocomplete(item, {
+            data: datas,
+            threshold: 1,
+            onInput: str => {
+                if(str.length == 0)
+                    value.value = null;
+            },
+            onSelectItem: val => {
+                value.value = val.value;
+            }
+        });
+    }
+
+    // END Products
+
+    // Observer
+    const observerConfig = {attributes: true, childList: true, subtree: true};
+    const observer = new MutationObserver(elem => {
+        const element = elem[0];
+
+        if(element.target.id === 'items-container')
+        {
+            const items = element.target.getElementsByClassName('item-name');
+
+            Array.from(items, async (item, idx) => {
+                const itemValue = document.querySelector('input[name="invoice_item['+(idx+1)+'][value]"]');
+                const datas = await getProducts();
+                
+                new Autocomplete(item, {
+                    data: datas,
+                    threshold: 1,
+                    onInput: str => {
+                        if(str.length === 0) itemValue.value = null;
+                    },
+                    onSelectItem: val => {
+                        itemValue.value = val.value;
+                    }
+                });
+
+            });
+        }
+    });
+    // End Observer
 
     // Items Group
     const itemContainer = document.getElementById('items-container'),
@@ -339,6 +408,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
 
         return row;
     }
+    observer.observe(itemContainer, observerConfig);
 
     // end item group
 
@@ -422,6 +492,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     }
 
     //end tax group
+    
 
     // check if window is changed
     const deleteItemRow = e => {
@@ -449,7 +520,6 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
 
     const inputOnFocusOut = async e =>  {
         e = e || window.event;
-        console.log(e.target);
         if(!e.target.value)
             e.target.parentElement.classList.remove('is-filled');
     }
@@ -462,62 +532,38 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     });
     // end editor group
 
-     // INIT Observer
-     const configObserver = { attributes: true, childList: true, subtree: true };
-
-    const observer = new MutationObserver(async e => {
-        
-        if(e[0].target.id == 'items-container')
-        {
-            const target = e[0].target;
-            const itemNames = target.getElementsByClassName('item-name');
-
-            const setAutoComplete = async () => {
-                try
-                {
-                    const f = await fetch('{{ route('invoices.products') }}');
-                    const j = await f.json();
-
-                    var datas = j.map(x => ({'label': x.product_name, 'value': x.id}));
-
-                    Array.from(itemNames, item => {
-                        return new Autocomplete(item, {
-                            data: datas,
-                            onInput: inp => {
-                                console.log(item.nextSibling);
-                            },
-                            onSelectItem: sel => {
-
-                            } 
-                        });
-
-                    });
-                }
-                catch(err)
-                {
-                    console.log(err);
-                }
-            }
-            
-            await setAutoComplete();
-        }
-    });
-
-    observer.observe(itemContainer, configObserver);
-    observer.observe(taxContainer, configObserver);
-    // End Init
 
     // form submit
-    const mainForm = document.forms['invoice-form'];
 
-    const submitForm = async e => {
+    const formInvoice = async e => {
         e.preventDefault();
 
+        try 
+        {
+            const formData = new FormData(e.target);
+
+            const f = await fetch(e.target.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
+            });
+            const j = await f.json();
+
+            console.log(j);
+        } 
+        catch (error) 
+        {
+            console.log(error);    
+        }
     }
     // end form submit
 
     (async () => {
         await getCustomer();
+        await firstProductAutoComplete();
+
 
         btnAddItem.addEventListener('click', e => {
             e.preventDefault();
@@ -533,7 +579,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
             taxContainer.appendChild(createTax());
        });
 
-       mainForm.addEventListener('submit', async e => await submitForm(e));
+       form.addEventListener('submit', async e => await formInvoice(e));
 
     })();
 </script>
