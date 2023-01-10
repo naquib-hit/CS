@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
     // // Sales
     // Route::delete('sales/truncate', [SalesController::class, 'clean'])->name('sales.truncate');
     // Route::get('sales/get', [SalesController::class, 'get'])->name('sales.get');
+    Route::get('invoices/products', [InvoiceController::class, 'getProducts'])->name('invoices.products');
     Route::get('invoices/customers', [InvoiceController::class, 'getCustomers'])->name('invoices.customers');
     Route::resource('invoices', InvoiceController::class);
     // Transactions

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Invoice, Customer};
+use App\Models\{Invoice, Customer, Product};
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
@@ -96,5 +96,15 @@ class InvoiceController extends Controller
     public function getCustomers(): JsonResponse
     {
         return response()->json(Customer::cursor(), 200, ['Content-Type' => 'application/json']);
+    }
+
+    /**
+     * get all products data for selection
+     *
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function getProducts(): JsonResponse
+    {
+        return response()->json(Product::cursor(), 200, ['Content-Type' => 'application/json']);
     }
 }

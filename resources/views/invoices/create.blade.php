@@ -156,7 +156,7 @@
                                         <div class="col-12 col-md-4 px-1">
                                             <div class="input-group input-group-outline mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
-                                                <input type="number" min="0" step="0.01" value="11" class="form-control tax-total"  name="invoice_tax[0][total]">
+                                                <input type="number" min="0" value="11" class="form-control tax-total"  name="invoice_tax[0][total]">
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-2 ps-1">
@@ -254,32 +254,6 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     
     // End autompolete
 
-    // INIT Observer
-    const configObserver = { attributes: true, childList: true, subtree: true };
-
-    const observer = new MutationObserver(e => {
-        
-        if(e[0].target.id == 'items-container')
-        {
-            const target = e[0].target;
-            const itemNames = target.getElementsByClassName('item-name');
-
-            const setAutoComplete = async () => {
-                try
-                {
-                    
-                }
-                catch(err)
-                {
-                    console.log(err);
-                }
-            }
-            
-        }
-    });
-
-    // End Init
-
     // Items Group
     const itemContainer = document.getElementById('items-container'),
           btnAddItem = document.getElementById('add-item');
@@ -320,6 +294,10 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         const inputText = document.createElement('input');
         inputText.type = 'text';
         inputText.classList.add('form-control', 'item-name');
+       // input text value
+        const inputTextValue = document.createElement('input');
+        inputTextValue.type = 'text';
+        inputTextValue.classList.add('d-none', 'item-name-value');
         // input number
         const inputNumber = document.createElement('input');
         inputNumber.type = 'number';
@@ -332,11 +310,13 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         // LEFT
         labelLeft.innerHTML = "{{ __('invoice.form.fields.item') }} <span class=\"text-danger\">*</span>";
         inputText.name = "invoice_items["+ (+lastIndex + 1) +"][name]";
+        inputTextValue.name = 'invoice_items['+ (+lastIndex + 1) +'][value]'
         inputText.onfocus = async e => await inputOnFocus(e);
         inputText.onblur = async e => await inputOnFocusOut(e);
         inputText.onkeyup = async e => await inputOnKeyup(e);
         inputGroupLeft.appendChild(labelLeft);
         inputGroupLeft.appendChild(inputText);
+        inputGroupLeft.appendChild(inputTextValue);
         colLeft.appendChild(inputGroupLeft);
         row.appendChild(colLeft);
         // MIDDLE
@@ -360,7 +340,6 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         return row;
     }
 
-    observer.observe(itemContainer, configObserver);
     // end item group
 
     // tax group
@@ -429,7 +408,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         inputNumber.onblur = async e => await inputOnFocusOut(e);
         inputNumber.onkeyup = async e => await inputOnKeyup(e);
         inputNumber.min = 0;
-        inputNumber.step = 0.01;
+        //inputNumber.step = 0.01;
         inputGroupMiddle.appendChild(labelMiddle);
         inputGroupMiddle.appendChild(inputNumber);
         colMiddle.appendChild(inputGroupMiddle);
@@ -442,7 +421,6 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         return row;
     }
 
-    observer.observe(taxContainer, configObserver);
     //end tax group
 
     // check if window is changed
@@ -483,6 +461,51 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         theme: 'snow'
     });
     // end editor group
+
+     // INIT Observer
+     const configObserver = { attributes: true, childList: true, subtree: true };
+
+    const observer = new MutationObserver(async e => {
+        
+        if(e[0].target.id == 'items-container')
+        {
+            const target = e[0].target;
+            const itemNames = target.getElementsByClassName('item-name');
+
+            const setAutoComplete = async () => {
+                try
+                {
+                    const f = await fetch('{{ route('invoices.products') }}');
+                    const j = await f.json();
+
+                    var datas = j.map(x => ({'label': x.product_name, 'value': x.id}));
+
+                    Array.from(itemNames, item => {
+                        return new Autocomplete(item, {
+                            data: datas,
+                            onInput: inp => {
+                                console.log(item.nextSibling);
+                            },
+                            onSelectItem: sel => {
+
+                            } 
+                        });
+
+                    });
+                }
+                catch(err)
+                {
+                    console.log(err);
+                }
+            }
+            
+            await setAutoComplete();
+        }
+    });
+
+    observer.observe(itemContainer, configObserver);
+    observer.observe(taxContainer, configObserver);
+    // End Init
 
     // form submit
     const mainForm = document.forms['invoice-form'];
