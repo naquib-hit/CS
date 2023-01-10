@@ -37,9 +37,9 @@ class InvoiceController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreInvoiceRequest  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response
      */
-    public function store(StoreInvoiceRequest $request): \Illuminate\Http\JsonResponse
+    public function store(StoreInvoiceRequest $request): \Illuminate\Http\Response
     {
         //
         try {

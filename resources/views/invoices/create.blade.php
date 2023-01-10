@@ -38,8 +38,10 @@
     <div class="row h-100 justify-content-center">
         <form class="col-12" 
               autocomplete="off" name="form-input" 
-              action="{{ route('invoices.store') }}" >
-           
+              action="{{ route('invoices.store') }}" 
+              method="POST"
+              enctype="multipart/form-data">
+           @csrf
             <fieldset class="row">
                 <div class="col-12 col-lg-4">
                     <div class="card fadeIn3 fadeInBottom">
@@ -49,23 +51,35 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="input-group input-group-outline">
+                            <div class="input-group input-group-outline @error('invoice_no') is-invalid @enderror">
                                 <label class="form-label">{{ __('invoice.form.fields.no') }} <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="invoice_no">
+                                <input type="text" class="form-control" name="invoice_no" >
                             </div>
-                            <div class="input-group input-group-outline mt-3">
+                            @error('invoice_no')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                            <div class="input-group input-group-outline @error('invoice_customer') is-invalid @enderror mt-3">
                                 <label class="form-label">{{ __('invoice.form.fields.customer') }} <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="invoice_customer_text" id="customer_input">
+                                <input type="text" class="form-control" name="invoice_customer_text" id="customer_input" autofocus="">
                                 <input type="text" name="invoice_customer" hidden>
                             </div>
-                            <div class="input-group input-group-outline mt-3">
+                            @error('invoice_customer')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                            <div class="input-group input-group-outline @error('invoice_date') is-invalid @enderror mt-3">
                                 <label class="form-label">{{ __('invoice.form.fields.date') }} <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" name="invoice_dates">
+                                <input type="date" class="form-control" name="invoice_date">
                             </div>
-                            <div class="input-group input-group-outline mt-3">
+                            @error('invoice_date')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                            <div class="input-group input-group-outline @error('invoice_due') is-invalid @enderror mt-3">
                                 <label class="form-label">{{ __('invoice.form.fields.due_date') }}<span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" name="invoice_due">
                             </div>
+                            @error('invoice_due')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
                     </div>
                     <div class="card fadeIn3 fadeInBottom mt-5">
@@ -77,10 +91,13 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-8">
-                                    <div class="input-group input-group-outline">
+                                    <div class="input-group input-group-outline @error('invoice_discount') is-invalid @enderror">
                                         <label class="form-label">{{ __('invoice.form.fields.discount') }}</label>
                                         <input type="number" min="0" class="form-control" name="invoice_discount">
                                     </div>
+                                    @error('invoice_discount')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
                                 </div>
                                 <div class="col-4">
                                     <div class="input-group input-group-outline">
@@ -199,8 +216,15 @@
 @section('js')
 <script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
 <script src="{{ asset('vendor/quill/quill.min.js') }}"></script>
-
-<script type="module">
+<script>
+    const deleteItemRow = e => {
+        e = e || window.event;
+        e.stopPropagation();
+        const row = e.target.parentNode.closest('div.row');
+        row.remove();
+    }
+</script>
+<script type="module" defer>
 import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}";
 
 @if(session()->has('error'))
@@ -495,12 +519,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     
 
     // check if window is changed
-    const deleteItemRow = e => {
-        e = e || window.event;
-        e.stopPropagation();
-        const row = e.target.parentNode.closest('div.row');
-        row.remove();
-    }
+    
 
     const inputOnFocus = async e => {
         e = e || window.event;
@@ -579,7 +598,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
             taxContainer.appendChild(createTax());
        });
 
-       form.addEventListener('submit', async e => await formInvoice(e));
+       //form.addEventListener('submit', async e => await formInvoice(e));
 
     })();
 </script>

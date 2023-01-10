@@ -33,6 +33,7 @@ class StoreInvoiceRequest extends FormRequest
         return [
             //
             'invoice_no' => 'required|unique:invoices,invoice_no',
+            'invoice_customer_text' => 'required|exists:customers,customer_name',
             'invoice_customer' => 'required|exists:customers,id',
             'invoice_date'  => ['required', 'date'],
             'invoice_due'   => 'required|date|after_or_equal:invoice_date',
