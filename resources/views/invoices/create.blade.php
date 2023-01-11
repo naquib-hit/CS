@@ -450,7 +450,6 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         inputNumber.onblur = async e => await inputOnFocusOut(e);
         inputNumber.onkeyup = async e => await inputOnKeyup(e);
         inputNumber.min = 0;
-        inputNumber.step = 0.01;
         inputGroupMiddle.appendChild(labelMiddle);
         inputGroupMiddle.appendChild(inputNumber);
         colMiddle.appendChild(inputGroupMiddle);
