@@ -35,6 +35,14 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link text-white " href="{{ route('taxes.index') }}">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-percent"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">{{ __('template.menu.tax') }}</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link text-white" data-bs-toggle="collapse" data-bs-target="#{{ __('template.menu.invoice.general') }}-children">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-file-invoice"></i>

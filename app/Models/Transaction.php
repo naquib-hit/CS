@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\{ Model, SoftDeletes };
+use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 
 class Transaction extends Model
 {
@@ -21,7 +21,7 @@ class Transaction extends Model
         'sales_id'
     ];
 
-    protected $hidden = [ 'created_at', 'updated_at', 'deleted_at' ];
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
     public function customer(): BelongsTo
     {
@@ -46,10 +46,10 @@ class Transaction extends Model
     public static function getAll(array $filter = NULL): \Illuminate\Database\Query\Builder
     {
         $trans = DB::table('transactions')
-                    ->join('customers', 'customers.id', '=', 'transactions.customer_id')
-                    ->join('products', 'products.id', '=', 'transactions.product_id')
-                    //->join('sales', 'sales.id', '=', 'transactions.sales_id')
-                    ->whereNull('transactions.deleted_at');
+            ->join('customers', 'customers.id', '=', 'transactions.customer_id')
+            ->join('products', 'products.id', '=', 'transactions.product_id')
+            //->join('sales', 'sales.id', '=', 'transactions.sales_id')
+            ->whereNull('transactions.deleted_at');
 
         return $trans;
     }

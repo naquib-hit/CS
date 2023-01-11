@@ -75,6 +75,7 @@
   </main>
 
   <!--   Core JS Files   -->
+  @once
   <script src="{{ asset('js/core/bootstrap.bundle.min.js') }}" ></script>
   <script src="{{ asset('js/plugins/perfect-scrollbar.min.js') }}"></script>
   <script src="{{ asset('js/plugins/smooth-scrollbar.min.js') }}"></script>
@@ -119,6 +120,7 @@
       }
     }
   </script>
+  @endonce
 
   @yield('js')
 </body>

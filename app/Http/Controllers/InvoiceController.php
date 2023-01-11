@@ -39,7 +39,7 @@ class InvoiceController extends Controller
      * @param  \App\Http\Requests\StoreInvoiceRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreInvoiceRequest $request): \Illuminate\Http\Response
+    public function store(StoreInvoiceRequest $request)
     {
         //
         try {

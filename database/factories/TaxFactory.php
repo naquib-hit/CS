@@ -15,6 +15,8 @@ class TaxFactory extends Factory
     {
         return [
             //
+            'tax_name' => $this->faker->unique()->word(),
+            'tax_amount' => $this->faker->numberBetween(1, 20)
         ];
     }
 }

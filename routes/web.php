@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     ProductController,
     CustomerController,
     InvoiceController,
+    TaxController,
     TransactionController
 };
 
@@ -34,6 +35,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('customers/truncate', [CustomerController::class, 'clean'])->name('customers.truncate');
     Route::get('customers/get', [CustomerController::class, 'get'])->name('customers.get');
     Route::resource('customers', CustomerController::class);
+    // Taxes
+    Route::delete('taxes/truncate', [TaxController::class, 'truncate'])->name('taxes.truncate');
+    Route::get('taxes/get', [TaxController::class, 'get'])->name('taxes.get');
+    Route::resource('taxes', TaxController::class);
     // // Sales
     // Route::delete('sales/truncate', [SalesController::class, 'clean'])->name('sales.truncate');
     // Route::get('sales/get', [SalesController::class, 'get'])->name('sales.get');

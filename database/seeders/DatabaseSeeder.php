@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             ProductUnitSeeder::class,
             ProductSeeder::class,
             CustomerSeeder::class,
+            TaxSeeder::class,
             //SalesSeeder::class,
             TransactionSeeder::class
         ]);

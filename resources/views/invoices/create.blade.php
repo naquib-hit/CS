@@ -130,23 +130,51 @@
                                 <div class="card-body" id="items-container">
                                     <div class="row align-items-baseline">
                                         <div class="col-12 col-md-6 pe-1">
-                                            <div class="input-group input-group-outline mt-3">
+                                            <div class="input-group input-group-outline @error('invoice_item.0.value') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" name="invoice_item[0][name]">
                                                 <input type="text" class="d-none" name="invoice_item[0][value]">
                                             </div>
-                                            
+                                            @error('invoice_item.0.value')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <div class="col-12 col-md-4 px-1">
-                                            <div class="input-group input-group-outline mt-3">
+                                            <div class="input-group input-group-outline @error('invoice_item.0.total') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
                                                 <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_item[0][total]">
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-2 ps-1">
+                                        {{-- <div class="col-12 col-md-2 ps-1">
                                             <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
-                                        </div>
+                                        </div> --}}
                                     </div>
+
+                                    @if (!empty(old('invoice_item')) && count(old('invoice_item')) > 1)
+                                        @for ($i=1;$i<=count(old('invoice_item'));$i++)
+                                        <div class="row align-items-baseline">
+                                            <div class="col-12 col-md-6 pe-1">
+                                                <div class="input-group input-group-outline @error('invoice_item.'.$i.'.value') is-invalid @enderror mt-3">
+                                                    <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" name="invoice_item[0][name]">
+                                                    <input type="text" class="d-none" name="invoice_item[0][value]">
+                                                </div>
+                                                @error('invoice_item.'.$i.'.value')
+                                                    <small class="text-danger">{{ $message }}</small>
+                                                @enderror
+                                            </div>
+                                            <div class="col-12 col-md-4 px-1">
+                                                <div class="input-group input-group-outline @error('invoice_item.'.$i.'.total') is-invalid @enderror mt-3">
+                                                    <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
+                                                    <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_item[0][total]">
+                                                </div>
+                                            </div>
+                                            {{-- <div class="col-12 col-md-2 ps-1">
+                                                <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
+                                            </div> --}}
+                                        </div>
+                                        @endfor
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -328,13 +356,14 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
             const items = element.target.getElementsByClassName('item-name');
 
             Array.from(items, async (item, idx) => {
-                const itemValue = document.querySelector('input[name="invoice_item['+(idx+1)+'][value]"]');
+                const itemValue = document.querySelector('input[name="invoice_item['+idx+'][value]"]');
                 const datas = await getProducts();
                 
                 new Autocomplete(item, {
                     data: datas,
                     threshold: 1,
                     onInput: str => {
+                        console.log(str);
                         if(str.length === 0) itemValue.value = null;
                     },
                     onSelectItem: val => {
@@ -394,6 +423,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         // input number
         const inputNumber = document.createElement('input');
         inputNumber.type = 'number';
+        inputNumber.step = 1;
         inputNumber.classList.add('form-control');
         // trash icon
         const faTrash = document.createElement('i');
@@ -502,7 +532,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         inputNumber.onblur = async e => await inputOnFocusOut(e);
         inputNumber.onkeyup = async e => await inputOnKeyup(e);
         inputNumber.min = 0;
-        //inputNumber.step = 0.01;
+        inputNumber.step = 1;
         inputGroupMiddle.appendChild(labelMiddle);
         inputGroupMiddle.appendChild(inputNumber);
         colMiddle.appendChild(inputGroupMiddle);

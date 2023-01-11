@@ -16,9 +16,10 @@ class CreateTaxesTable extends Migration
         Schema::create('taxes', function (Blueprint $table) {
             $table->id();
             $table->string('tax_name', 220);
-            $table->integer('amount');
+            $table->integer('tax_amount');
             $table->integer('created_by')->nullable();
             $table->timestamps();
+            $table->softDeletes('deleted_at');
         });
     }
 

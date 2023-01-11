@@ -8,6 +8,7 @@ return [
         'product'       => 'Products / Services',
         'customer'      => 'Customers',
         'sales'         => 'Salesperson',
+        'tax'           => 'Tax',
         'invoice'       => [
             'general'   => 'Invoice',
             'reccuring' => 'Recurring Invoice',

@@ -8,6 +8,7 @@ return [
         'product'       => 'Produk / Layanan',
         'customer'      => 'Pelanggan',
         'sales'         => 'Sales',
+        'tax'           => 'Pajak',
         'transaction'   => 'Transaksi',
         'invoice'       => [
             'general'   => 'Faktur',

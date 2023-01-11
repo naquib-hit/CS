@@ -71,7 +71,7 @@ class TransactionController extends Controller
      * @param  \App\Models\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTransactionRequest $request, Transaction $transaction): Response
+    public function update(UpdateTransactionRequest $request, Transaction $transaction)
     {
         //
     }
@@ -97,7 +97,7 @@ class TransactionController extends Controller
     {
         //
         $trans = Transaction::getAll();
-        $page = $trans->paginate(6)->withQueryString();
+        $page = $trans->paginate(6);
 
         return $page;
     }

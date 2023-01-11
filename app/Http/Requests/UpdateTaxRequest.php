@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateTaxRequest extends FormRequest
@@ -13,7 +14,7 @@ class UpdateTaxRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +24,14 @@ class UpdateTaxRequest extends FormRequest
      */
     public function rules()
     {
+        $uri = explode('/', $this->path());
+        $id = $uri[count($uri) - 1];
+
         return [
             //
+
+            'tax_name'      => ['required', Rule::unique('taxes', 'tax_name')->where(fn ($q) => $q->where('id', '<>', $id))->whereNull('deleted_at')],
+            'tax_amount'    => 'required|integer|gt:0'
         ];
     }
 }

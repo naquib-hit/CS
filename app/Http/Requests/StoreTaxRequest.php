@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTaxRequest extends FormRequest
@@ -13,7 +14,7 @@ class StoreTaxRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +26,8 @@ class StoreTaxRequest extends FormRequest
     {
         return [
             //
+            'tax_name'      => ['required', Rule::unique('taxes', 'tax_name')->whereNull('deleted_at')],
+            'tax_amount'    => 'required|integer|gt:0'
         ];
     }
 }
