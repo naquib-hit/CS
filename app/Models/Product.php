@@ -15,15 +15,6 @@ class Product extends Model
     protected $fillable = [ 'product_name', 'product_price'];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
     
-    /**
-     * productUnit
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function productUnit(): BelongsTo 
-    {
-        return $this->belongsTo(ProductUnit::class, 'product_unit_id', 'id');
-    }
     
     /**
      * Transaction table relation
@@ -42,7 +33,7 @@ class Product extends Model
      */
     public function invoices(): BelongsToMany
     {
-        return $this->belongsToMany(Invoice::class, 'products_invoices', 'product_id', 'invoice_id');
+        return $this->belongsToMany(Invoice::class, 'invoice_product', 'product_id', 'invoice_id');
     }
     
     /**

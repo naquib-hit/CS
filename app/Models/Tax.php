@@ -12,4 +12,14 @@ class Tax extends Model
 
     protected $fillable = ['tax_name', 'tax_amount'];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+     /**
+     *  Invoices Realation Definition
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function invoices(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Invoice::class);
+    }
 }

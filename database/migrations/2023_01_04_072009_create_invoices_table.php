@@ -23,7 +23,6 @@ class CreateInvoicesTable extends Migration
             $table->smallInteger('invoice_status')->default(0);
             $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('customer_id')->constrained('customers')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('tax_id')->constrained('taxes')->cascadeOnUpdate()->cascadeOnDelete();
             $table->integer('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes('deleted_at');

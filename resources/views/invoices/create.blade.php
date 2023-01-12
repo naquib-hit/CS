@@ -53,29 +53,29 @@
                         <div class="card-body">
                             <div class="input-group input-group-outline @error('invoice_no') is-invalid @enderror">
                                 <label class="form-label">{{ __('invoice.form.fields.no') }} <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="invoice_no" >
+                                <input type="text" class="form-control" name="invoice_no" value="{{ old('invoice_no') ?? NULL }}">
                             </div>
                             @error('invoice_no')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                             <div class="input-group input-group-outline @error('invoice_customer') is-invalid @enderror mt-3">
                                 <label class="form-label">{{ __('invoice.form.fields.customer') }} <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="invoice_customer_text" id="customer_input" autofocus="">
-                                <input type="text" name="invoice_customer" hidden>
+                                <input type="text" class="form-control" name="invoice_customer_text" id="customer_input" autofocus="" value="{{ old('invoice_customer_text') ?? NULL }}">
+                                <input type="text" name="invoice_customer" value="{{ old('invoice_customer') ?? NULL }}" hidden>
                             </div>
                             @error('invoice_customer')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                             <div class="input-group input-group-outline @error('invoice_date') is-invalid @enderror mt-3">
                                 <label class="form-label">{{ __('invoice.form.fields.date') }} <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" name="invoice_date">
+                                <input type="date" class="form-control" name="invoice_date" value="{{ old('invoice_date') ?? NULL }}">
                             </div>
                             @error('invoice_date')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                             <div class="input-group input-group-outline @error('invoice_due') is-invalid @enderror mt-3">
                                 <label class="form-label">{{ __('invoice.form.fields.due_date') }}<span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" name="invoice_due">
+                                <input type="date" class="form-control" name="invoice_due" value="{{ old('invoice_due') ?? NULL }}">
                             </div>
                             @error('invoice_due')
                                 <small class="text-danger">{{ $message }}</small>
@@ -93,7 +93,7 @@
                                 <div class="col-8">
                                     <div class="input-group input-group-outline @error('invoice_discount') is-invalid @enderror">
                                         <label class="form-label">{{ __('invoice.form.fields.discount') }}</label>
-                                        <input type="number" min="0" class="form-control" name="invoice_discount">
+                                        <input type="number" min="0" class="form-control" name="invoice_discount" value="{{ old('invoice_discount') ?? NULL }}">
                                     </div>
                                     @error('invoice_discount')
                                         <small class="text-danger">{{ $message }}</small>
@@ -132,8 +132,8 @@
                                         <div class="col-12 col-md-6 pe-1">
                                             <div class="input-group input-group-outline @error('invoice_items.0.value') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control item-name" name="invoice_items[0][name]">
-                                                <input type="text" class="d-none" name="invoice_items[0][value]">
+                                                <input type="text" class="form-control item-name" name="invoice_items[0][name]" value="{{ old('invoice_items.0.name') ?? NULL }}">
+                                                <input type="text" class="d-none" name="invoice_items[0][value]" value="{{ old('invoice_items.0.value') ?? NULL }}">
                                             </div>
                                             @error('invoice_items.0.value')
                                                 <small class="text-danger">{{ $message }}</small>
@@ -142,7 +142,7 @@
                                         <div class="col-12 col-md-4 px-1">
                                             <div class="input-group input-group-outline @error('invoice_items.0.total') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
-                                                <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[0][total]">
+                                                <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[0][total]" value="{{ old('invoice_items.0.value') ?? NULL }}">
                                             </div>
                                         </div>
                                         {{-- <div class="col-12 col-md-2 ps-1">
@@ -157,8 +157,8 @@
                                                 <div class="col-12 col-md-6 pe-1">
                                                     <div class="input-group input-group-outline @error('invoice_items.'.$i.'.value') is-invalid @enderror mt-3">
                                                         <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control item-name" name="invoice_items[{{ $i }}][name]">
-                                                        <input type="text" class="d-none" name="invoice_items[{{ $i }}][value]">
+                                                        <input type="text" class="form-control item-name" name="invoice_items[{{ $i }}][name]" value="{{ old('invoice_items.'.$i.'.name') ?? NULL }}">
+                                                        <input type="text" class="d-none" name="invoice_items[{{ $i }}][value]" value="{{ old('invoice_items.'.$i.'.value') ?? NULL }}">
                                                     </div>
                                                     @error('invoice_items.'.$i.'.value')
                                                         <small class="text-danger">{{ $message }}</small>
@@ -167,7 +167,7 @@
                                                 <div class="col-12 col-md-4 px-1">
                                                     <div class="input-group input-group-outline @error('invoice_items.'.$i.'.total') is-invalid @enderror mt-3">
                                                         <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
-                                                        <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[{{ $i }}][total]">
+                                                        <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[{{ $i }}][total]" value="{{ old('invoice_items.'.$i.'.total') ?? NULL }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-2 ps-1">
@@ -200,7 +200,8 @@
                                         <div class="col-12 col-md-9 pe-1">
                                             <div class="input-group input-group-outline mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.tax') }}<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control tax-name" value="PPN" name="invoice_tax[0][name]">
+                                                <input type="text" class="form-control tax-name" value="PPN" name="invoice_tax[0][name]" value="{{ old('invoice_tax.0.name') ?? NULL }}">
+                                                <input type="number" name="invoice_tax[0][value]" value="{{ old('invoice_tax.0.value') ?? NULL }}" hidden>
                                             </div>
                                             
                                         </div>
@@ -221,7 +222,7 @@
                                       <h4 class="text-white font-weight-bolder ms-3 my-0">{{ __('invoice.form.fields.notes') }}</h4>
                                 </div>
                                 <div class="card-body">
-                                    <textarea id="notes-editor" class="form-control" name="invoice_notes"></textarea>
+                                    <textarea id="notes-editor" class="form-control" name="invoice_notes">{{ old('invoice_notes') ?? NULL }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -508,6 +509,11 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         const inputGroupLeft = document.createElement('div');
         inputGroupLeft.classList.add('input-group', 'input-group-outline');
         // input-group-middlw (sengaja beda biar classListNya beda)
+        // input text value
+        const inputTextValue = document.createElement('input');
+        inputTextValue.type = 'number';
+        inputTextValue.classList.add('d-none', 'tax-name-value');
+        // pisahin ajah
         const inputGroupMiddle = document.createElement('div');
         inputGroupMiddle.classList.add('input-group', 'input-group-outline');
         // clear-row 
@@ -535,13 +541,15 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         faTrash.classList.add('fas', 'fa-trash', 'font-reset');
 
         // LEFT
-        labelLeft.innerHTML = "{{ __('invoice.form.fields.tax') }} <span class=\"text-danger\"></span>";
+        labelLeft.innerHTML = "{{ __('invoice.form.fields.tax') }} <span class=\"text-danger\">*</span>";
         inputText.name = "invoice_tax["+ (+lastTaxIndex + 1) +"][name]";
+        inputTextValue.name =  "invoice_tax["+ (+lastTaxIndex + 1) +"][value]";
         inputText.onfocus = async e => await inputOnFocus(e);
         inputText.onblur = async e => await inputOnFocusOut(e);
         inputText.onkeyup = async e => await inputOnKeyup(e);
         inputGroupLeft.appendChild(labelLeft);
         inputGroupLeft.appendChild(inputText);
+        inputGroupLeft.appendChild(inputTextValue);
         colLeft.appendChild(inputGroupLeft);
         row.appendChild(colLeft);
         // MIDDLE

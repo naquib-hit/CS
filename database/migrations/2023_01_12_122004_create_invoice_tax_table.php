@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductsTable extends Migration
+class CreateInvoiceTaxTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('invoice_tax', function (Blueprint $table) {
             $table->id();
-            $table->string('product_name', 240);
-            $table->integer('product_price');
+            $table->foreignId('invoice_id')->constrained('invoices')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('tax_id')->constrained('taxes')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
-            $table->integer('created_by')->nullable();
-            $table->softDeletes($column = 'deleted_at', $precision = 0);
         });
     }
 
@@ -30,6 +28,6 @@ class CreateProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('invoice_tax');
     }
 }

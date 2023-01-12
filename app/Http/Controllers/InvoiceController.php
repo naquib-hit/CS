@@ -42,6 +42,7 @@ class InvoiceController extends Controller
     public function store(StoreInvoiceRequest $request)
     {
         //
+        $items = []; $taxes = [];
         try {
             $valid = $request->validated();
 
@@ -51,24 +52,29 @@ class InvoiceController extends Controller
             $invoice->create_date = (new \DateTime($valid['invoice_date']))->format('Y-m-d');
             $invoice->due_date = (new \DateTime($valid['invoice_due']))->format('Y-m-d');
             $invoice->notes = $valid['invoice_notes'];
-            $invoice->user_id = Auth::id();
+            $invoice->user_id = (int) Auth::id();
             $invoice->save();
 
-            // attach for pivot table
-            $attach = [];
+            // attach products for pivot table
             foreach ($valid['invoice_items'] as $item)
-                $attach[$item['value']] = [
+                $items[$item['value']] = [
                     'quantity'      => $item['total'],
                     'total_price'   => (Product::find($item['value']))->product_price * $item['total']
                 ];
+            $invoice->products()->attach($items);
 
-            $invoice->products()->attach($attach);
+            // attach tax for pivot table
+            $taxes = collect($valid['invoice_tax'])->pluck('value');
+            $invoice->taxes()->attach($taxes);
 
             return redirect()->route('invoices.index')->with('success', __('validation.success.create'));
         } catch (\Throwable $e) {
             Log::error($e->getMessage());
 
             return redirect()->back()->with('error', __('validation.failed.create'));
+        } finally {
+            $items = NULL;
+            $taxes = NULL;
         }
     }
 
