@@ -29,7 +29,7 @@ return [
       'due_date'  => 'batas Waktu',
       'customer'  => 'Pelanggan',
       'item'      => 'Jenis Barang',
-      'total'     => 'Jumlah',
+      'total'     => 'Kuantitas',
       'tax'       => 'Pajak',
       'discount'  => 'Diskon',
       'notes'     => 'Catatan'

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
+use Response;
+use Illuminate\Support\Facades\{Log, Auth};
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
-use App\Models\{Invoice, Customer, Product};
+use App\Models\{Invoice, Customer, Product, Tax};
 
 class InvoiceController extends Controller
 {
@@ -36,7 +35,8 @@ class InvoiceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreInvoiceRequest  $request
+     * @param \App\Http\Requests\StoreInvoiceRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(StoreInvoiceRequest $request)
@@ -45,18 +45,30 @@ class InvoiceController extends Controller
         try {
             $valid = $request->validated();
 
-            return response()->json(
-                ['success' => true, 'message' => __('validation.success.create'), 'token' => csrf_token()],
-                200,
-                ['Content-Type' => 'application/json']
-            );
+            $invoice = new Invoice;
+            $invoice->invoice_no = $valid['invoice_no'];
+            $invoice->customer_id  = $valid['invoice_customer'];
+            $invoice->create_date = (new \DateTime($valid['invoice_date']))->format('Y-m-d');
+            $invoice->due_date = (new \DateTime($valid['invoice_due']))->format('Y-m-d');
+            $invoice->notes = $valid['invoice_notes'];
+            $invoice->user_id = Auth::id();
+            $invoice->save();
+
+            // attach for pivot table
+            $attach = [];
+            foreach ($valid['invoice_items'] as $item)
+                $attach[$item['value']] = [
+                    'quantity'      => $item['total'],
+                    'total_price'   => (Product::find($item['value']))->product_price * $item['total']
+                ];
+
+            $invoice->products()->attach($attach);
+
+            return redirect()->route('invoices.index')->with('success', __('validation.success.create'));
         } catch (\Throwable $e) {
             Log::error($e->getMessage());
-            return response()->json(
-                ['success' => false, 'message' => __('validation.failed.create'), 'token' => csrf_token()],
-                422,
-                ['Content-Type' => 'application/json']
-            );
+
+            return redirect()->back()->with('error', __('validation.failed.create'));
         }
     }
 
@@ -108,9 +120,9 @@ class InvoiceController extends Controller
     /**
      * get all customers data for selection
      *
-     * @return Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
      */
-    public function getCustomers(): JsonResponse
+    public function getCustomers()
     {
         return response()->json(Customer::cursor(), 200, ['Content-Type' => 'application/json']);
     }
@@ -118,10 +130,20 @@ class InvoiceController extends Controller
     /**
      * get all products data for selection
      *
-     * @return Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
      */
-    public function getProducts(): JsonResponse
+    public function getProducts()
     {
         return response()->json(Product::cursor(), 200, ['Content-Type' => 'application/json']);
+    }
+
+    /**
+     * get all taxes data for selection
+     *
+     * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     */
+    public function getTaxes()
+    {
+        return response()->json(Tax::cursor(), 200, ['Content-Type' => 'application/json']);
     }
 }

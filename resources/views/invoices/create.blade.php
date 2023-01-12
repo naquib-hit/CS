@@ -37,8 +37,8 @@
     
     <div class="row h-100 justify-content-center">
         <form class="col-12" 
-              autocomplete="off" name="form-input" 
-              action="{{ route('invoices.store') }}" 
+              autocomplete="off" name="form-input"
+              action="{{ route('invoices.store') }}"
               method="POST"
               enctype="multipart/form-data">
            @csrf
@@ -130,19 +130,19 @@
                                 <div class="card-body" id="items-container">
                                     <div class="row align-items-baseline">
                                         <div class="col-12 col-md-6 pe-1">
-                                            <div class="input-group input-group-outline @error('invoice_item.0.value') is-invalid @enderror mt-3">
+                                            <div class="input-group input-group-outline @error('invoice_items.0.value') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="invoice_item[0][name]">
-                                                <input type="text" class="d-none" name="invoice_item[0][value]">
+                                                <input type="text" class="form-control item-name" name="invoice_items[0][name]">
+                                                <input type="text" class="d-none" name="invoice_items[0][value]">
                                             </div>
-                                            @error('invoice_item.0.value')
+                                            @error('invoice_items.0.value')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                         <div class="col-12 col-md-4 px-1">
-                                            <div class="input-group input-group-outline @error('invoice_item.0.total') is-invalid @enderror mt-3">
+                                            <div class="input-group input-group-outline @error('invoice_items.0.total') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
-                                                <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_item[0][total]">
+                                                <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[0][total]">
                                             </div>
                                         </div>
                                         {{-- <div class="col-12 col-md-2 ps-1">
@@ -150,30 +150,33 @@
                                         </div> --}}
                                     </div>
 
-                                    @if (!empty(old('invoice_item')) && count(old('invoice_item')) > 1)
-                                        @for ($i=1;$i<=count(old('invoice_item'));$i++)
-                                        <div class="row align-items-baseline">
-                                            <div class="col-12 col-md-6 pe-1">
-                                                <div class="input-group input-group-outline @error('invoice_item.'.$i.'.value') is-invalid @enderror mt-3">
-                                                    <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" name="invoice_item[0][name]">
-                                                    <input type="text" class="d-none" name="invoice_item[0][value]">
+                                    @if (!empty(old('invoice_items')) && count(old('invoice_items')) > 1)
+                                        
+                                        @for ($i=1;$i<=count(old('invoice_items'));$i++)
+                                            <div class="row align-items-baseline">
+                                                <div class="col-12 col-md-6 pe-1">
+                                                    <div class="input-group input-group-outline @error('invoice_items.'.$i.'.value') is-invalid @enderror mt-3">
+                                                        <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control item-name" name="invoice_items[{{ $i }}][name]">
+                                                        <input type="text" class="d-none" name="invoice_items[{{ $i }}][value]">
+                                                    </div>
+                                                    @error('invoice_items.'.$i.'.value')
+                                                        <small class="text-danger">{{ $message }}</small>
+                                                    @enderror
                                                 </div>
-                                                @error('invoice_item.'.$i.'.value')
-                                                    <small class="text-danger">{{ $message }}</small>
-                                                @enderror
-                                            </div>
-                                            <div class="col-12 col-md-4 px-1">
-                                                <div class="input-group input-group-outline @error('invoice_item.'.$i.'.total') is-invalid @enderror mt-3">
-                                                    <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
-                                                    <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_item[0][total]">
+                                                <div class="col-12 col-md-4 px-1">
+                                                    <div class="input-group input-group-outline @error('invoice_items.'.$i.'.total') is-invalid @enderror mt-3">
+                                                        <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
+                                                        <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[{{ $i }}][total]">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-2 ps-1">
+                                                    <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
                                                 </div>
                                             </div>
-                                            {{-- <div class="col-12 col-md-2 ps-1">
-                                                <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
-                                            </div> --}}
-                                        </div>
+    
                                         @endfor
+
                                     @endif
                                 </div>
                             </div>
@@ -194,18 +197,12 @@
                                 </div>
                                 <div class="card-body" id="tax-container">
                                     <div class="row align-items-baseline">
-                                        <div class="col-12 col-md-6 pe-1">
+                                        <div class="col-12 col-md-9 pe-1">
                                             <div class="input-group input-group-outline mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.tax') }}<span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control tax-name" value="PPN" name="invoice_tax[0][name]">
                                             </div>
                                             
-                                        </div>
-                                        <div class="col-12 col-md-4 px-1">
-                                            <div class="input-group input-group-outline mt-3">
-                                                <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
-                                                <input type="number" min="0" value="11" class="form-control tax-total"  name="invoice_tax[0][total]">
-                                            </div>
                                         </div>
                                         <div class="col-12 col-md-2 ps-1">
                                             <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
@@ -224,7 +221,7 @@
                                       <h4 class="text-white font-weight-bolder ms-3 my-0">{{ __('invoice.form.fields.notes') }}</h4>
                                 </div>
                                 <div class="card-body">
-                                    <textarea id="notes-editor" class="form-control"></textarea>
+                                    <textarea id="notes-editor" class="form-control" name="invoice_notes"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -326,59 +323,87 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     }
 
     // buat first product autocomplete
+    const itemContainer = document.getElementById('items-container'),
+          btnAddItem = document.getElementById('add-item');
+    
     async function firstProductAutoComplete() { 
         const datas = await getProducts();
-        const item = document.querySelector('input[name="invoice_item[0][name]"]'),
-              value = document.querySelector('input[name="invoice_item[0][value]"]');
+        const names = itemContainer.getElementsByClassName('item-name');
+        // const item = document.querySelector('input[name="invoice_items[0][name]"]'),
+        //       value = document.querySelector('input[name="invoice_items[0][value]"]');
         
-        return new Autocomplete(item, {
-            data: datas,
-            threshold: 1,
-            onInput: str => {
-                if(str.length == 0)
-                    value.value = null;
-            },
-            onSelectItem: val => {
-                value.value = val.value;
-            }
+        Array.from(names, (item, idx) => {
+
+            const value = document.querySelector('input[name="invoice_items['+idx+'][value]"]');
+            
+            new Autocomplete(item, {
+                data: datas,
+                threshold: 1,
+                onInput: str => {
+                    if(str.length == 0)
+                        value.value = null;
+                },
+                onSelectItem: val => {
+                    value.value = val.value;
+                }
+            });
         });
     }
-
     // END Products
+
+    // Tax
+    const taxContainer = document.getElementById('tax-container'),
+          btnAddTax = document.getElementById('add-tax');
+
+    async function taxAutocomplete()
+    {
+        try {
+            const f = await fetch("{{ route('invoices.taxes') }}");
+            const j = await f.json();
+
+            const map = j.map(x => ({'label': x.tax_name, 'value': x.id}));
+            const names = taxContainer.getElementsByClassName('tax-name');
+
+            Array.from(names, (item, idx) => {
+
+                const value = document.querySelector('input[name="invoice_tax['+idx+'][value]"]');
+
+                new Autocomplete(item, {
+                    data: map,
+                    threshold: 1,
+                    onInput: str => {
+                        if(str.length == 0)
+                            value.value = null;
+                    },
+                    onSelectItem: val => {
+                        value.value = val.value;
+                    }
+                });
+            });
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    
+    // End Tax
 
     // Observer
     const observerConfig = {attributes: true, childList: true, subtree: true};
-    const observer = new MutationObserver(elem => {
+    const observer = new MutationObserver(async elem => {
         const element = elem[0];
 
         if(element.target.id === 'items-container')
-        {
-            const items = element.target.getElementsByClassName('item-name');
+            await firstProductAutoComplete();
 
-            Array.from(items, async (item, idx) => {
-                const itemValue = document.querySelector('input[name="invoice_item['+idx+'][value]"]');
-                const datas = await getProducts();
-                
-                new Autocomplete(item, {
-                    data: datas,
-                    threshold: 1,
-                    onInput: str => {
-                        console.log(str);
-                        if(str.length === 0) itemValue.value = null;
-                    },
-                    onSelectItem: val => {
-                        itemValue.value = val.value;
-                    }
-                });
-
-            });
-        }
+        if(element.target.id === 'tax-container')
+            await taxAutocomplete();
     });
     // End Observer
 
     // Items Group
-    const itemContainer = document.getElementById('items-container'),
-          btnAddItem = document.getElementById('add-item');
+    
     let lastIndex = document.getElementsByClassName('item-name').length - 1;
     
     
@@ -466,8 +491,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     // end item group
 
     // tax group
-    const taxContainer = document.getElementById('tax-container'),
-          btnAddTax = document.getElementById('add-tax');
+   
     let lastTaxIndex = document.getElementsByClassName('tax-name').length - 1;
     
     const createTax = () => {
@@ -476,10 +500,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         row.classList.add('row', 'mt-3', 'align-items-baseline');
         // col-left 
         const colLeft = document.createElement('div');
-        colLeft.classList.add('col-12', 'col-md-6', 'pe-1');
-        // col-middle
-        const colMiddle = document.createElement('div');
-        colMiddle.classList.add('col-12', 'col-md-4','px-1');
+        colLeft.classList.add('col-12', 'col-md-9', 'pe-1');
         // col-right
         const colRight = document.createElement('div');
         colRight.classList.add('col-12', 'col-md-2', 'ps-1');
@@ -525,17 +546,17 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         row.appendChild(colLeft);
         // MIDDLE
         //labelMiddle.innerText = '';
-        labelMiddle.innerHTML = "{{ __('invoice.form.fields.total') }} <span class=\"text-danger\"></span>";
-        inputNumber.name= "invoice_tax["+ (+lastIndex + 1) +"][total]";
-        inputNumber.onfocus = async e => await inputOnFocus(e);
-        inputNumber.onblur = async e => await inputOnFocusOut(e);
-        inputNumber.onkeyup = async e => await inputOnKeyup(e);
-        inputNumber.min = 0;
-        inputNumber.step = 1;
-        inputGroupMiddle.appendChild(labelMiddle);
-        inputGroupMiddle.appendChild(inputNumber);
-        colMiddle.appendChild(inputGroupMiddle);
-        row.appendChild(colMiddle);
+        // labelMiddle.innerHTML = "{{ __('invoice.form.fields.total') }} <span class=\"text-danger\"></span>";
+        // inputNumber.name= "invoice_tax["+ (+lastIndex + 1) +"][total]";
+        // inputNumber.onfocus = async e => await inputOnFocus(e);
+        // inputNumber.onblur = async e => await inputOnFocusOut(e);
+        // inputNumber.onkeyup = async e => await inputOnKeyup(e);
+        // inputNumber.min = 0;
+        // inputNumber.step = 1;
+        // inputGroupMiddle.appendChild(labelMiddle);
+        // inputGroupMiddle.appendChild(inputNumber);
+        // colMiddle.appendChild(inputGroupMiddle);
+        // row.appendChild(colMiddle);
         // RIGHT
         clearRow.appendChild(faTrash);
         colRight.appendChild(clearRow);
@@ -543,7 +564,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
 
         return row;
     }
-
+    observer.observe(taxContainer, observerConfig);
     //end tax group
     
 
@@ -590,20 +611,27 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         {
             const formData = new FormData(e.target);
 
-            const f = await fetch(e.target.action, {
+            const f = await fetch("{{ route('invoices.store') }}", {
                 method: 'POST',
                 headers: {
+                    'Accept': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 },
                 body: formData
             });
             const j = await f.json();
 
-            console.log(j);
+            if(!j.success)
+            {
+                Swal.fire({
+                    
+                });
+                return false;
+            }
         } 
         catch (error) 
         {
-            console.log(error);    
+            console.log(error.reponse);    
         }
     }
     // end form submit
@@ -611,7 +639,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     (async () => {
         await getCustomer();
         await firstProductAutoComplete();
-
+        await taxAutocomplete();
 
         btnAddItem.addEventListener('click', e => {
             e.preventDefault();
