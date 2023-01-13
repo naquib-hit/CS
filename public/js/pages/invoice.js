@@ -1,241 +1,229 @@
-import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}";
+'use strict';
 
+const table = document.getElementById('tbl-main');
+const tbody = table.tBodies[0];
+const lang = JSON.parse(document.getElementById('lang').textContent);
+const checkAll = document.getElementById('check-all');
+const deleteAllBtn = document.getElementById('delete-all'),
+      prevPage = document.getElementById('previous-page'),
+      nextPage = document.getElementById('next-page');
 
-// Autocomplete
-const customerElement = document.getElementById('customer');
-const autocomplete = new Autocomplete(customerElement);
-const getCustomer = async () => {
+let selectedRows = [],
+    data = null,
+    fetchUrl = `${window.location.href}/get`;
+// INIT DATA
+const getData = async (url, options) => {
     try
     {
-        const f = await fetch(`{{ route('invoices.customers') }}`);
-        const j = await f.json();
-        const cs = j.map(x => ({'label': x.customer_name, 'value': x.id}));
+        let opt = options ? options : {};
+        let req = await fetch(url, opt);
+        const j = await req.json();
 
-        autocomplete.setData(cs);
+        return j;
     }
     catch(err)
     {
-        console.log(err);
+        console.error(err);
     }
 }
-// End autompolete
 
-// Items Group
-const itemContainer = document.getElementById('items-container'),
-      btnAddItem = document.getElementById('add-item');
-let elemIndex = 0,
-    lastIndex = document.getElementsByClassName('item-name').length - 1;
+// 
 
-console.log(lastIndex);
-
-const createItem = () => {
-    // new row
-    const row = document.createElement('div');
-    row.classList.add('row', 'mt-3', 'align-items-baseline');
-    // col-left 
-    const colLeft = document.createElement('div');
-    colLeft.classList.add('col-12', 'col-md-6', 'pe-1');
-    // col-middle
-    const colMiddle = document.createElement('div');
-    colMiddle.classList.add('col-12', 'col-md-4','px-1');
-    // col-right
-    const colRight = document.createElement('div');
-    colRight.classList.add('col-12', 'col-md-2', 'ps-1');
-    // input-group-left
-    const inputGroupLeft = document.createElement('div');
-    inputGroupLeft.classList.add('input-group', 'input-group-outline');
-    // input-group-middlw (sengaja beda biar classListNya beda)
-    const inputGroupMiddle = document.createElement('div');
-    inputGroupMiddle.classList.add('input-group', 'input-group-outline');
-    // clear-row 
-    const clearRow = document.createElement('button');
-    clearRow.type = 'button';
-    clearRow.onclick = e => deleteItemRow(e);
-    clearRow.classList.add('btn', 'btn-circle', 'btn-danger', 'm-0', 'p-0', 'clear-row');
-    // label buat text
-    const labelLeft = document.createElement('label');
-    labelLeft.classList.add('form-label');
-    // label buat number
-    const labelMiddle = document.createElement('label');
-    labelMiddle.classList.add('form-label');
-   // input text
-    const inputText = document.createElement('input');
-    inputText.type = 'text';
-    inputText.classList.add('form-control', 'item-name');
-    // input number
-    const inputNumber = document.createElement('input');
-    inputNumber.type = 'number';
-    inputNumber.classList.add('form-control');
-    // trash icon
-    const faTrash = document.createElement('i');
-    faTrash.onclick = () => false;
-    faTrash.classList.add('fas', 'fa-trash', 'font-reset');
-
-    // LEFT
-    labelLeft.innerHTML = "{{ __('invoice.form.fields.item') }} <span class=\"text-danger\">*</span>";
-    inputText.name = "invoice_items["+ (+lastIndex + 1) +"][name]";
-    inputText.onfocus = async e => await inputOnFocus(e);
-    inputText.onblur = async e => await inputOnFocusOut(e);
-    inputText.onkeyup = async e => await inputOnKeyup(e);
-    inputGroupLeft.appendChild(labelLeft);
-    inputGroupLeft.appendChild(inputText);
-    colLeft.appendChild(inputGroupLeft);
-    row.appendChild(colLeft);
-    // MIDDLE
-    //labelMiddle.innerText = '';
-    labelMiddle.innerHTML = "{{ __('invoice.form.fields.total') }} <span class=\"text-danger\">*</span>";
-    inputNumber.name= "invoice_items["+ (+lastIndex + 1) +"][total]";
-    inputNumber.onfocus = async e => await inputOnFocus(e);
-    inputNumber.onblur = async e => await inputOnFocusOut(e);
-    inputNumber.onkeyup = async e => await inputOnKeyup(e);
-    inputNumber.min = 0;
-    inputNumber.step = 0.01;
-    inputGroupMiddle.appendChild(labelMiddle);
-    inputGroupMiddle.appendChild(inputNumber);
-    colMiddle.appendChild(inputGroupMiddle);
-    row.appendChild(colMiddle);
-    // RIGHT
-    clearRow.appendChild(faTrash);
-    colRight.appendChild(clearRow);
-    row.appendChild(colRight);
-
-    return row;
-}
-
-// tax group
-const taxContainer = document.getElementById('tax-container'),
-      btnAddTax = document.getElementById('add-tax');
-let elemTaxIndex = 0,
-    lastTaxIndex = document.getElementsByClassName('tax-name').length - 1;
-
-const createTax = () => {
-    // new row
-    const row = document.createElement('div');
-    row.classList.add('row', 'mt-3', 'align-items-baseline');
-    // col-left 
-    const colLeft = document.createElement('div');
-    colLeft.classList.add('col-12', 'col-md-6', 'pe-1');
-    // col-middle
-    const colMiddle = document.createElement('div');
-    colMiddle.classList.add('col-12', 'col-md-4','px-1');
-    // col-right
-    const colRight = document.createElement('div');
-    colRight.classList.add('col-12', 'col-md-2', 'ps-1');
-    // input-group-left
-    const inputGroupLeft = document.createElement('div');
-    inputGroupLeft.classList.add('input-group', 'input-group-outline');
-    // input-group-middlw (sengaja beda biar classListNya beda)
-    const inputGroupMiddle = document.createElement('div');
-    inputGroupMiddle.classList.add('input-group', 'input-group-outline');
-    // clear-row 
-    const clearRow = document.createElement('button');
-    clearRow.type = 'button';
-    clearRow.onclick = e => deleteItemRow(e);
-    clearRow.classList.add('btn', 'btn-circle', 'btn-danger', 'm-0', 'p-0', 'clear-row');
-    // label buat text
-    const labelLeft = document.createElement('label');
-    labelLeft.classList.add('form-label');
-    // label buat number
-    const labelMiddle = document.createElement('label');
-    labelMiddle.classList.add('form-label');
-   // input text
-    const inputText = document.createElement('input');
-    inputText.type = 'text';
-    inputText.classList.add('form-control', 'tax-name');
-    // input number
-    const inputNumber = document.createElement('input');
-    inputNumber.type = 'number';
-    inputNumber.classList.add('form-control');
-    // trash icon
-    const faTrash = document.createElement('i');
-    faTrash.onclick = () => false;
-    faTrash.classList.add('fas', 'fa-trash', 'font-reset');
-
-    // LEFT
-    labelLeft.innerHTML = "{{ __('invoice.form.fields.tax') }} <span class=\"text-danger\"></span>";
-    inputText.name = "invoice_tax["+ (+lastTaxIndex + 1) +"][name]";
-    inputText.onfocus = async e => await inputOnFocus(e);
-    inputText.onblur = async e => await inputOnFocusOut(e);
-    inputText.onkeyup = async e => await inputOnKeyup(e);
-    inputGroupLeft.appendChild(labelLeft);
-    inputGroupLeft.appendChild(inputText);
-    colLeft.appendChild(inputGroupLeft);
-    row.appendChild(colLeft);
-    // MIDDLE
-    //labelMiddle.innerText = '';
-    labelMiddle.innerHTML = "{{ __('invoice.form.fields.total') }} <span class=\"text-danger\"></span>";
-    inputNumber.name= "invoice_tax["+ (+lastIndex + 1) +"][total]";
-    inputNumber.onfocus = async e => await inputOnFocus(e);
-    inputNumber.onblur = async e => await inputOnFocusOut(e);
-    inputNumber.onkeyup = async e => await inputOnKeyup(e);
-    inputNumber.min = 0;
-    inputNumber.step = 0.01;
-    inputGroupMiddle.appendChild(labelMiddle);
-    inputGroupMiddle.appendChild(inputNumber);
-    colMiddle.appendChild(inputGroupMiddle);
-    row.appendChild(colMiddle);
-    // RIGHT
-    clearRow.appendChild(faTrash);
-    colRight.appendChild(clearRow);
-    row.appendChild(colRight);
-
-    return row;
-}
-//end tax group
-
-// check if window is changed
-const deleteItemRow = e => {
-    e = e || window.event;
-    e.stopPropagation();
-    const row = e.target.parentNode.closest('div.row');
-    row.remove();
-}
-
-const inputOnFocus = async e => {
-    e = e || window.event;
-    e.srcElement.parentElement.classList.add('is-filled');
-}
-
-const inputOnKeyup = async e => {
-    e = e || window.event;
-    const el = e.srcElement;
-    const parent = el.parentElement;
-
-    if(el.value)
-        parent.classList.add('is-filled');
-    else
-        parent.classList.remove('is-filled');
-}
-
-const inputOnFocusOut = async e =>  {
-    e = e || window.event;
-    console.log(e.target);
-    if(!e.target.value)
-        e.target.parentElement.classList.remove('is-filled');
-}
-//observer.disconnect();
-// End Items Group
-
-// editor
-var editor = new wysihtml5.Editor('editor', {
-    toolbar: 'toolbar',
-    parserRules:  wysihtml5ParserRules
-});
-// end editor group
 
 (async () => {
-    await getCustomer();
+    document.getElementById('loading-table').classList.remove('d-none');
 
-    btnAddItem.addEventListener('click', e => {
-        e.preventDefault();
-        lastIndex = document.getElementsByClassName('item-name').length - 1;
-        itemContainer.appendChild(createItem());
+    data = await getData(fetchUrl);
+    
+    await setTable(data);
+    document.getElementById('loading-table').classList.add('d-none');
+
+    // // check all table
+    // checkAll.addEventListener('click', checkAllRows);
+    // // delete all table
+    // deleteAllBtn.addEventListener('click', async e => deleteAllRows(e, {}));
+    // seacrh
+    const frmSearch = document.forms['search-form'];
+
+    frmSearch.addEventListener('submit', async e => await filterData(e));
+
+    frmSearch.addEventListener('reset', async e => {
+        fetchUrl = `${window.location.origin}/customers/get`;
+        data = await getData(fetchUrl);
+        checkAll.checked = false;
+        await setTable(data);
+    }); 
+
+    document.getElementById('previous-page').addEventListener('click', async e => {
+        if(data.prev_page_url === null) return; 
+
+        e.target.classList.remove('disabled');
+        document.getElementById('loading-table').classList.remove('d-none');
+
+        data = await getData(data.prev_page_url);
+        await setTable(data);
+        document.getElementById('loading-table').classList.add('d-none');
     });
 
-   btnAddTax.addEventListener('click', e => {
-        e.preventDefault();
-        lastIndex = document.getElementsByClassName('tax-name').length - 1;
-        taxContainer.appendChild(createTax());
-   });
+    document.getElementById('next-page').addEventListener('click', async e => {
+        if(data.next_page_url === null) return; 
+
+        e.target.classList.remove('disabled');
+        document.getElementById('loading-table').classList.remove('d-none');
+       
+        data = await getData(data.next_page_url);
+        await setTable(data);
+        document.getElementById('loading-table').classList.add('d-none');
+    });
 
 })();
+
+
+const setTable = async data => {
+    tbody.innerHTML = null;
+    Array.from(data.data, item => {
+        const row = tbody.insertRow();
+        const keys = Object.keys(item);
+
+        const cell_0 = row.insertCell(0),
+              cell_1 = row.insertCell(1),
+              cell_2 = row.insertCell(2),
+              cell_3 = row.insertCell(3),
+              cell_4 = row.insertCell(4),
+              cell_5 = row.insertCell(5);
+        
+        // Column 0
+        cell_0.innerText = item['id'];
+        cell_0.dataset.name = 'id';
+        cell_0.classList.add('d-none');
+        // Column 1
+        cell_1.innerText = item['invoice_no'];
+        cell_1.dataset.name = 'invoice_no';
+        cell_1.classList.add('ps-2');
+        // Column 2
+        cell_2.innerText = item['customers']['id'];
+        cell_2.dataset.name = 'customer_id';
+        cell_2.classList.add('d-none');
+        // Column 3
+        cell_3.innerText = item['customers']['customer_name'];
+        cell_3.dataset.name = 'customer_name';
+        cell_3.classList.add('ps-2');
+        // Column 4
+        cell_4.innerHTML = setEmailStatus(+item['invoice_status']);
+        cell_4.dataset.name = 'invoice_status';
+        cell_4.classList.add('ps-2');
+        // Column 5
+        cell_5.innerHTML = `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
+                                `<a type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="${window.location.origin}/customers/${item.id}/edit">` + 
+                                    `<i class="fas fa-edit font-reset"></i>` +
+                                `</a>` +
+                                `<button type="button" class="btn btn-sm btn-danger btn-circle p-0 m-0 ms-1 delete_data" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="deleteConfirmation(event)"><i class="fas fa-trash font-reset"></i></button>` + 
+                            `</span>`;
+        cell_5.dataset.name = 'invoice_status';
+        cell_5.classList.add('ps-2');
+
+        // Column 6
+        // const cell_5 = row.insertCell(5);
+        // cell_5.innerHTML =  `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
+        //                         `<a type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="${window.location.origin}/customers/${item.id}/edit">` + 
+        //                             `<i class="fas fa-edit font-reset"></i>` +
+        //                         `</a>` +
+        //                         `<button type="button" class="btn btn-sm btn-danger btn-circle p-0 m-0 ms-1 delete_data" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="deleteConfirmation(event)"><i class="fas fa-trash font-reset"></i></button>` + 
+        //                     `</span>`;
+        // cell_5.classList.add('ps-1');
+    });
+
+    await setPagination(data);
+}
+
+const setPagination = async data => {
+    var pageNo = document.getElementById('page_no'),
+        totalPage = document.getElementById('total_pages');
+
+    // Current Page
+    pageNo.innerText = data.current_page;
+    // Total Page
+    totalPage.innerText = data.last_page;
+}
+
+// Delete
+const deleteConfirmation = e => {
+    const tr = e.target.parentNode.closest('tr');
+    const props = [...tr.cells].filter(x => x.dataset.hasOwnProperty('name')).reduce((prev, curr) => Object.assign(prev, {[curr.dataset.name] : curr.innerHTML}), {});
+
+    Swal.fire({
+        title: '<h4 class="text-warning">'+ lang.delete.confirm +'</h4>',
+        html: '<h5 class="text-warning">' +lang.delete.text+ '</h5>',
+        icon: 'warning',
+        confirmButtonText: lang.confirmation.yes,
+        showCancelButton: true,
+        cancelButtonText: lang.confirmation.no
+    })
+    .then(t => {
+        if(!t.value) return;
+
+        loading();
+        fetch(`${window.location.origin}/customers/${props.id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector("meta[name='csrf-token']").content
+            }
+        })
+        .then(res => {
+            Swal.close();
+            window.location.reload();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    });
+}
+
+// Loading
+const loading = () => {
+    Swal.fire({
+        html: 	'<div class="d-flex flex-column align-items-center">'
+        + '<span class="spinner-border text-primary"></span>'
+        + '<h3 class="mt-2">Loading...</h3>'
+        + '<div>',
+        showConfirmButton: false,
+        width: '14rem'
+    });
+}
+
+// Filter
+const filterData = async e => {
+    e.preventDefault();
+
+    let frm = new FormData(e.target);
+    let obj = Object.fromEntries(frm.entries());
+    let params = new URLSearchParams(obj);
+
+    try 
+    {
+        fetchUrl = `${window.location.origin}/customers/get?` + params;
+        data = await getData(fetchUrl);
+        await setTable(data);
+    } 
+    catch (error) 
+    {
+        console.log(error);
+    }  
+} 
+
+// Email Status Text
+
+const setEmailStatus = num => {
+    let text = null;
+    switch(num)
+    {
+        case 0:
+            return '<span class="bg-warning text-white px-1">DRAFT</span>';
+        case 1:
+            return '<span class="bg-success text-white px-1">SENT</span>';
+        case 2:
+            return '<span class="bg-danger text-white px-1">FAILED</span>';
+    }
+
+    return text;
+}

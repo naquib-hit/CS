@@ -19,6 +19,7 @@ return [
     'customer'     => 'Pelanggan',
     'created_by'   => 'Pembuat',
     'email_status' => 'Status',
+    'opt'          => 'Operation',
 
   ],
   'form' => [

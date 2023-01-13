@@ -39,16 +39,11 @@
                         <thead class="bg-danger text-white">
                             <tr>
                                 <th class="d-none">ID</th>
-                                <th>{{ __('transaction.table.code') }}</th>
+                                <th>{{ __('invoice.table.invoice_no') }}</th>
                                 <th class="d-none">Customer ID</th>
-                                <th>{{ __('transaction.table.customer') }}</th>
-                                <th class="d-none">product ID</th>
-                                <th>{{ __('transaction.table.product') }}</th>
-                                <th class="d-none">Sales ID</th>
-                                <th>{{ __('transaction.table.sales') }}</th>
-                                <th>{{ __('transaction.table.start_date') }}</th>
-                                <th>{{ __('transaction.table.expiration_date') }}</th>
-                                <th>{{ __('transaction.table.opt') }}</th>
+                                <th>{{ __('invoice.table.customer') }}</th>
+                                <th>{{ __('invoice.table.email_status') }}</th>
+                                <th>{{ __('invoice.table.opt') }}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -136,5 +131,5 @@
 </script>
 @endif
 
-<script src="{{ asset('js/pages/transaction.js') }}"></script>
+<script src="{{ asset('js/pages/invoice.js') }}"></script>
 @endsection

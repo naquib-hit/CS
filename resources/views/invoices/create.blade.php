@@ -200,7 +200,7 @@
                                         <div class="col-12 col-md-9 pe-1">
                                             <div class="input-group input-group-outline mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.tax') }}<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control tax-name" value="PPN" name="invoice_tax[0][name]" value="{{ old('invoice_tax.0.name') ?? NULL }}">
+                                                <input type="text" class="form-control tax-name" name="invoice_tax[0][name]" value="{{ old('invoice_tax.0.name') ?? NULL }}">
                                                 <input type="number" name="invoice_tax[0][value]" value="{{ old('invoice_tax.0.value') ?? NULL }}" hidden>
                                             </div>
                                             
@@ -209,6 +209,24 @@
                                             <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
                                         </div>
                                     </div>
+
+                                    @if (!empty(old('invoice_tax')) && old('invoice_tax') > 1)
+                                        @for ($i=1;$i<=count(old('invoice_tax'));$i++)
+                                            <div class="row align-items-baseline mt-3">
+                                                <div class="col-12 col-md-9 pe-1">
+                                                    <div class="input-group input-group-outline">
+                                                        <label class="form-label">{{ __('invoice.form.fields.tax') }}<span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control tax-name" name="invoice_tax[{{ $i }}][name]" value="{{ old('invoice_tax.'.$i.'.name') ?? NULL }}">
+                                                        <input type="number" name="invoice_tax[{{ $i }}][value]" value="{{ old('invoice_tax.'.$i.'.value') ?? NULL }}" hidden>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-12 col-md-2 ps-1">
+                                                    <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
+                                                </div>
+                                            </div>
+                                        @endfor
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -242,28 +260,30 @@
 @section('js')
 <script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
 <script src="{{ asset('vendor/quill/quill.min.js') }}"></script>
-<script>
+<script defer>
     const deleteItemRow = e => {
         e = e || window.event;
         e.stopPropagation();
         const row = e.target.parentNode.closest('div.row');
         row.remove();
     }
-</script>
-<script type="module" defer>
-import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}";
 
+    
 @if(session()->has('error'))
 
-    Swal.fire({
-        title: '<h4 class="text-danger">ERROR</h4>',
-        html: '<h5 class="text-danger">{{ session('error') }}</h5>',
-        icon: 'error',
-        timer: 1800,
-        timerProgressBar: true,
-        showConfirmButton: false
-    });
+Swal.fire({
+    title: '<h4 class="text-danger">ERROR</h4>',
+    html: '<h5 class="text-danger">{{ session('error') }}</h5>',
+    icon: 'error',
+    timer: 1800,
+    timerProgressBar: true,
+    showConfirmButton: false
+});
 @endif
+
+</script>
+<script type="module">
+import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}";
 
     const form = document.forms['form-input'];
 
@@ -356,37 +376,44 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     const taxContainer = document.getElementById('tax-container'),
           btnAddTax = document.getElementById('add-tax');
 
-    async function taxAutocomplete()
+    async function getTaxesData()
     {
         try {
             const f = await fetch("{{ route('invoices.taxes') }}");
             const j = await f.json();
 
             const map = j.map(x => ({'label': x.tax_name, 'value': x.id}));
-            const names = taxContainer.getElementsByClassName('tax-name');
-
-            Array.from(names, (item, idx) => {
-
-                const value = document.querySelector('input[name="invoice_tax['+idx+'][value]"]');
-
-                new Autocomplete(item, {
-                    data: map,
-                    threshold: 1,
-                    onInput: str => {
-                        if(str.length == 0)
-                            value.value = null;
-                    },
-                    onSelectItem: val => {
-                        value.value = val.value;
-                    }
-                });
-            });
+            
+            return map;
 
         } catch (error) {
             console.log(error);
         }
     }
 
+
+    async function taxAutocomplete()
+    {
+        const names = taxContainer.getElementsByClassName('tax-name');
+        const map = await getTaxesData();
+
+        Array.from(names, (item, idx) => {
+
+            const value = document.querySelector('input[name="invoice_tax['+idx+'][value]"]');
+
+            new Autocomplete(item, {
+                data: map,
+                threshold: 1,
+                onInput: str => {
+                    if(str.length == 0)
+                        value.value = null;
+                },
+                onSelectItem: val => {
+                    value.value = val.value;
+                }
+            });
+        });
+    }
     
     // End Tax
 

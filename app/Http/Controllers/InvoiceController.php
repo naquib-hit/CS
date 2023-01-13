@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Response;
+use Illuminate\Http\{Request, Response};
 use Illuminate\Support\Facades\{Log, Auth};
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
@@ -42,30 +42,11 @@ class InvoiceController extends Controller
     public function store(StoreInvoiceRequest $request)
     {
         //
-        $items = []; $taxes = [];
+        $items = [];
+        $taxes = [];
         try {
             $valid = $request->validated();
-
-            $invoice = new Invoice;
-            $invoice->invoice_no = $valid['invoice_no'];
-            $invoice->customer_id  = $valid['invoice_customer'];
-            $invoice->create_date = (new \DateTime($valid['invoice_date']))->format('Y-m-d');
-            $invoice->due_date = (new \DateTime($valid['invoice_due']))->format('Y-m-d');
-            $invoice->notes = $valid['invoice_notes'];
-            $invoice->user_id = (int) Auth::id();
-            $invoice->save();
-
-            // attach products for pivot table
-            foreach ($valid['invoice_items'] as $item)
-                $items[$item['value']] = [
-                    'quantity'      => $item['total'],
-                    'total_price'   => (Product::find($item['value']))->product_price * $item['total']
-                ];
-            $invoice->products()->attach($items);
-
-            // attach tax for pivot table
-            $taxes = collect($valid['invoice_tax'])->pluck('value');
-            $invoice->taxes()->attach($taxes);
+            $invoice = Invoice::createInvoice($valid);
 
             return redirect()->route('invoices.index')->with('success', __('validation.success.create'));
         } catch (\Throwable $e) {
@@ -121,6 +102,20 @@ class InvoiceController extends Controller
     public function destroy(Invoice $invoice)
     {
         //
+    }
+
+    /**
+     * *******************************************************************
+     *              CUSTOM FUNCTIONS
+     * *******************************************************************
+     */
+
+    public function get(Request $req)
+    {
+        $invoices = Invoice::with(['customers', 'products', 'taxes'])
+            ->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+
+        return $invoices->paginate(8);
     }
 
     /**

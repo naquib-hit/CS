@@ -13,7 +13,7 @@ class StoreInvoiceRequest extends FormRequest
      * @var bool
      */
 
-    protected $forceJsonResponse = false;
+    //protected $forceJsonResponse = false;
     /**
      * Determine if the user is authorized to make this request.
      *

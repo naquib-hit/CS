@@ -45,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('invoices/products', [InvoiceController::class, 'getProducts'])->name('invoices.products');
     Route::get('invoices/customers', [InvoiceController::class, 'getCustomers'])->name('invoices.customers');
     Route::get('invoices/taxes', [InvoiceController::class, 'getTaxes'])->name('invoices.taxes');
+    Route::get('invoices/get', [InvoiceController::class, 'get'])->name('invoices.get');
     Route::resource('invoices', InvoiceController::class);
     // Transactions
     Route::get('transactions/get', [TransactionController::class, 'get'])->name('transactions.get');
