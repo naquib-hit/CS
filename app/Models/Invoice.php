@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
@@ -13,12 +10,11 @@ class Invoice extends Model
 {
     use HasFactory, SoftDeletes;
 
-    //protected $fillable = ['invoice_no', 'create_date', 'due_date', 'notes', 'customer_id'];
-    protected $attributes = [
-        'created_by' => Auth::id()
-    ];
+    // private const AuthID = \Illuminate\Support\Facades\Auth::id();
 
+    //protected $fillable = ['invoice_no', 'create_date', 'due_date', 'notes', 'customer_id'];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+    protected $guarded = ['id'];
 
 
     /**
@@ -66,13 +62,13 @@ class Invoice extends Model
     }
 
     /**
-     * Insert Products to 
+     * Insert Invoice's Products
      *
      * @param Invoice $invoice
      * @param array $items
      * @return self
      */
-    public static function createItems(Invoice $invoice, array $items): self
+    public function createItems(array $items): self
     {
         $_items = [];
         foreach ($items as $item)
@@ -80,26 +76,26 @@ class Invoice extends Model
                 'quantity'      => $item['total'],
                 'total_price'   => (Product::find($item['value']))->product_price * $item['total']
             ];
-        $invoice->products()->syncWithoutDetaching($_items);
+        $this->products()->syncWithoutDetaching($_items);
 
-        return $invoice;
+        return $this;
     }
 
     /**
-     * Undocumented function
+     * Insert Invoice's Taxes
      *
      * @param [type] $invoice
      * @param [type] $taxes
      * @return self
      */
-    public static function createTax(Invoice $invoice = NULL, array $taxes = NULL): self
+    public function createTax(array $taxes = NULL): self
     {
         if (!empty($taxes)) {
             $_taxes = collect($taxes)->pluck('value');
-            $invoice->taxes()->syncWithoutDetaching($_taxes);
+            self::taxes()->syncWithoutDetaching($_taxes);
         }
 
-        return $invoice;
+        return $this;
     }
 
     /**
@@ -118,10 +114,10 @@ class Invoice extends Model
         $invoice->due_date = (new \DateTime($valid['invoice_due']))->format('Y-m-d');
         $invoice->notes = $valid['invoice_notes'];
         $invoice->user_id = (int) auth()->id();
+        $invoice->created_by = (int) auth()->id();
         $invoice->save();
 
-        self::createItems($invoice, $valid['invoice_items']);
-        self::createTax($invoice, $valid['invoice_tax']);
+        $invoice->createItems($valid['invoice_items'])->createTax($valid['invoice_tax']);
 
         return $invoice;
     }
