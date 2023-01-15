@@ -11,14 +11,17 @@ class InvoiceMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    protected $invoice;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(\App\Models\Invoice $invoice)
     {
         //
+        $this->invoice = $invoice;
     }
 
     /**
