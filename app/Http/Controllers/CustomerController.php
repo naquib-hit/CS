@@ -3,19 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as Request;
-use Illuminate\Support\Facades\Log as Log;
+use Illuminate\Support\Facades\{ Log as Log, View };
+use Illuminate\Contracts\View\View as ViewContract;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index(): ViewContract
     {
         //
         try
@@ -32,9 +35,9 @@ class CustomerController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
-    public function create()
+    public function create():  ViewContract
     {
         //
         return view('customers.create');
@@ -44,9 +47,9 @@ class CustomerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreCustomerRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(StoreCustomerRequest $request)
+    public function store(StoreCustomerRequest $request): RedirectResponse
     {
         //
         try
@@ -84,9 +87,9 @@ class CustomerController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
-    public function edit(Customer $customer)
+    public function edit(Customer $customer): ViewContract
     {
         //
         return view('customers.edit', compact('customer', 'customer'));
@@ -97,9 +100,9 @@ class CustomerController extends Controller
      *
      * @param  \App\Http\Requests\UpdateCustomerRequest  $request
      * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateCustomerRequest $request, Customer $customer)
+    public function update(UpdateCustomerRequest $request, Customer $customer): RedirectResponse
     {
         //
         try
@@ -121,9 +124,9 @@ class CustomerController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Customer $customer)
+    public function destroy(Customer $customer): RedirectResponse
     {
         //
         try
@@ -144,7 +147,7 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function get(Request $req)
+    public function get(Request $req): LengthAwarePaginator
     {
         // Paging parameters
         $customers = Customer::query()->orderBy('id', 'desc')->orderBy('created_at', 'desc');
@@ -166,9 +169,9 @@ class CustomerController extends Controller
       /**
      * Mass Delete Alias.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function clean(Request $req)
+    public function clean(Request $req): RedirectResponse
     {
         //
         try

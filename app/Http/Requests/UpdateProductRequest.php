@@ -33,7 +33,7 @@ class UpdateProductRequest extends FormRequest
                 Rule::unique('products')->where(fn ($q) => $q->where('id', '<>', $id))
             ],
             'product_price' => 'required|numeric|min:0',
-            'product_unit'  => 'required'
+            //'product_unit'  => 'required'
         ];
     }
 }

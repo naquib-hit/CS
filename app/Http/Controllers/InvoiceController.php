@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\{Request, Response};
+use App\Http\Requests\{StoreInvoiceRequest, UpdateInvoiceRequest};
 use Illuminate\Support\Facades\{Log, Auth};
-use App\Http\Requests\StoreInvoiceRequest;
-use App\Http\Requests\UpdateInvoiceRequest;
 use App\Models\{Invoice, Customer, Product, Tax};
+use Illuminate\Http\{RedirectResponse, Request, Response, JsonResponse};
+use Illuminate\View\View;
 
 class InvoiceController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(): View
     {
         //
         return view('invoices.index');
@@ -24,9 +24,9 @@ class InvoiceController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(): View
     {
         //
         return view('invoices.create');
@@ -36,27 +36,23 @@ class InvoiceController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \App\Http\Requests\StoreInvoiceRequest $request
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(StoreInvoiceRequest $request)
+    public function store(StoreInvoiceRequest $request): RedirectResponse
     {
         //
-        $items = [];
-        $taxes = [];
-        try {
+        try 
+        {
             $valid = $request->validated();
             $invoice = Invoice::createInvoice($valid);
 
             return redirect()->route('invoices.index')->with('success', __('validation.success.create'));
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) 
+        {
             Log::error($e->getMessage());
-
             return redirect()->back()->with('error', __('validation.failed.create'));
-        } finally {
-            $items = NULL;
-            $taxes = NULL;
-        }
+        } 
     }
 
     /**
@@ -65,9 +61,10 @@ class InvoiceController extends Controller
      * @param  \App\Models\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function show(Invoice $invoice)
+    public function show(Invoice $invoice): Response
     {
         //
+        return new Response('Mau Tau Aja', 200, ['Content-Type' => 'text/plain']);
     }
 
     /**
@@ -76,9 +73,10 @@ class InvoiceController extends Controller
      * @param  \App\Models\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function edit(Invoice $invoice)
+    public function edit(Invoice $invoice): Response
     {
         //
+        return new Response('Mau Tau Aja', 200, ['Content-Type' => 'text/plain']);
     }
 
     /**
@@ -88,20 +86,31 @@ class InvoiceController extends Controller
      * @param  \App\Models\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateInvoiceRequest $request, Invoice $invoice)
+    public function update(UpdateInvoiceRequest $request, Invoice $invoice): Response
     {
         //
+        return new Response('Mau Tau Aja', 200, ['Content-Type' => 'text/plain']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Invoice  $invoice
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Invoice $invoice)
+    public function destroy(Invoice $invoice): RedirectResponse
     {
         //
+        try 
+        {
+            $invoice->delete();
+            return redirect()->route('invoices.index')->with('success', __('validation.success.delete'));
+        } 
+        catch (\Throwable $e) 
+        {
+            Log::error($e->getMessage());
+            return redirect()->back()->with('error', __('validation.failed.delete'));
+        }
     }
 
     /**
@@ -110,9 +119,14 @@ class InvoiceController extends Controller
      * *******************************************************************
      */
 
-    public function get(Request $req)
+    /**
+     * Summary of get
+     * @param Request $req
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function get(Request $req): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        $invoices = Invoice::with(['customers', 'products', 'taxes'])
+        $invoices = Invoice::with(['customers', 'products', 'taxes', 'invoiceSummary'])
             ->orderBy('created_at', 'desc')->orderBy('id', 'desc');
 
         return $invoices->paginate(8);
@@ -121,9 +135,9 @@ class InvoiceController extends Controller
     /**
      * get all customers data for selection
      *
-     * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getCustomers()
+    public function getCustomers(): JsonResponse
     {
         return response()->json(Customer::cursor(), 200, ['Content-Type' => 'application/json']);
     }
@@ -131,9 +145,9 @@ class InvoiceController extends Controller
     /**
      * get all products data for selection
      *
-     * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getProducts()
+    public function getProducts(): JsonResponse
     {
         return response()->json(Product::cursor(), 200, ['Content-Type' => 'application/json']);
     }
@@ -141,9 +155,9 @@ class InvoiceController extends Controller
     /**
      * get all taxes data for selection
      *
-     * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getTaxes()
+    public function getTaxes(): JsonResponse
     {
         return response()->json(Tax::cursor(), 200, ['Content-Type' => 'application/json']);
     }

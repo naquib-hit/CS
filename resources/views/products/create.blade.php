@@ -17,11 +17,6 @@
 @section('content')
     
     <div class="row h-100 justify-content-center align-items-center">
-        @if(session()->has('error'))
-        <div class="alert alert-danger">
-            <h4>{{ session('error') }}</h4>
-        </div>
-        @endif
         <div class="col-12 col-md-8 col-lg-5">
             <div class="card fadeIn3 fadeInBottom">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
@@ -30,7 +25,7 @@
                     </div>
                   </div>
                 <div class="card-body">
-                    <form action="{{ url('products') }}" class="d-flex flex-column" method="post">
+                    <form action="{{ route('products.store') }}" class="d-flex flex-column" method="post">
                         @csrf
                         <span class="input-group input-group-dynamic @error('product_name') is-invalid @enderror">
                             <label class="form-label">{{ __('product.form.fields.name') }} <span class="text-danger">*</span></label>
@@ -44,18 +39,6 @@
                             <input type="number" min="0" step="0.01" class="form-control" name="product_price" value="{{ old('product_price') }}" @error('product_price') autofocus @enderror/>
                         </span>
                         @error('product_price')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                        <span class="input-group input-group-static @error('product_unit') is-invalid @enderror mt-4">
-                            <label class="form-label">{{ __('product.form.fields.unit') }} <span class="text-danger">*</span></label>
-                            <select class="form-control px-1" name="product_unit" value="{{ old('product_unit') }}" @error('product_unit') autofocus @enderror>
-                                <option value="">------------------</option>
-                                @foreach ($units as $unit)
-                                <option value="{{ $unit->id }}">{{ __($unit->unit_name) }}</option>
-                                @endforeach
-                            </select>
-                        </span>
-                        @error('product_unit')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                         <span class="d-flex flex-nowrap mt-5 w-100">
@@ -80,6 +63,16 @@
 <script>
      const form = document.forms['form-input'];
 
+    @if(session()->has('error'))
+    Swal.fire({
+        title: '<h4 class="text-danger">ERROR</h4>',
+        html: '<h5 class="text-danger">{{ session('error') }}</h5>',
+        icon: 'error',
+        timer: 1800,
+        timerProgressBar: true,
+        showConfirmButton: false
+    });
+    @endif
    
     const loading = () => {
         Swal.fire({

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tax;
-use Illuminate\Http\Request;
+use Illuminate\Http\{Request, Response, RedirectResponse};
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreTaxRequest;
 use App\Http\Requests\UpdateTaxRequest;
@@ -13,9 +14,9 @@ class TaxController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index(): \Illuminate\Contracts\View\View
     {
         //
         return view('taxes.index');
@@ -24,9 +25,9 @@ class TaxController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
-    public function create()
+    public function create(): \Illuminate\Contracts\View\View
     {
         //
         return view('taxes.create');
@@ -36,17 +37,20 @@ class TaxController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreTaxRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(StoreTaxRequest $request)
+    public function store(StoreTaxRequest $request): RedirectResponse
     {
         //
-        try {
+        try 
+        {
             $valid = $request->validated();
             Tax::create($valid);
 
             return redirect()->route('taxes.index')->with('success', __('validation.success.create'));
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) 
+        {
             Log::error($e->getMessage());
             return redirect()->back()->with('error', __('validation.failed.create'));
         }
@@ -58,18 +62,18 @@ class TaxController extends Controller
      * @param  \App\Models\Tax  $tax
      * @return \Illuminate\Http\Response
      */
-    public function show(Tax $tax)
+    public function show(Tax $tax): Response
     {
-        //
+        return new Response("Mau Tau Aje", 200, ['Content-Type' => 'text/plain']);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Tax  $tax
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
-    public function edit(Tax $tax)
+    public function edit(Tax $tax): \Illuminate\Contracts\View\View
     {
         //
         return view('taxes.edit', compact('tax'));
@@ -80,9 +84,9 @@ class TaxController extends Controller
      *
      * @param  \App\Http\Requests\UpdateTaxRequest  $request
      * @param  \App\Models\Tax  $tax
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateTaxRequest $request, Tax $tax)
+    public function update(UpdateTaxRequest $request, Tax $tax): RedirectResponse
     {
         //
         try {
@@ -102,9 +106,9 @@ class TaxController extends Controller
      * @param  \App\Models\Tax  $tax
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tax $tax)
+    public function destroy(Tax $tax): Response
     {
-        //
+        return new Response("Mau tau Aje", 200, ['Content-Type' => 'text/plain']);
     }
 
     /**
@@ -113,19 +117,15 @@ class TaxController extends Controller
      * @param  \Illuminate\Http\Request
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function get(Request $req)
+    public function get(Request $req): LengthAwarePaginator
     {
-        try {
-            $taxes = Tax::query()->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+        $taxes = Tax::query()->orderBy('created_at', 'desc')->orderBy('id', 'desc');
 
-            if (!empty($req->input('s_tax_name')))
-                $taxes = $taxes->whereRaw('LOWER(tax_name) LIKE ?', ['%' . strtolower($req->input('s_tax_name')) . '%']);
-            $page = $taxes->paginate(6);
+        if (!empty($req->input('s_tax_name')))
+            $taxes = $taxes->whereRaw('LOWER(tax_name) LIKE ?', ['%' . strtolower($req->input('s_tax_name')) . '%']);
+        $page = $taxes->paginate(6);
 
-            return $page;
-        } catch (\Throwable $e) {
-            Log::error($e->getMessage());
-        }
+        return $page;
     }
 
     /**
@@ -134,26 +134,29 @@ class TaxController extends Controller
      * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function truncate(Request $req): \Illuminate\Http\RedirectResponse
+    public function truncate(Request $req): RedirectResponse
     {
-        try {
+        try 
+        {
             $taxes = Tax::query();
 
-            if ($req->input('rows') === 'all') {
-
+            if ($req->input('rows') === 'all') 
+            {
                 if (!empty($req->input('tax_name')))
                     $taxes = $taxes->whereRaw('LOWER(tax_name) LIKE ?', ['%' . strtolower($req->input('tax_name')) . '%']);
-            } else {
+            } 
+            else 
+            {
                 $ids = explode(',', $req->input('rows'));
                 $taxes = $taxes->whereIn('id', $ids);
             }
-
             $taxes->delete();
 
             return redirect()->back()->with('success', __('validation.success.delete'));
-        } catch (\Throwable $e) {
+        } 
+        catch (\Throwable $e) 
+        {
             Log::error($e->getMessage());
-
             return redirect()->back()->with('success', __('validation.failed.delete'));
         }
     }

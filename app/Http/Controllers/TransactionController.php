@@ -91,7 +91,7 @@ class TransactionController extends Controller
      * .
      *
      * @param  \App\Models\Transaction  $transaction
-     * @return Illuminate\Pagination\LengthAwarePaginator
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function get(Request $req): \Illuminate\Pagination\LengthAwarePaginator
     {

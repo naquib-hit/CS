@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasOne};
 
 class Invoice extends Model
 {
@@ -48,7 +49,7 @@ class Invoice extends Model
     }
 
     /**
-     *  User Relation Definition
+     *  User Relationship Definition
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -57,14 +58,47 @@ class Invoice extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public static function getDiscount()
+     /**
+     *  InvoiceSummary Relationship Definition
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function invoiceSummary(): HasOne 
     {
+        return $this->hasOne(InvoiceSummary::class, 'invoice_id', 'id');        
+    }
+
+    public function getDiscountAttribute()
+    {
+    }
+
+   /**
+     * Insert Invoice's Summary
+     *
+     * @param array $items
+     * @return self
+     */
+    public function getInvoiceSummaryAttribute(int $id): int
+    { 
+        $summary = self::find($id)->products()
+                                  ->get()
+                                  ->pluck('pivot')
+                                  ->pluck('total_price')
+                                  ->reduce(fn ($sum, $curr) => $sum + $curr);
+        return $summary;
+    }
+
+    /** */
+    public function createInvoiceSummary($id): self
+    {
+        self::invoiceSummary()->create(['invoice_id' => $id, 'total_summary' => self::getInvoiceSummaryAttribute($id)]);
+
+        return $this;
     }
 
     /**
      * Insert Invoice's Products
      *
-     * @param Invoice $invoice
      * @param array $items
      * @return self
      */
@@ -76,7 +110,7 @@ class Invoice extends Model
                 'quantity'      => $item['total'],
                 'total_price'   => (Product::find($item['value']))->product_price * $item['total']
             ];
-        $this->products()->syncWithoutDetaching($_items);
+        $this->products()->sync($_items);
 
         return $this;
     }
@@ -92,7 +126,7 @@ class Invoice extends Model
     {
         if (!empty($taxes)) {
             $_taxes = collect($taxes)->pluck('value');
-            self::taxes()->syncWithoutDetaching($_taxes);
+            self::taxes()->sync($_taxes);
         }
 
         return $this;
@@ -115,9 +149,15 @@ class Invoice extends Model
         $invoice->notes = $valid['invoice_notes'];
         $invoice->user_id = (int) auth()->id();
         $invoice->created_by = (int) auth()->id();
-        $invoice->save();
+       
+        DB::transaction(function() use($invoice, $valid) {
+            $invoice->save();
 
-        $invoice->createItems($valid['invoice_items'])->createTax($valid['invoice_tax']);
+            $invoice->createItems($valid['invoice_items'])
+            ->createTax($valid['invoice_tax'])
+            ->createInvoiceSummary($invoice->id);
+
+        });
 
         return $invoice;
     }

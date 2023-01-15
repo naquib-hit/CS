@@ -19,6 +19,7 @@ return [
     'customer'     => 'Customer',
     'created_by'   => 'Created By',
     'email_status' => 'Status',
+    'sum'          => 'Price Total',
     'opt'          => 'Operation',
 
   ],

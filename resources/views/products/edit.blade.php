@@ -18,11 +18,6 @@
     
     <div class="row h-100 justify-content-center align-items-center">
         <div class="col-12 col-md-8 col-lg-5">
-            @if(session()->has('error'))
-            <div class="alert alert-danger">
-                <h4>{{ session('error') }}</h4>
-            </div>
-            @endif
             <div class="card fadeIn3 fadeInBottom">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                     <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
@@ -47,18 +42,6 @@
                         @error('product_price')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
-                        <span class="input-group input-group-static @error('product_unit') is-invalid @enderror mt-4">
-                            <label class="form-label">{{ __('product.form.fields.unit') }} <span class="text-danger">*</span></label>
-                            <select class="form-control px-2" name="product_unit" value="{{ old('product_unit') }}" @error('product_unit') autofocus @enderror>
-                                <option value="">------------------</option>
-                                @foreach ($units as $unit)
-                                <option value="{{ $unit->id }}">{{ __($unit->unit_name) }}</option>
-                                @endforeach
-                            </select>
-                        </span>
-                        @error('product_unit')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
                         <span class="d-flex flex-nowrap mt-5 w-100">
                             <a href="{{ route('products.index') }}"  class="btn btn-primary p-0 btn-circle">
                                 <i class="fas fa-hand-point-left font-reset"></i>
@@ -80,6 +63,18 @@
 
 <script>
     const form = document.forms['form-input'];
+
+    @if(session()->has('error'))
+
+    Swal.fire({
+        title: '<h4 class="text-danger">ERROR</h4>',
+        html: '<h5 class="text-danger">{{ session('error') }}</h5>',
+        icon: 'error',
+        timer: 1800,
+        timerProgressBar: true,
+        showConfirmButton: false
+    });
+    @endif
 
     const loading = () => {
         Swal.fire({

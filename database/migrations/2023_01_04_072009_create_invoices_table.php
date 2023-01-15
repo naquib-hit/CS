@@ -18,7 +18,8 @@ class CreateInvoicesTable extends Migration
             $table->string('invoice_no', 40);
             $table->date('create_date')->useCurrent();
             $table->date('due_date')->nullable();
-            $table->string('discount', 100)->nullable();
+            $table->string('discount_amount', 100)->nullable();
+            $table->string('discount_unit', 100)->nullable();
             $table->text('notes')->nullable();
             $table->smallInteger('invoice_status')->default(0);
             $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();

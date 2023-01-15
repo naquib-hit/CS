@@ -7,6 +7,10 @@ const checkAll = document.getElementById('check-all');
 const deleteAllBtn = document.getElementById('delete-all'),
       prevPage = document.getElementById('previous-page'),
       nextPage = document.getElementById('next-page');
+const intToCurrency = angka => {
+    const lokal = new Intl.NumberFormat('id', { style: 'currency', currency: 'IDR'}).format(angka);
+    return lokal;
+}
 
 let selectedRows = [],
     data = null,
@@ -90,7 +94,8 @@ const setTable = async data => {
               cell_2 = row.insertCell(2),
               cell_3 = row.insertCell(3),
               cell_4 = row.insertCell(4),
-              cell_5 = row.insertCell(5);
+              cell_5 = row.insertCell(5),
+              cell_6 = row.insertCell(6);
         
         // Column 0
         cell_0.innerText = item['id'];
@@ -113,14 +118,18 @@ const setTable = async data => {
         cell_4.dataset.name = 'invoice_status';
         cell_4.classList.add('ps-2');
         // Column 5
-        cell_5.innerHTML = `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
+        cell_5.innerHTML= intToCurrency(+item['invoice_summary']['total_summary']);
+        cell_5.dataset.name = 'total_summary';
+        cell_5.classList.add('ps-2');
+        // Column 6
+        cell_6.innerHTML = `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
                                 `<a type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="${window.location.origin}/customers/${item.id}/edit">` + 
                                     `<i class="fas fa-edit font-reset"></i>` +
                                 `</a>` +
                                 `<button type="button" class="btn btn-sm btn-danger btn-circle p-0 m-0 ms-1 delete_data" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="deleteConfirmation(event)"><i class="fas fa-trash font-reset"></i></button>` + 
                             `</span>`;
-        cell_5.dataset.name = 'invoice_status';
-        cell_5.classList.add('ps-2');
+        cell_6.dataset.name = 'invoice_status';
+        cell_6.classList.add('ps-2');
 
         // Column 6
         // const cell_5 = row.insertCell(5);
