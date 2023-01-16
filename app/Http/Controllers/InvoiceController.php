@@ -41,30 +41,27 @@ class InvoiceController extends Controller
     public function store(StoreInvoiceRequest $request): RedirectResponse
     {
         //
-        try 
-        {
+        try {
             $valid = $request->validated();
             $invoice = Invoice::createInvoice($valid);
 
             return redirect()->route('invoices.index')->with('success', __('validation.success.create'));
-        } 
-        catch (\Throwable $e) 
-        {
+        } catch (\Throwable $e) {
             Log::error($e->getMessage());
             return redirect()->back()->with('error', __('validation.failed.create'));
-        } 
+        }
     }
 
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\Invoice  $invoice
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function show(Invoice $invoice): Response
+    public function show(Invoice $invoice): View
     {
         //
-        return new Response('Mau Tau Aja', 200, ['Content-Type' => 'text/plain']);
+        return view('invoices.show')->with('invoice', $invoice);
     }
 
     /**
@@ -101,13 +98,10 @@ class InvoiceController extends Controller
     public function destroy(Invoice $invoice): RedirectResponse
     {
         //
-        try 
-        {
+        try {
             $invoice->delete();
             return redirect()->route('invoices.index')->with('success', __('validation.success.delete'));
-        } 
-        catch (\Throwable $e) 
-        {
+        } catch (\Throwable $e) {
             Log::error($e->getMessage());
             return redirect()->back()->with('error', __('validation.failed.delete'));
         }

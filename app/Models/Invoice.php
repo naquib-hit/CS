@@ -58,33 +58,33 @@ class Invoice extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-     /**
+    /**
      *  InvoiceSummary Relationship Definition
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function invoiceSummary(): HasOne 
+    public function invoiceSummary(): HasOne
     {
-        return $this->hasOne(InvoiceSummary::class, 'invoice_id', 'id');        
+        return $this->hasOne(InvoiceSummary::class, 'invoice_id', 'id');
     }
 
     public function getDiscountAttribute()
     {
     }
 
-   /**
+    /**
      * Insert Invoice's Summary
      *
      * @param array $items
      * @return self
      */
     public function getInvoiceSummaryAttribute(int $id): int
-    { 
+    {
         $summary = self::find($id)->products()
-                                  ->get()
-                                  ->pluck('pivot')
-                                  ->pluck('total_price')
-                                  ->reduce(fn ($sum, $curr) => $sum + $curr);
+            ->get()
+            ->pluck('pivot')
+            ->pluck('total_price')
+            ->reduce(fn ($sum, $curr) => $sum + $curr);
         return $summary;
     }
 
@@ -104,12 +104,15 @@ class Invoice extends Model
      */
     public function createItems(array $items): self
     {
-        $_items = [];
-        foreach ($items as $item)
-            $_items[$item['value']] = [
-                'quantity'      => $item['total'],
-                'total_price'   => (Product::find($item['value']))->product_price * $item['total']
-            ];
+        $_items = collect($items)->reduce(function ($summary, $item) {
+            $summary[$item['value']] =
+                [
+                    'quantity'      => $item['value'],
+                    'total_price'   => (Product::find($item['value']))->product_price * $item['total']
+                ];
+            return $summary;
+        }, []);
+
         $this->products()->sync($_items);
 
         return $this;
@@ -149,14 +152,13 @@ class Invoice extends Model
         $invoice->notes = $valid['invoice_notes'];
         $invoice->user_id = (int) auth()->id();
         $invoice->created_by = (int) auth()->id();
-       
-        DB::transaction(function() use($invoice, $valid) {
+
+        DB::transaction(function () use ($invoice, $valid) {
             $invoice->save();
 
             $invoice->createItems($valid['invoice_items'])
-            ->createTax($valid['invoice_tax'])
-            ->createInvoiceSummary($invoice->id);
-
+                ->createTax($valid['invoice_tax'])
+                ->createInvoiceSummary($invoice->id);
         });
 
         return $invoice;
