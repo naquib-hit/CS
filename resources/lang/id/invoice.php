@@ -34,7 +34,14 @@ return [
       'total'     => 'Kuantitas',
       'tax'       => 'Pajak',
       'discount'  => 'Diskon',
-      'notes'     => 'Catatan'
+      'notes'     => 'Catatan',
+      'additional' => [
+        'title'       => 'Bidang Tambahan',
+        'name'        => 'Nama',
+        'value'       => 'Nilai',
+        'unit'        => 'Satuan',
+        'operation'   => 'Operasi'
+      ]
     ],
 
   ],

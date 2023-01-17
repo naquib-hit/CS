@@ -247,6 +247,36 @@
                     </div>
                 </div>
             </fieldset>
+            <fieldset class="row mt-5">
+                <div class="col-12">
+
+                    <div class="card fadeIn3 fadeInBottom">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 pe-1 d-flex flex-nowrap align-itesm-center">
+                              <h4 class="text-white font-weight-bolder ms-3 my-0">{{ __('invoice.form.fields.additional.title') }}</h4>
+                              <div class="ms-auto me-2">
+                                    <button type="button" class="btn btn-sm btn-primary mb-0" id="btn-additional">
+                                        <span class="font-weight-bolder me-1">+</span>
+                                        {{ __('template.toolbar.add') }}
+                                    </button>
+                                </div>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm" id="table-additional">
+                                <thead>
+                                    <th>{{ __('invoice.form.fields.additional.name') }}</th>
+                                    <th>{{ __('invoice.form.fields.additional.value') }}</th>
+                                    <th>{{ __('invoice.form.fields.additional.unit') }}</th>
+                                    <th>{{ __('invoice.form.fields.additional.operation') }}</th>
+                                    <th></th>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </fieldset>
             <fieldset class="row">
                 <div class="col-12 d-flex flex-nowrap justify-content-end pt-3">
                     <button type="reset" class="btn btn-secondary me-1"><i class="fas fa-undo"></i> {{ __('template.form.reset') }} </button>
@@ -268,7 +298,12 @@
         row.remove();
     }
 
-    
+    const deleteAddtionalFieldRow = e => {
+        e.preventDefault();
+
+        const tr = e.target.parentElement.closest('tr');
+        document.getElementById('table-additional').tBodies[0].deleteRow(tr.rowIndex - 1);
+    }
 @if(session()->has('error'))
 
 Swal.fire({
@@ -431,7 +466,6 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     // End Observer
 
     // Items Group
-    
     let lastIndex = document.getElementsByClassName('item-name').length - 1;
     
     
@@ -638,7 +672,6 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
 
 
     // form submit
-
     const formInvoice = async e => {
         e.preventDefault();
 
@@ -671,6 +704,45 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     }
     // end form submit
 
+    // Table Addtional Fields
+    const tblAdd = document.getElementById('table-additional');
+    const tblAddTBody = tblAdd.tBodies[0];
+    const arrLength = tblAddTBody.rows.length;
+    const btnAdditionalField = document.getElementById('btn-additional');
+
+    const setAdditionalFieldsRow = row => {
+        console.log(row);
+
+        // Name
+        const cellName = row.insertCell(0);
+        cellName.innerHTML = `<input type="text" name="additional_input[${arrLength}][name]" class="form-control form-control-sm border">`;
+        // Value
+        const cellValue = row.insertCell(1);
+        cellValue.innerHTML = `<input type="number" name="additional_input[${arrLength}][value]" class="form-control form-control-sm border">`;
+        // Units
+        const cellUnits = row.insertCell(2);
+        cellUnits.innerHTML = `<select name="additional_input[${arrLength}][unit]" class="form-select form-select-sm">` +
+                                `<option value="currency">Rp.</value>` +  
+                                `<option value="percent">%</value>` +  
+                             `</select>`;
+        // Operation
+        const cellOpt = row.insertCell(3);
+        cellOpt.innerHTML = `<select name="additional_input[${arrLength}][operation]" class="form-select form-select-sm">` + 
+                                `<option value="+">+</option>` + 
+                                `<option value="-">-</option>` + 
+                                `<option value="x">x</option>` + 
+                                `<option value="/">/</option>` + 
+                            `<select>`;
+        // Last Index
+        const cellRemove = row.insertCell(4);
+        cellRemove.innerHTML = '<button type="button" onclick="deleteAddtionalFieldRow(event)" class="btn btn-danger btn-circle p-0">' +
+                                    '<i class="fas fa-trash font-reset"></i>' +
+                               '</button>';
+    }
+
+    
+    // End Table addiotnal Fields
+
     (async () => {
         await getCustomer();
         await firstProductAutoComplete();
@@ -688,6 +760,13 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
             e.preventDefault();
             lastIndex = document.getElementsByClassName('tax-name').length - 1;
             taxContainer.appendChild(createTax());
+       });
+
+       btnAdditionalField.addEventListener('click', e => {
+           
+            const row = tblAddTBody.insertRow();
+            console.log(e);
+            setAdditionalFieldsRow(row);
        });
 
        //form.addEventListener('submit', async e => await formInvoice(e));

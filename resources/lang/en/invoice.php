@@ -34,7 +34,14 @@ return [
       'item'      => 'Items',
       'tax'       => 'Tax',
       'discount'  => 'Discount',
-      'notes'     => 'Notes'
+      'notes'     => 'Notes',
+      'additional' => [
+        'title'       => 'Additional Fields',
+        'name'        => 'Name',
+        'value'       => 'Value',
+        'unit'        => 'Unit',
+        'operation'   => 'Operation'
+      ]
     ],
 
   ],
