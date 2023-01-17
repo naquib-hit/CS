@@ -76,7 +76,7 @@ class Invoice extends Model
      * Insert Invoice's Summary
      *
      * @param array $items
-     * @return self
+     * @return int
      */
     public function getInvoiceSummaryAttribute(int $id): int
     {
