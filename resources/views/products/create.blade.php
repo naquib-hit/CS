@@ -23,7 +23,7 @@
                     <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
                       <h4 class="text-white font-weight-bolder text-center my-0">{{ __('product.form.title') }}</h4>
                     </div>
-                  </div>
+                </div>
                 <div class="card-body">
                     <form action="{{ route('products.store') }}" class="d-flex flex-column" method="post">
                         @csrf
