@@ -48,7 +48,14 @@ class StoreInvoiceRequest extends FormRequest
             'invoice_tax.*' => 'sometimes|required',
             'invoice_tax.*.name' => 'sometimes|required',
             'invoice_tax.*.total' => 'sometimes|required_with:invoice_tax.*.name',
-            'invoice_notes' => 'nullable'
+            'invoice_notes' => 'nullable',
+            'additional_input'  => 'nullable',
+            'additional_input.*'  => 'nullable',
+            'additional_input.*.name'   => 'sometimes',
+            'additional_input.*.value'  => 'sometimes',
+            'additional_input.*.unit'  => 'sometimes',
+            'additional_input.*.operation'  => 'sometimes',
+
         ];
     }
 

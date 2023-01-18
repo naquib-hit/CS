@@ -68,6 +68,16 @@ class Invoice extends Model
         return $this->hasOne(InvoiceSummary::class, 'invoice_id', 'id');
     }
 
+    /**
+     * Additional Field Relationship Definiton
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function additionalField(): HasMany
+    {
+        return $this->hasMany(AdditionalField::class, 'invoice_id', 'id');
+    }
+
     public function getDiscountAttribute()
     {
     }
@@ -135,6 +145,19 @@ class Invoice extends Model
         return $this;
     }
 
+
+    public function createAdditionalFields(array $fields = NULL, $id):self
+    {
+        self::additionalField()->create([
+            'invoice_id'    => $id,
+            'field_name'    => $fields['name'],
+            'field_value'   => $fields['value'],
+            'unit'          => $fields['unit'],
+            'operation'     => $fields['operation']
+        ]);
+        return $this;
+    }
+
     /**
      * C For CRUD Invoice
      *
@@ -159,6 +182,10 @@ class Invoice extends Model
             $invoice->createItems($valid['invoice_items'])
                 ->createTax($valid['invoice_tax'])
                 ->createInvoiceSummary($invoice->id);
+
+            if (count($valid['additional_input']) > 0)
+                foreach($valid['additional_input'] as $field)
+                    $invoice->createAdditionalFields($field, $invoice->id);
         });
 
         return $invoice;

@@ -769,7 +769,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
             setAdditionalFieldsRow(row);
        });
 
-       //form.addEventListener('submit', async e => await formInvoice(e));
+       form.addEventListener('submit', e => loading());
 
     })();
 </script>
