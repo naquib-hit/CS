@@ -43,72 +43,46 @@
               enctype="multipart/form-data">
            @csrf
             <fieldset class="row">
-                <div class="col-12">
+                <div class="col-12 col-lg-4">
                     <div class="card fadeIn3 fadeInBottom">
                         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                             <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 pe-1">
                               <h4 class="text-white font-weight-bolder ms-3 my-0">{{ __('invoice.form.title') }}</h4>
                             </div>
                         </div>
-                        <div class="card-body row">
-                            <div class="col-12 col-lg-4">
-                                <div class="input-group input-group-outline @error('invoice_no') is-invalid @enderror mt-3">
-                                    <label class="form-label">{{ __('invoice.form.fields.no') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="invoice_no" value="{{ old('invoice_no') }}">
-                                </div>
-                                @error('invoice_no')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                        <div class="card-body">
+                            <div class="input-group input-group-outline @error('invoice_no') is-invalid @enderror">
+                                <label class="form-label">{{ __('invoice.form.fields.no') }} <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="invoice_no" value="{{ old('invoice_no') }}">
                             </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="input-group input-group-outline @error('invoice_po') is-invalid @enderror mt-3">
-                                    <label class="form-label">{{ __('invoice.form.fields.po') }}<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="invoice_po" value="{{ old('invoice_po') }}">
-                                </div>
-                                @error('invoice_po')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                            @error('invoice_no')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                            <div class="input-group input-group-outline @error('invoice_customer') is-invalid @enderror mt-3">
+                                <label class="form-label">{{ __('invoice.form.fields.customer') }} <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="invoice_customer_text" id="customer_input" autofocus="" value="{{ old('invoice_customer_text') }}">
+                                <input type="text" name="invoice_customer" value="{{ old('invoice_customer') }}" hidden>
                             </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="input-group input-group-outline @error('invoice_customer') is-invalid @enderror mt-3">
-                                    <label class="form-label">{{ __('invoice.form.fields.customer') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="invoice_customer_text" id="customer_input" autofocus="" value="{{ old('invoice_customer_text') }}">
-                                    <input type="text" name="invoice_customer" value="{{ old('invoice_customer') }}" hidden>
-                                </div>
-                                @error('invoice_customer')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                            @error('invoice_customer')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                            <div class="input-group input-group-outline @error('invoice_date') is-invalid @enderror mt-3">
+                                <label class="form-label">{{ __('invoice.form.fields.date') }} <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="invoice_date" value="{{ old('invoice_date') }}">
                             </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="input-group input-group-outline @error('invoice_date') is-invalid @enderror mt-3">
-                                    <label class="form-label">{{ __('invoice.form.fields.date') }} <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="invoice_date" value="{{ old('invoice_date') }}">
-                                </div>
-                                @error('invoice_date')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                            @error('invoice_date')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                            <div class="input-group input-group-outline @error('invoice_due') is-invalid @enderror mt-3">
+                                <label class="form-label">{{ __('invoice.form.fields.due_date') }}<span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="invoice_due" value="{{ old('invoice_due') }}">
                             </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="input-group input-group-outline @error('invoice_due') is-invalid @enderror mt-3">
-                                    <label class="form-label">{{ __('invoice.form.fields.due_date') }}<span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="invoice_due" value="{{ old('invoice_due') }}">
-                                </div>
-                                @error('invoice_due')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="input-group input-group-outline @error('invoice_currency') is-invalid @enderror mt-3">
-                                    <label class="form-label">{{ __('invoice.form.fields.currency') }}</label>
-                                    <input type="text" class="form-control" name="invoice_currency" value="{{ old('invoice_currency') }}">
-                                </div>
-                                @error('invoice_currency')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                           
+                            @error('invoice_due')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
                     </div>
-                    <!--<div class="card fadeIn3 fadeInBottom mt-5">
+                    <div class="card fadeIn3 fadeInBottom mt-5">
                         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                             <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 pe-1">
                               <h4 class="text-white font-weight-bolder ms-3 my-0">{{ __('invoice.form.fields.discount') }}</h4>
@@ -136,11 +110,11 @@
                             </div>
                             
                         </div>
-                    </div>-->
+                    </div>
                 </div>
-                <div class="col-12">
-                    <div class="row mt-5">
-                        <div class="col-12 col-lg-8">
+                <div class="col-12 col-lg-8">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
                             <div class="card fadeIn3 fadeInBottom">
                                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                                     <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 pe-1 d-flex flex-nowrap align-items-center">
@@ -155,7 +129,7 @@
                                 </div>
                                 <div class="card-body" id="items-container">
                                     <div class="row align-items-baseline">
-                                        <div class="col-12 col-md-8 pe-1">
+                                        <div class="col-12 col-md-6 pe-1">
                                             <div class="input-group input-group-outline @error('invoice_items.0.value') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control item-name" name="invoice_items[0][name]" value="{{ old('invoice_items.0.name') }}">
@@ -165,7 +139,7 @@
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
-                                        <div class="col-12 col-md-3 px-1">
+                                        <div class="col-12 col-md-4 px-1">
                                             <div class="input-group input-group-outline @error('invoice_items.0.total') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
                                                 <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[0][total]" value="{{ old('invoice_items.0.value') }}">
@@ -207,7 +181,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-4">
+                        <div class="col-12 col-lg-6">
                              <!-- PAJAK -->
                             <div class="card fadeIn3 fadeInBottom">
                                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
@@ -272,9 +246,6 @@
                         </div>
                     </div>
                 </div>
-            </fieldset>
-            <fieldset class="row">
-
             </fieldset>
             <fieldset class="row mt-5">
                 <div class="col-12">

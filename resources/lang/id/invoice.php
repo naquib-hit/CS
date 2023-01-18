@@ -30,6 +30,8 @@ return [
       'date'      => 'Tanggal',
       'due_date'  => 'batas Waktu',
       'customer'  => 'Pelanggan',
+      'po'        => 'No. PO',
+      'currency'  => 'Mata Uang',
       'item'      => 'Jenis Barang',
       'total'     => 'Kuantitas',
       'tax'       => 'Pajak',

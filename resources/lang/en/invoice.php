@@ -30,6 +30,8 @@ return [
       'date'      => 'Invoice Date',
       'total'     => 'Quantity',
       'due_date'  => 'Due Date',
+      'po'        => 'PO Number',
+      'currency'  => 'Currency',
       'customer'  => 'Customer',
       'item'      => 'Items',
       'tax'       => 'Tax',
