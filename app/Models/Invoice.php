@@ -148,13 +148,18 @@ class Invoice extends Model
 
     public function createAdditionalFields(array $fields = NULL, $id):self
     {
-        self::additionalField()->create([
-            'invoice_id'    => $id,
-            'field_name'    => $fields['name'],
-            'field_value'   => $fields['value'],
-            'unit'          => $fields['unit'],
-            'operation'     => $fields['operation']
-        ]);
+        if(!empty($fields))
+        {
+            collect($fields)->each(function ($field) use ($id) { 
+                self::additionalField()->create([
+                    'invoice_id'    => $id,
+                    'field_name'    => $field['name'],
+                    'field_value'   => $field['value'],
+                    'unit'          => $field['unit'],
+                    'operation'     => $field['operation']
+                ]);       
+            });
+        }
         return $this;
     }
 
@@ -181,11 +186,8 @@ class Invoice extends Model
 
             $invoice->createItems($valid['invoice_items'])
                 ->createTax($valid['invoice_tax'])
-                ->createInvoiceSummary($invoice->id);
-
-            if (count($valid['additional_input']) > 0)
-                foreach($valid['additional_input'] as $field)
-                    $invoice->createAdditionalFields($field, $invoice->id);
+                ->createInvoiceSummary($invoice->id)
+                ->createAdditionalFields($valid['additional_input'], $invoice->id);
         });
 
         return $invoice;
