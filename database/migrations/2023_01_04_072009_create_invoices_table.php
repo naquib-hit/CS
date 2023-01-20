@@ -23,7 +23,7 @@ class CreateInvoicesTable extends Migration
             $table->text('notes')->nullable();
             $table->smallInteger('invoice_status')->default(0);
             $table->string('po_no');
-            $table->string('currency',  10)->nullable();
+            $table->string('currency', 10)->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('customer_id')->constrained('customers')->cascadeOnUpdate()->cascadeOnDelete();
             $table->integer('created_by')->nullable();

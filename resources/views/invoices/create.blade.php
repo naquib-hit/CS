@@ -72,7 +72,8 @@
                             <div class="col-12 col-lg-4">
                                 <div class="input-group input-group-outline @error('invoice_customer') is-invalid @enderror mt-3">
                                     <label class="form-label">{{ __('invoice.form.fields.customer') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="invoice_customer_text" id="customer_input" autofocus="" value="{{ old('invoice_customer_text') }}">
+                                    {{-- <input type="text" class="form-control" name="invoice_customer_text" id="customer_input" autofocus="" value="{{ old('invoice_customer_text') }}" list="list-customer"> --}}
+                                    <select class="form-select" id="list-customer"></select>
                                     <input type="text" name="invoice_customer" value="{{ old('invoice_customer') }}" hidden>
                                 </div>
                                 @error('invoice_customer')
@@ -228,6 +229,7 @@
                                                 <label class="form-label">{{ __('invoice.form.fields.tax') }}<span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control tax-name" name="invoice_tax[0][name]" value="{{ old('invoice_tax.0.name') }}">
                                                 <input type="number" name="invoice_tax[0][value]" value="{{ old('invoice_tax.0.value') }}" hidden>
+                                               
                                             </div>
                                             
                                         </div>
@@ -367,26 +369,39 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     // });
 
     // Customers
-    const customerElement = document.getElementById('customer_input');
-    const autocomplete = new Autocomplete(customerElement, {
-        threshold: 1,
-        onSelectItem: e => {
-            document.querySelector('input[name="invoice_customer"]').value = e.value;
-        }
-    });
+    const customerElement = document.getElementById('customer_input'),
+          customerList = document.getElementById('list-customer');
+    // const autocomplete = new Autocomplete(customerElement, {
+    //     threshold: 1,
+    //     onSelectItem: e => {
+    //         document.querySelector('input[name="invoice_customer"]').value = e.value;
+    //     }
+    // });
 
-    const getCustomer = async () => {
+    const getCustomers = async () => {
         try
         {
             const f = await fetch(`{{ route('invoices.customers') }}`);
-            const j = await f.json();
-            const cs = j.map(x => ({'label': x.customer_name, 'value': x.id}));
+            const customers = await f.json();
+            //const cs = j.map(x => ({'label': x.customer_name, 'value': x.id}));
 
-            autocomplete.setData(cs);
+            return customers;
         }
         catch(err)
         {
             console.log(err);
+        }
+    }
+
+    const setListCustomers = async () => {
+        let customers = await getCustomers();
+
+        for(var customer of customers)
+        {
+            const option = new Option();
+            option.text  = customer.customer_name;
+            option.value = customer.id;
+            customerList.appendChild(option);
         }
     }
     // End autompolete
@@ -504,10 +519,10 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         row.classList.add('row', 'mt-3', 'align-items-baseline');
         // col-left 
         const colLeft = document.createElement('div');
-        colLeft.classList.add('col-12', 'col-md-6', 'pe-1');
+        colLeft.classList.add('col-12', 'col-md-8', 'pe-1');
         // col-middle
         const colMiddle = document.createElement('div');
-        colMiddle.classList.add('col-12', 'col-md-4','px-1');
+        colMiddle.classList.add('col-12', 'col-md-2','px-1');
         // col-right
         const colRight = document.createElement('div');
         colRight.classList.add('col-12', 'col-md-2', 'ps-1');
@@ -773,9 +788,10 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     // End Table addiotnal Fields
 
     (async () => {
-        await getCustomer();
+        //await getCustomers();
         await firstProductAutoComplete();
         await taxAutocomplete();
+        await setListCustomers();
 
         btnAddItem.addEventListener('click', e => {
             e.preventDefault();
@@ -798,7 +814,15 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
             setAdditionalFieldsRow(row);
        });
 
+       customerList.addEventListener('change', e => {
+            if(e.target.value)
+                e.target.parentNode.closest('.input-group').classList.add('is-filled');
+            else
+                e.target.parentNode.closest('.input-group').classList.remove('is-filled');;
+       });
+
        form.addEventListener('submit', e => loading());
+
 
     })();
 </script>
