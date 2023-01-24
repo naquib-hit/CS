@@ -164,6 +164,17 @@ class Invoice extends Model
     }
 
     /**
+     * Undocumented function
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getInvoiceByID(int $id): self
+    {
+        $invoice = self::with('products', 'customers', 'taxes', 'additionalField', 'invoiceSummary')->find($id);
+        return $invoice;
+    }
+
+    /**
      * C For CRUD Invoice
      *
      * @param array $valid
@@ -178,6 +189,8 @@ class Invoice extends Model
         $invoice->create_date = (new \DateTime($valid['invoice_date']))->format('Y-m-d');
         $invoice->due_date = (new \DateTime($valid['invoice_due']))->format('Y-m-d');
         $invoice->notes = $valid['invoice_notes'];
+        $invoice->po_no = $valid['invoice_po'];
+        $invoice->currency = $valid['invoice_currency'];
         $invoice->user_id = (int) auth()->id();
         $invoice->created_by = (int) auth()->id();
 
@@ -186,8 +199,10 @@ class Invoice extends Model
 
             $invoice->createItems($valid['invoice_items'])
                 ->createTax($valid['invoice_tax'])
-                ->createInvoiceSummary($invoice->id)
-                ->createAdditionalFields($valid['additional_input'], $invoice->id);
+                ->createInvoiceSummary($invoice->id);
+            
+            if(!empty($valid['additional_input']))
+                $invoice->createAdditionalFields($valid['additional_input'], $invoice->id);
         });
 
         return $invoice;

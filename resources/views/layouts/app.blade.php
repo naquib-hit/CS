@@ -54,6 +54,11 @@
     .table {
       font-size: 13px;
     }
+
+    .input-group.input-group-static > select.form-select {
+      width: 100%;
+      border: 0;
+    }
   </style>
 
    @yield('css')

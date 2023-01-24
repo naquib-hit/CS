@@ -553,6 +553,9 @@ window.onload = function() {
   var inputs = document.querySelectorAll('input, textarea');
 
   for (var i = 0; i < inputs.length; i++) {
+
+    if(inputs[i].parentElement.classList.contains('input-group-static')) continue;
+
     inputs[i].addEventListener('focus', function(e) {
       this.parentElement.classList.add('is-focused');
     }, false);
@@ -574,24 +577,7 @@ window.onload = function() {
   }
 
   // updated by naquib 2023-01-20
-  var selects = document.querySelectorAll('select');
-
-  Array.from([...selects], item => {
-    item.addEventListener('load', e => {
-      if(e.target.value) 
-        e.target.parentNode.closest('.input-group').classList.add('is-filled');
-      // else
-      //   e.target.parentNode.closest('.input-group').classList.remove('is-filled');
-    });
-
-    item.addEventListener('change', e => {
-      if(e.target.value)
-        e.target.parentNode.closest('.input-group').classList.add('is-filled');
-      else
-        e.target.parentNode.closest('.input-group').classList.remove('is-filled');
-
-    });
-  });
+ 
   // end update "by naquib 2023-01-20"
 
   // Ripple Effect

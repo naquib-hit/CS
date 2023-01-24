@@ -55,12 +55,13 @@ class InvoiceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Invoice  $invoice
+     * @param  mixed $id
      * @return \Illuminate\View\View
      */
-    public function show(Invoice $invoice): View
+    public function show(int $id): View
     {
         //
+        $invoice = Invoice::getInvoiceByID($id);
         return view('invoices.show')->with('invoice', $invoice);
     }
 
