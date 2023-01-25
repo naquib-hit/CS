@@ -58,6 +58,13 @@
     .input-group.input-group-static > select.form-select {
       width: 100%;
       border: 0;
+      border-bottom: 1px solid lightgrey;
+      border-radius: 0px;
+      transition: border-bottom 2s linear;
+    }
+
+    .input-group.input-group-static > .form-select:focus {
+      width: 100%;
     }
   </style>
 

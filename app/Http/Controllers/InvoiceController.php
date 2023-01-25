@@ -61,7 +61,7 @@ class InvoiceController extends Controller
     public function show(int $id): View
     {
         //
-        $invoice = Invoice::getInvoiceByID($id);
+        $invoice = Invoice::getInvoiceByID($id)->toArray();
         return view('invoices.show')->with('invoice', $invoice);
     }
 

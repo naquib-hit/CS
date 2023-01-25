@@ -99,9 +99,12 @@
                                 @enderror
                             </div>
                             <div class="col-12 col-lg-4">
-                                <div class="input-group input-group-static @error('invoice_currency') is-invalid @enderror mt-3">
+                                <div class="input-group input-group-static flex-nowrap flex-column @error('invoice_currency') is-invalid @enderror mt-3">
                                     <label class="form-label">{{ __('invoice.form.fields.currency') }}</label>
-                                    <select class="form-select" name="invoice_currency" value="{{ old('invoice_currency') }}"></select>
+                                    <div class="d-flex flex-nowrap">
+                                    <select class="form-control" name="invoice_currency" value="{{ old('invoice_currency') }}"></select>
+                                    <label class="input-group-text"><i class="fas fa-caret-down"></i></label>
+                                    </div>
                                 </div>
                                 @error('invoice_currency')
                                     <small class="text-danger">{{ $message }}</small>
@@ -563,9 +566,9 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         labelLeft.innerHTML = "{{ __('invoice.form.fields.item') }} <span class=\"text-danger\">*</span>";
         inputText.name = "invoice_items["+ (+lastIndex + 1) +"][name]";
         inputTextValue.name = 'invoice_items['+ (+lastIndex + 1) +'][value]'
-        inputText.onfocus = async e => await inputOnFocus(e);
-        inputText.onblur = async e => await inputOnFocusOut(e);
-        inputText.onkeyup = async e => await inputOnKeyup(e);
+        // inputText.onfocus = async e => await inputOnFocus(e);
+        // inputText.onblur = async e => await inputOnFocusOut(e);
+        // inputText.onkeyup = async e => await inputOnKeyup(e);
         inputGroupLeft.appendChild(labelLeft);
         inputGroupLeft.appendChild(inputText);
         inputGroupLeft.appendChild(inputTextValue);
@@ -575,9 +578,9 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         //labelMiddle.innerText = '';
         labelMiddle.innerHTML = "{{ __('invoice.form.fields.total') }} <span class=\"text-danger\">*</span>";
         inputNumber.name= "invoice_items["+ (+lastIndex + 1) +"][total]";
-        inputNumber.onfocus = async e => await inputOnFocus(e);
-        inputNumber.onblur = async e => await inputOnFocusOut(e);
-        inputNumber.onkeyup = async e => await inputOnKeyup(e);
+        // inputNumber.onfocus = async e => await inputOnFocus(e);
+        // inputNumber.onblur = async e => await inputOnFocusOut(e);
+        // inputNumber.onkeyup = async e => await inputOnKeyup(e);
         inputNumber.min = 0;
         inputGroupMiddle.appendChild(labelMiddle);
         inputGroupMiddle.appendChild(inputNumber);
@@ -647,9 +650,9 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         labelLeft.innerHTML = "{{ __('invoice.form.fields.tax') }} <span class=\"text-danger\">*</span>";
         inputText.name = "invoice_tax["+ (+lastTaxIndex + 1) +"][name]";
         inputTextValue.name =  "invoice_tax["+ (+lastTaxIndex + 1) +"][value]";
-        inputText.onfocus = async e => await inputOnFocus(e);
-        inputText.onblur = async e => await inputOnFocusOut(e);
-        inputText.onkeyup = async e => await inputOnKeyup(e);
+        //inputText.onfocus = async e => await inputOnFocus(e);
+        //inputText.onblur = async e => await inputOnFocusOut(e);
+        //inputText.onkeyup = async e => await inputOnKeyup(e);
         inputGroupLeft.appendChild(labelLeft);
         inputGroupLeft.appendChild(inputText);
         inputGroupLeft.appendChild(inputTextValue);

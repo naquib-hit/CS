@@ -117,7 +117,7 @@ class Invoice extends Model
         $_items = collect($items)->reduce(function ($summary, $item) {
             $summary[$item['value']] =
                 [
-                    'quantity'      => $item['value'],
+                    'quantity'      => $item['total'],
                     'total_price'   => (Product::find($item['value']))->product_price * $item['total']
                 ];
             return $summary;
@@ -145,7 +145,13 @@ class Invoice extends Model
         return $this;
     }
 
-
+    /**
+     * Insert Additional Fields Data
+     *
+     * @param array $fields
+     * @param int $id
+     * @return self
+     */
     public function createAdditionalFields(array $fields = NULL, $id):self
     {
         if(!empty($fields))
@@ -164,14 +170,25 @@ class Invoice extends Model
     }
 
     /**
-     * Undocumented function
+     * get An Invoice By ID
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return self
      */
     public static function getInvoiceByID(int $id): self
     {
         $invoice = self::with('products', 'customers', 'taxes', 'additionalField', 'invoiceSummary')->find($id);
         return $invoice;
+    }
+
+    protected function additionalFieldsOperation(int $a, int $b, string $operator): int
+    {
+        switch($operator)
+        {
+            case '+': return $a + $b;  
+            case '-': return $a - $b;  
+            case 'x': return $a * $b;  
+            case '/': return $a / $b;  
+        }
     }
 
     /**
