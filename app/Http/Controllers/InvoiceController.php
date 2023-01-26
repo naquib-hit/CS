@@ -61,7 +61,25 @@ class InvoiceController extends Controller
     public function show(int $id): View
     {
         //
-        $invoice = Invoice::getInvoiceByID($id)->toArray();
+        $invoice = collect(Invoice::getInvoiceByID($id));
+        // Check Taxes
+        
+        // Check discount
+        if(!empty($invoice->get('discount_amount')))
+        {
+
+        }
+                    // ->map(function($value, $key) {
+                    //     $_item = $value;
+                    //     // Calculate discount
+                    //     if(!empty($value['discount_amount']))
+                    //     {
+                    //         $discount_result = Invoice::setDiscount($value['discount_unit'], $value['discount_amount'], $value['total_summary']);
+                    //         $_item->put('discount_result', $discount_result);
+                    //     }
+                    //     // Calculate Tax
+                    //     return $_item;
+                    // });
         return view('invoices.show')->with('invoice', $invoice);
     }
 
@@ -119,12 +137,13 @@ class InvoiceController extends Controller
      * @param Request $req
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function get(Request $req): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function get(Request $req)
     {
         $invoices = Invoice::with(['customers', 'products', 'taxes', 'invoiceSummary'])
-            ->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+                    ->orderBy('created_at', 'desc')->orderBy('id', 'desc')
+                    ->paginate(8);
 
-        return $invoices->paginate(8);
+        return $invoices;
     }
 
     /**

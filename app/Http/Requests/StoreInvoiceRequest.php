@@ -40,6 +40,7 @@ class StoreInvoiceRequest extends FormRequest
             'invoice_po'    => 'required',
             'invoice_due'   => 'required|date|after_or_equal:invoice_date',
             'invoice_discount' => 'nullable',
+            'discount_unit' => 'nullable',
             'invoice_currency' => 'nullable',
             'invoice_items'  => 'required|array',
             'invoice_items.*' => 'required',

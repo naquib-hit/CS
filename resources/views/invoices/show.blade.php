@@ -59,7 +59,7 @@
                 </header>
                 <div id="invoice-body">
                     <div class="row">
-                        <dl class="col-4 d-flex">
+                        <dl class="col-5 d-flex">
                             <dt>Bill To :</dt>
                             <dd class="ms-3">
                                 <h6 class="mb-0 text-bold text-decoration-underline">{{ $invoice['customers']['customer_name'] }}</h6>
@@ -100,7 +100,7 @@
                             </tr>
                             @if (!empty($invoice['discount_amount']) )
                                 <td colspan="3"></td>
-                                <td class="text-bold">Discount</td>
+                                <td class="text-bold">Discount {{ $invoice['discount_unit'] == 'percent' ? $invoice['discount_amount'].'%' : NULL }}</td>
                                 <td class="text-bold">{{  number_format($invoice['discount_amount'], 0, NULL, '.') }}</td>
                             @endif
                         </tbody>

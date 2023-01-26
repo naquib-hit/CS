@@ -268,9 +268,9 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="input-group input-group-static">
-                                        <select class="form-control" name="tax_type">
+                                        <select class="form-control" name="discount_unit">
                                             <option value="percent">%</option>
-                                            <option value="number">Rp.</option>
+                                            <option value="fixed">Rp.</option>
                                         </select>
                                     </div>
                                 </div>

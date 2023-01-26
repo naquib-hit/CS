@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasOne};
+use App\Traits\CalculationHelperTrait;
 
 class Invoice extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CalculationHelperTrait;
 
     // private const AuthID = \Illuminate\Support\Facades\Auth::id();
 
@@ -78,8 +79,21 @@ class Invoice extends Model
         return $this->hasMany(AdditionalField::class, 'invoice_id', 'id');
     }
 
-    public function getDiscountAttribute()
+    /**
+     * Undocumented function
+     *
+     * @param string $unit
+     * @param integer $amount
+     * @param integer $percent
+     * @return integer
+     */
+    public static function setDiscount(string $unit, int $amount, int $subtotal = NULL): int
     {
+        switch($unit)
+        {
+            case 'fixed': return $amount;
+            case 'percent': return self::percentOf($subtotal, $amount);
+        }
     }
 
     /**
@@ -88,20 +102,20 @@ class Invoice extends Model
      * @param array $items
      * @return int
      */
-    public function getInvoiceSummaryAttribute(int $id): int
+    public function setInvoiceSummary(int $id): int
     {
         $summary = self::find($id)->products()
-            ->get()
-            ->pluck('pivot')
-            ->pluck('total_price')
-            ->reduce(fn ($sum, $curr) => $sum + $curr);
+                        ->get()
+                        ->pluck('pivot')
+                        ->pluck('total_price')
+                        ->reduce(fn ($sum, $curr) => $sum + $curr);
         return $summary;
     }
 
     /** */
     public function createInvoiceSummary($id): self
     {
-        self::invoiceSummary()->create(['invoice_id' => $id, 'total_summary' => self::getInvoiceSummaryAttribute($id)]);
+        self::invoiceSummary()->create(['invoice_id' => $id, 'total_summary' => self::setInvoiceSummary($id)]);
 
         return $this;
     }
@@ -176,19 +190,8 @@ class Invoice extends Model
      */
     public static function getInvoiceByID(int $id): self
     {
-        $invoice = self::with('products', 'customers', 'taxes', 'additionalField', 'invoiceSummary')->find($id);
+        $invoice = self::with(['products', 'customers', 'taxes', 'additionalField', 'invoiceSummary'])->find($id);
         return $invoice;
-    }
-
-    protected function additionalFieldsOperation(int $a, int $b, string $operator): int
-    {
-        switch($operator)
-        {
-            case '+': return $a + $b;  
-            case '-': return $a - $b;  
-            case 'x': return $a * $b;  
-            case '/': return $a / $b;  
-        }
     }
 
     /**
@@ -205,6 +208,8 @@ class Invoice extends Model
         $invoice->customer_id  = $valid['invoice_customer'];
         $invoice->create_date = (new \DateTime($valid['invoice_date']))->format('Y-m-d');
         $invoice->due_date = (new \DateTime($valid['invoice_due']))->format('Y-m-d');
+        $invoice->discount_amount = $valid['invoice_discount'];
+        $invoice->discount_unit = $valid['discount_unit'];
         $invoice->notes = $valid['invoice_notes'];
         $invoice->po_no = $valid['invoice_po'];
         $invoice->currency = $valid['invoice_currency'];

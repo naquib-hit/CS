@@ -16,7 +16,6 @@ class CreateInvoiceSummariesTable extends Migration
         Schema::create('invoice_summaries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('invoice_id')->unique()->constrained('invoices')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->double('sub_total');
             $table->double('total_summary');
             $table->integer('created_by')->nullable();
             $table->timestamps();
