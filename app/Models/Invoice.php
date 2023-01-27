@@ -87,7 +87,7 @@ class Invoice extends Model
      * @param integer $percent
      * @return integer
      */
-    public static function setDiscount(string $unit, int $amount, int $subtotal = NULL): int
+    public static function setFixedOrPercent(string $unit, int $amount, ?int $subtotal): int
     {
         switch($unit)
         {

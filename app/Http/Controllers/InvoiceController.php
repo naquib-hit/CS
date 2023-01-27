@@ -58,28 +58,23 @@ class InvoiceController extends Controller
      * @param  mixed $id
      * @return \Illuminate\View\View
      */
-    public function show(int $id): View
+    public function show(int $id)
     {
         //
-        $invoice = collect(Invoice::getInvoiceByID($id));
-        // Check Taxes
-        
-        // Check discount
-        if(!empty($invoice->get('discount_amount')))
+        $invoice = Invoice::getInvoiceByID($id)->toArray();
+        $summary = $invoice['invoice_summary']['total_summary'];
+        //Check Taxes
+        for($i=0;$i<count($invoice['taxes']);$i++)
         {
-
+            $sum = Invoice::setFixedOrPercent('percent', $invoice['taxes'][$i]['tax_amount'],  $invoice['invoice_summary']['total_summary']);
+            data_set($invoice, 'taxes.'.$i.'.tax_sum', $sum);
         }
-                    // ->map(function($value, $key) {
-                    //     $_item = $value;
-                    //     // Calculate discount
-                    //     if(!empty($value['discount_amount']))
-                    //     {
-                    //         $discount_result = Invoice::setDiscount($value['discount_unit'], $value['discount_amount'], $value['total_summary']);
-                    //         $_item->put('discount_result', $discount_result);
-                    //     }
-                    //     // Calculate Tax
-                    //     return $_item;
-                    // });
+        //Check discount
+        if(!empty($invoice['discount_amount']))
+        {
+            $discount = Invoice::setFixedOrPercent($invoice['discount_unit'], $invoice['discount_amount'], $invoice['invoice_summary']['total_summary']);
+            data_fill($invoice, 'discount_sum', $discount);
+        }
         return view('invoices.show')->with('invoice', $invoice);
     }
 

@@ -98,10 +98,26 @@
                                 <td class="text-bold">Sub Total</td>
                                 <td class="text-bold">{{  number_format($invoice['invoice_summary']['total_summary'], 0, NULL, '.') }}</td>
                             </tr>
+                            @foreach ($invoice['taxes'] as $tax)
+                            <tr>
+                                <td colspan="3"></td>
+                                <td class="text-bold">{{ $tax['tax_name'] }}&nbsp;{{ $tax['tax_amount'] }}%</td>
+                                <td class="text-bold">{{  number_format(($invoice['invoice_summary']['total_summary'] * $tax['tax_amount']) / 100, 0, NULL, '.') }}</td>
+                            </tr>
+                            @endforeach
                             @if (!empty($invoice['discount_amount']) )
+                            <tr>
                                 <td colspan="3"></td>
                                 <td class="text-bold">Discount {{ $invoice['discount_unit'] == 'percent' ? $invoice['discount_amount'].'%' : NULL }}</td>
-                                <td class="text-bold">{{  number_format($invoice['discount_amount'], 0, NULL, '.') }}</td>
+                                <td class="text-bold">{{  number_format($invoice['discount_sum'], 0, NULL, '.') }}</td>
+                            </tr>
+                            @endif
+                            @if(!empty($invoice['additional_field']))
+                            <tr>
+                                <td colspan="3"></td>
+                                <td class="text-bold">Discount {{ $invoice['discount_unit'] == 'percent' ? $invoice['discount_amount'].'%' : NULL }}</td>
+                                <td class="text-bold">{{  number_format($invoice['discount_sum'], 0, NULL, '.') }}</td>
+                            </tr>
                             @endif
                         </tbody>
                     </table>

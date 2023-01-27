@@ -102,7 +102,10 @@
                                 <div class="input-group input-group-static flex-nowrap flex-column @error('invoice_currency') is-invalid @enderror mt-3">
                                     <label class="form-label">{{ __('invoice.form.fields.currency') }}</label>
                                     <div class="d-flex flex-nowrap">
-                                    <select class="form-control" name="invoice_currency" value="{{ old('invoice_currency') }}"></select>
+                                    <select class="form-control" name="invoice_currency" value="{{ old('invoice_currency') }}">
+                                        <option value="IDR">IDR - INDONESIA</option>
+                                        <option value="USD">USD - USA</option>
+                                    </select>
                                     <label class="input-group-text"><i class="fas fa-caret-down"></i></label>
                                     </div>
                                 </div>
@@ -199,13 +202,14 @@
                                 <div class="card-body" id="tax-container">
                                     <div class="row align-items-end">
                                         <div class="col-12 col-md-9 pe-1">
-                                            <div class="input-group input-group-static mt-3">
+                                            <div class="input-group input-group-static @error('invoice_tax.0.value') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.tax') }}<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control tax-name" name="invoice_tax[0][name]" value="{{ old('invoice_tax.0.name') }}">
-                                                <input type="number" name="invoice_tax[0][value]" value="{{ old('invoice_tax.0.value') }}" hidden>
-                                               
+                                                <input type="text" class="form-control tax-name" name="invoice_tax[0][name]" value="{{ old('invoice_tax.0.name') ?? 'PPN' }}">
+                                                <input type="number" name="invoice_tax[0][value]" value="{{ old('invoice_tax.0.value') ?? 5 }}" hidden>
                                             </div>
-                                            
+                                            @error('invoice_tax.0.value')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <div class="col-12 col-md-2 ps-1">
                                             <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
@@ -221,7 +225,9 @@
                                                         <input type="text" class="form-control tax-name" name="invoice_tax[{{ $i }}][name]" value="{{ old('invoice_tax.'.$i.'.name') }}">
                                                         <input type="number" name="invoice_tax[{{ $i }}][value]" value="{{ old('invoice_tax.'.$i.'.value') }}" hidden>
                                                     </div>
-                                                    
+                                                    @error('invoice_tax.'.$i.'.value')
+                                                        <small class="text-danger">{{ $message }}</small>
+                                                    @enderror
                                                 </div>
                                                 <div class="col-12 col-md-2 ps-1">
                                                     <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
@@ -807,7 +813,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         await firstProductAutoComplete();
         await taxAutocomplete();
         await setListCustomers();
-        await setCurrencySelection();
+        //await setCurrencySelection();
 
         btnAddItem.addEventListener('click', e => {
             e.preventDefault();

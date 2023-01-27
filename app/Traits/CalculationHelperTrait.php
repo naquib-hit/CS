@@ -12,7 +12,7 @@ trait CalculationHelperTrait {
      * @param string $operator
      * @return integer
      */
-    public function arithmathics(int $a, int $b, string $operator): int 
+    public function arithmethic(int $a, int $b, string $operator): int 
     {
         switch($operator)
         {
@@ -30,9 +30,9 @@ trait CalculationHelperTrait {
      * @param integer $input
      * @return integer
      */
-    public function percentOf(int $amount, int $input): int 
+    public function percentOf(int $amount, int $num): int 
     {
-        return  $input - floor(( $amount / 100 ) * $input);
+        return floor(( $amount / 100 ) * $num);
     }
 
     /**
