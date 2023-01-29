@@ -773,7 +773,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         // Units
         const cellUnits = row.insertCell(2);
         cellUnits.innerHTML = `<select name="additional_input[${arrLength}][unit]" class="form-select form-select-sm">` +
-                                `<option value="currency">Rp.</value>` +  
+                                `<option value="fixed">Rp.</value>` +  
                                 `<option value="percent">%</value>` +  
                              `</select>`;
         // Operation

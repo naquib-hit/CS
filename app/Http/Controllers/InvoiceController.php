@@ -68,13 +68,30 @@ class InvoiceController extends Controller
         {
             $sum = Invoice::setFixedOrPercent('percent', $invoice['taxes'][$i]['tax_amount'],  $invoice['invoice_summary']['total_summary']);
             data_set($invoice, 'taxes.'.$i.'.tax_sum', $sum);
+			$summary += $sum;
         }
         //Check discount
         if(!empty($invoice['discount_amount']))
         {
             $discount = Invoice::setFixedOrPercent($invoice['discount_unit'], $invoice['discount_amount'], $invoice['invoice_summary']['total_summary']);
             data_fill($invoice, 'discount_sum', $discount);
+			$summary -= $discount;
         }
+		// Check Additional Fields
+		if(!empty($invoice['additional_field']))
+		{
+			$afi=0;
+			foreach($invoice['additional_field'] as $af)
+			{
+                $be = Invoice::setFixedOrPercent($af['unit'], $af['field_value'], $invoice['invoice_summary']['total_summary']);
+                data_set($invoice, 'additional_field.'.$afi.'.field_sum', $be);
+				$fieldNum = Invoice::calculateAdditionalField($summary, $be, $af['operation']);
+				$summary = $fieldNum;
+				$afi++;
+			}
+		}
+		
+		data_set($invoice, 'last_result', $summary);
         return view('invoices.show')->with('invoice', $invoice);
     }
 

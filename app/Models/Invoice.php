@@ -95,6 +95,11 @@ class Invoice extends Model
             case 'percent': return self::percentOf($subtotal, $amount);
         }
     }
+	
+	public static function calculateAdditionalField(int $a, int $b, string $opt): int
+	{
+		return self::arithmethic($a, $b, $opt);
+	}
 
     /**
      * Insert Invoice's Summary
