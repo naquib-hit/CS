@@ -6,21 +6,28 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use App\Models\User;
 
 class InvoiceMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $invoice;
+    /**
+     * @var $invoice
+     * 
+     */
+    private array $invoice;
+    private User $user;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(\App\Models\Invoice $invoice)
+    public function __construct(array $invoice)
     {
         //
+        $this->user = User::find(auth()->id());
         $this->invoice = $invoice;
     }
 
@@ -31,6 +38,8 @@ class InvoiceMail extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->from('naquibalatas1987@gmail.com', 'Administrator')
+                    ->view('invoices.mails.1')
+                    ->with('invoice', $this->invoice);
     }
 }

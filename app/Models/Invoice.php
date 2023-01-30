@@ -191,11 +191,41 @@ class Invoice extends Model
     /**
      * get An Invoice By ID
      *
-     * @return self
+     * @return array
      */
-    public static function getInvoiceByID(int $id): self
+    public static function getInvoiceByID(int $id): array
     {
-        $invoice = self::with(['products', 'customers', 'taxes', 'additionalField', 'invoiceSummary'])->find($id);
+        $invoice = self::with(['products', 'customers', 'taxes', 'additionalField', 'invoiceSummary'])->find($id)->toArray();
+        $summary = $invoice['invoice_summary']['total_summary'];
+
+        for($i=0;$i<count($invoice['taxes']);$i++)
+        {
+            $sum = self::setFixedOrPercent('percent', $invoice['taxes'][$i]['tax_amount'],  $invoice['invoice_summary']['total_summary']);
+            data_set($invoice, 'taxes.'.$i.'.tax_sum', $sum);
+			$summary += $sum;
+        }
+        //Check discount
+        if(!empty($invoice['discount_amount']))
+        {
+            $discount = self::setFixedOrPercent($invoice['discount_unit'], $invoice['discount_amount'], $invoice['invoice_summary']['total_summary']);
+            data_fill($invoice, 'discount_sum', $discount);
+			$summary -= $discount;
+        }
+		// Check Additional Fields
+		if(!empty($invoice['additional_field']))
+		{
+			$afi=0;
+			foreach($invoice['additional_field'] as $af)
+			{
+                $be = self::setFixedOrPercent($af['unit'], $af['field_value'], $invoice['invoice_summary']['total_summary']);
+                data_set($invoice, 'additional_field.'.$afi.'.field_sum', $be);
+				$fieldNum = self::calculateAdditionalField($summary, $be, $af['operation']);
+				$summary = $fieldNum;
+				$afi++;
+			}
+		}
+		
+		data_set($invoice, 'last_result', $summary);
         return $invoice;
     }
 

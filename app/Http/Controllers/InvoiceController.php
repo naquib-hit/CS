@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\{StoreInvoiceRequest, UpdateInvoiceRequest};
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\{Log, Auth};
 use App\Models\{Invoice, Customer, Product, Tax};
+use App\Http\Requests\{StoreInvoiceRequest, UpdateInvoiceRequest};
 use Illuminate\Http\{RedirectResponse, Request, Response, JsonResponse};
-use Illuminate\View\View;
 
 class InvoiceController extends Controller
 {
@@ -58,40 +59,13 @@ class InvoiceController extends Controller
      * @param  mixed $id
      * @return \Illuminate\View\View
      */
-    public function show(int $id)
+    public function show(Request $req, int $id)
     {
         //
-        $invoice = Invoice::getInvoiceByID($id)->toArray();
+        $invoice = Invoice::getInvoiceByID($id);
         $summary = $invoice['invoice_summary']['total_summary'];
         //Check Taxes
-        for($i=0;$i<count($invoice['taxes']);$i++)
-        {
-            $sum = Invoice::setFixedOrPercent('percent', $invoice['taxes'][$i]['tax_amount'],  $invoice['invoice_summary']['total_summary']);
-            data_set($invoice, 'taxes.'.$i.'.tax_sum', $sum);
-			$summary += $sum;
-        }
-        //Check discount
-        if(!empty($invoice['discount_amount']))
-        {
-            $discount = Invoice::setFixedOrPercent($invoice['discount_unit'], $invoice['discount_amount'], $invoice['invoice_summary']['total_summary']);
-            data_fill($invoice, 'discount_sum', $discount);
-			$summary -= $discount;
-        }
-		// Check Additional Fields
-		if(!empty($invoice['additional_field']))
-		{
-			$afi=0;
-			foreach($invoice['additional_field'] as $af)
-			{
-                $be = Invoice::setFixedOrPercent($af['unit'], $af['field_value'], $invoice['invoice_summary']['total_summary']);
-                data_set($invoice, 'additional_field.'.$afi.'.field_sum', $be);
-				$fieldNum = Invoice::calculateAdditionalField($summary, $be, $af['operation']);
-				$summary = $fieldNum;
-				$afi++;
-			}
-		}
-		
-		data_set($invoice, 'last_result', $summary);
+      
         return view('invoices.show')->with('invoice', $invoice);
     }
 
@@ -156,6 +130,45 @@ class InvoiceController extends Controller
                     ->paginate(8);
 
         return $invoices;
+    }
+
+    /**
+     * Function for send mail
+     *
+     * @param integer $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function mail(int $id): RedirectResponse
+    {
+        try 
+        {
+            $invoice = Invoice::getInvoiceByID($id);
+            Mail::to($invoice['customers']['customer_email'])->send(new \App\Mail\InvoiceMail($invoice));
+
+            if(count(Mail::failures()) > 0) 
+            {
+                Invoice::find($id)->update([
+                    'invoice_status' => 2
+                ]);
+                return redirect()->back()->with('error', __('Email Gagal Terkirim'));
+            }
+
+            Invoice::find($id)->update([
+                'invoice_status' => 1
+            ]);
+
+            return redirect()->route('invoices.index')->with('success', __('Email berhasil dikirim'));
+        }
+        catch(\Throwable $e)
+        {
+            Log::error($e->getMessage());
+            
+            Invoice::find($id)->update([
+                'invoice_status' => 2
+            ]);
+            return redirect()->back()->with('error', __('Email Gagal Terkirim'));
+        }
+        
     }
 
     /**

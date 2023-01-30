@@ -75,7 +75,6 @@ if (document.querySelectorAll('.input-group').length != 0) {
       
   });
 
-  console.log(select);
 
 }
 
@@ -554,11 +553,21 @@ window.onload = function() {
 
   for (var i = 0; i < inputs.length; i++) {
 
+    if(inputs[i].type === 'date')
+    {
+       inputs[i].addEventListener('blur', e => {
+          if(e.target.value)
+          this.parentElement.classList.add('is-focused');
+       });
+    }
+
     if(inputs[i].parentElement.classList.contains('input-group-static')) continue;
 
     inputs[i].addEventListener('focus', function(e) {
       this.parentElement.classList.add('is-focused');
     }, false);
+
+ 
 
     inputs[i].onkeyup = function(e) {
       if (this.value != "") {

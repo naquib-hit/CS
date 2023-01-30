@@ -120,10 +120,13 @@ const setTable = async data => {
         // Column 5
         cell_5.innerHTML= intToCurrency(+item['invoice_summary']['total_summary']);
         cell_5.dataset.name = 'total_summary';
-        cell_5.classList.add('ps-2');
+        cell_5.classList.add('ps-2', 'd-none');
         // Column 6
         cell_6.innerHTML = `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
-                                `<a type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="${window.location.origin}/customers/${item.id}/edit">` + 
+                                `<a type="button" class="btn btn-sm btn-success btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="${window.location.origin}/invoices/${item.id}">` + 
+                                    `<i class="fas fa-eye font-reset"></i>` +
+                                `</a>` +
+                                `<a type="button" class="btn btn-sm btn-info btn-circle p-0 m-0 ms-1 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="${window.location.origin}/invoices/${item.id}/edit">` + 
                                     `<i class="fas fa-edit font-reset"></i>` +
                                 `</a>` +
                                 `<button type="button" class="btn btn-sm btn-danger btn-circle p-0 m-0 ms-1 delete_data" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="deleteConfirmation(event)"><i class="fas fa-trash font-reset"></i></button>` + 

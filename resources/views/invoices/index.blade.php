@@ -43,7 +43,7 @@
                                 <th class="d-none">Customer ID</th>
                                 <th>{{ __('invoice.table.customer') }}</th>
                                 <th>{{ __('invoice.table.email_status') }}</th>
-                                <th>{{ __('invoice.table.sum') }}</th>
+                                <th class="d-none">{{ __('invoice.table.sum') }}</th>
                                 <th>{{ __('invoice.table.opt') }}</th>
                             </tr>
                         </thead>
