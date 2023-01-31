@@ -33,6 +33,9 @@
 @endsection
 
 
+@php
+    print_r($invoice);
+@endphp
 @section('content')
     
     <div class="row h-100 justify-content-center">
@@ -309,38 +312,7 @@
                                     <th>{{ __('invoice.form.fields.additional.operation') }}</th>
                                     <th></th>
                                 </thead>
-                                <tbody>
-                                    @if (!empty(old('additional_input')) && count(old('additional_input')) > 0)
-                                    @for ($i=0;$i<count(old('additional_input'));$i++)
-                                    <tr>
-                                        <td>
-                                            <input type="text" name="additional_input[{{$i}}][name]" class="form-control form-control-sm border" value="{{ old('additional_input.'.$i.'.name') }}">
-                                        </td>
-                                        <td>
-                                            <input type="number" name="additional_input[{{ $i }}][value]" class="form-control form-control-sm border" value="{{ old('additional_input.'.$i.'.value') }}">
-                                        </td>
-                                        <td>
-                                            <select name="additional_input[{{ $i }}][unit]" class="form-select form-select-sm" value="{{ old('additional_input.'.$i.'.unit') }}">
-                                                <option value="fixed">Rp.</option>
-                                                <option value="percent">%</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select name="additional_input[{{ $i }}][operation]" class="form-select form-select-sm" value="{{ old('addtional_input.'.$i.'.operation') }}">
-                                                <option value="+">+</option>
-                                                <option value="-">-</option>
-                                                <option value="x">x</option>
-                                                <option value="/">/</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <button type="button" onclick="deleteAddtionalFieldRow(event)" class="btn btn-danger btn-circle p-0"><i class="fas fa-trash font-reset"></i></button>
-                                        </td>
-                                    </tr>
-                                    @endfor
-                                   
-                                    @endif
-                                </tbody>
+                                <tbody></tbody>
                             </table>
                         </div>
                     </div>

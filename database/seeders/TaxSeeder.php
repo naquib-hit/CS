@@ -15,6 +15,9 @@ class TaxSeeder extends Seeder
     public function run()
     {
         //
-        Tax::factory()->count(4)->create();
+        Tax::create([
+            'tax_name'      => 'PPN',
+            'tax_amount'    => 11
+        ]);
     }
 }

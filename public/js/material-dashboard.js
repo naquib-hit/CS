@@ -557,7 +557,12 @@ window.onload = function() {
     {
        inputs[i].addEventListener('blur', e => {
           if(e.target.value)
-          this.parentElement.classList.add('is-focused');
+            e.target.classList.add('text-secondary');
+       });
+
+       inputs[i].addEventListener('focusout', e => {
+        if(e.target.value)
+        e.target.classList.add('text-secondary');
        });
     }
 

@@ -46,7 +46,7 @@ class InvoiceController extends Controller
             $valid = $request->validated();
             $invoice = Invoice::createInvoice($valid);
 
-            return redirect()->route('invoices.index')->with('success', __('validation.success.create'));
+            return redirect()->route('invoices.show', ['invoice' => $invoice->id])->with('success', __('validation.success.create'));
         } catch (\Throwable $e) {
             Log::error($e->getMessage());
             return redirect()->back()->with('error', __('validation.failed.create'));
@@ -73,12 +73,13 @@ class InvoiceController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Invoice  $invoice
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function edit(Invoice $invoice): Response
+    public function edit(Invoice $invoice): View
     {
         //
-        return new Response('Mau Tau Aja', 200, ['Content-Type' => 'text/plain']);
+        $inv = $invoice->getInvoiceByID($invoice->id);
+        return view('invoices.edit')->with('invoice', $inv);
     }
 
     /**
