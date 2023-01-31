@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\{Log, Auth};
 use App\Models\{Invoice, Customer, Product, Tax};
 use App\Http\Requests\{StoreInvoiceRequest, UpdateInvoiceRequest};
 use Illuminate\Http\{RedirectResponse, Request, Response, JsonResponse};
+use Knp\Snappy\Pdf;
 
 class InvoiceController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -42,12 +44,18 @@ class InvoiceController extends Controller
     public function store(StoreInvoiceRequest $request): RedirectResponse
     {
         //
-        try {
+        try 
+        {
             $valid = $request->validated();
             $invoice = Invoice::createInvoice($valid);
 
-            return redirect()->route('invoices.show', ['invoice' => $invoice->id])->with('success', __('validation.success.create'));
-        } catch (\Throwable $e) {
+            $render = view('invoices.mails.1')->with('invoice', $invoice->getInvoiceByID($invoice->id))->render();
+            (new Pdf(base_path(env('WKHTML_PDF_BINARY'))))->generateFromHtml($render, public_path('files/invoices/'.$invoice->id.'.pdf'), [], TRUE);
+
+            return redirect()->route('invoices.show', ['invoice' => $invoice])->with('success', __('validation.success.create'));
+        } 
+        catch (\Throwable $e) 
+        {
             Log::error($e->getMessage());
             return redirect()->back()->with('error', __('validation.failed.create'));
         }
@@ -59,14 +67,10 @@ class InvoiceController extends Controller
      * @param  mixed $id
      * @return \Illuminate\View\View
      */
-    public function show(Request $req, int $id)
+    public function show(Invoice $invoice)
     {
         //
-        $invoice = Invoice::getInvoiceByID($id);
-        $summary = $invoice['invoice_summary']['total_summary'];
-        //Check Taxes
-      
-        return view('invoices.show')->with('invoice', $invoice);
+        return view('invoices.show')->with('invoice', $invoice->getInvoiceByID($invoice->id));
     }
 
     /**
@@ -86,13 +90,28 @@ class InvoiceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateInvoiceRequest  $request
-     * @param  \App\Models\Invoice  $invoice
-     * @return \Illuminate\Http\Response
+     * @param  int $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateInvoiceRequest $request, Invoice $invoice): Response
+    public function update(UpdateInvoiceRequest $request, int $id): RedirectResponse
     {
         //
-        return new Response('Mau Tau Aja', 200, ['Content-Type' => 'text/plain']);
+        try
+        {
+            $valid = $request->validated();
+            $invoice = Invoice::updateInvoice($valid, $id);
+
+            $render = view('invoices.mails.1')->with('invoice', $invoice->getInvoiceByID($invoice->id))->render();
+            (new Pdf(base_path(env('WKHTML_PDF_BINARY'))))->generateFromHtml($render, public_path('files/invoices/'.$invoice->id.'.pdf'), [], TRUE);
+
+            return redirect()->route('invoices.show', ['invoice' => $invoice])->with('success', __('validation.success.create'));
+        }
+        catch(\Throwable $e)
+        {
+            Log::error($e->getMessage());
+            return redirect()->back()->with('error', __('validation.failed.create'));
+        }
+        
     }
 
     /**

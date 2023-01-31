@@ -92,6 +92,8 @@
         font-size: var(--fas-custom-size) !important;
     }
 </style>
+
+<link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/sweetalert2.min.css') }}"/>
 @endsection
 
 @section('content')
@@ -101,11 +103,11 @@
         <div class="card fadeIn3 fadeInBottom h-100">
             <div class="card-header border-bottom">
                 <div class="btn-group btn-group-sm mb-0">
-                    <a class="btn btn-primary" href="{{ route('invoices.mail', ['id' => $invoice['id']]) }}">
+                    <a id="send-mail" class="btn btn-primary" href="{{ route('invoices.mail', ['id' => $invoice['id']]) }}">
                         <i class="fas fa-envelope font-reset"></i>
                         {{ __('Send') }}
                     </a>
-                    <a class="btn btn-primary">
+                    <a class="btn btn-primary" href="{{ route('invoices.index') }}">
                         <i class="fas fa-save font-reset"></i>
                         {{ __('Save as Draft') }}
                     </a>
@@ -219,7 +221,7 @@
                             <div id="description" class="mt-2">
                                 <h6 class="mb-0">Deskripsi</h6>
                                 <div class="border rounded w-100">
-                                    {{ $invoice['notes'] }}
+                                    {!! $invoice['notes'] !!}
                                 </div>
                             </div>
                             @endif
@@ -262,6 +264,36 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
+
+<script>
+@if(session()->has('error'))
+Swal.fire({
+    title: '<h4 class="text-danger">ERROR</h4>',
+    html: '<h5 class="text-danger">{{ session('error') }}</h5>',
+    icon: 'error',
+    timer: 1800,
+    timerProgressBar: true,
+    showConfirmButton: false
+});
+@endif
+
+const loading = () => {
+    Swal.fire({
+        html: 	'<div class="d-flex flex-column align-items-center">'
+        + '<span class="spinner-border text-primary"></span>'
+        + '<h3 class="mt-2">Loading...</h3>'
+        + '<div>',
+        showConfirmButton: false,
+        width: '14rem'
+    });
+}
+
+document.getElementById('send-mail').addEventListener('click', e => {
+    loading();
+});
+</script>
+
 
 @endsection
 

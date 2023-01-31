@@ -2,8 +2,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <link rel="stylesheet" href="{{ asset('css/app.css') }}" media="screen">  
+        <link rel="stylesheet" href="{{ asset('css/bootstrap-print.min.css') }}" media="screen">  
         <style>
-            <?= file_get_contents('css/app.css') ?>
             .table-print,
             .table-print-footer {
                 width: 100%;
@@ -204,7 +204,7 @@
                             <div id="description" class="mt-2">
                                 <h6 class="mb-0">Deskripsi</h6>
                                 <div class="border rounded w-100">
-                                    {{ $invoice['notes'] }}
+                                    {!! $invoice['notes'] !!}
                                 </div>
                             </div>
                             @endif

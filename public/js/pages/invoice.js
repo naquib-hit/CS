@@ -137,7 +137,6 @@ const setTable = async data => {
                                     `<i class="fas fa-eye font-reset"></i>` +
                                 `</a>`;
         cell_6.innerHTML += `</span>`;
-        cell_6.dataset.name = 'invoice_status';
         cell_6.classList.add('ps-2');
 
         // Column 6

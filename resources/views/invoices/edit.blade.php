@@ -33,18 +33,16 @@
 @endsection
 
 
-@php
-    print_r($invoice);
-@endphp
 @section('content')
-    
+
     <div class="row h-100 justify-content-center">
         <form class="col-12" 
               autocomplete="off" name="form-input"
-              action="{{ route('invoices.store') }}"
+              action="{{ route('invoices.update', ['invoice' => $invoice['id']]) }}"
               method="POST"
               enctype="multipart/form-data">
            @csrf
+           @method('PUT')
             <fieldset class="row">
                 <div class="col-12">
                     <div class="card fadeIn3 fadeInBottom">
@@ -57,7 +55,7 @@
                             <div class="col-12 col-lg-4">
                                 <div class="input-group input-group-static @error('invoice_no') is-invalid @enderror mt-3">
                                     <label class="form-label">{{ __('invoice.form.fields.no') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="invoice_no" value="{{ old('invoice_no') }}">
+                                    <input type="text" class="form-control" name="invoice_no" value="{{ old('invoice_no') ?? $invoice['invoice_no'] }}">
                                 </div>
                                 @error('invoice_no')
                                     <small class="text-danger">{{ $message }}</small>
@@ -66,7 +64,7 @@
                             <div class="col-12 col-lg-4">
                                 <div class="input-group input-group-static @error('invoice_po') is-invalid @enderror mt-3">
                                     <label class="form-label">{{ __('invoice.form.fields.po') }}<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="invoice_po" value="{{ old('invoice_po') }}">
+                                    <input type="text" class="form-control" name="invoice_po" value="{{ old('invoice_po') ?? $invoice['po_no'] }}">
                                 </div>
                                 @error('invoice_po')
                                     <small class="text-danger">{{ $message }}</small>
@@ -75,9 +73,9 @@
                             <div class="col-12 col-lg-4">
                                 <div class="input-group input-group-static @error('invoice_customer') is-invalid @enderror mt-3">
                                     <label class="form-label">{{ __('invoice.form.fields.customer') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="invoice_customer_text" id="customer_input"  value="{{ old('invoice_customer_text') }}">
+                                    <input type="text" class="form-control" name="invoice_customer_text" id="customer_input"  value="{{ old('invoice_customer_text') ?? $invoice['customers']['customer_name'] }}">
                                     <button class="input-group-text px-2 btn-open-customer" type="button"><i class="fas fa-caret-down"></i></button>
-                                    <input type="text" name="invoice_customer" value="{{ old('invoice_customer') }}" hidden>
+                                    <input type="text" name="invoice_customer" value="{{ old('invoice_customer') ?? $invoice['customers']['id'] }}" hidden>
                                 </div>
                                 @error('invoice_customer')
                                     <small class="text-danger">{{ $message }}</small>
@@ -86,7 +84,7 @@
                             <div class="col-12 col-lg-4">
                                 <div class="input-group input-group-static @error('invoice_date') is-invalid @enderror mt-3">
                                     <label class="form-label">{{ __('invoice.form.fields.date') }} <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="invoice_date" value="{{ old('invoice_date') }}">
+                                    <input type="date" class="form-control" name="invoice_date" value="{{ old('invoice_date') ?? $invoice['create_date'] }}">
                                 </div>
                                 @error('invoice_date')
                                     <small class="text-danger">{{ $message }}</small>
@@ -95,7 +93,7 @@
                             <div class="col-12 col-lg-4">
                                 <div class="input-group input-group-static @error('invoice_due') is-invalid @enderror mt-3">
                                     <label class="form-label">{{ __('invoice.form.fields.due_date') }}<span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="invoice_due" value="{{ old('invoice_due') }}">
+                                    <input type="date" class="form-control" name="invoice_due" value="{{ old('invoice_due') ?? $invoice['due_date'] }}">
                                 </div>
                                 @error('invoice_due')
                                     <small class="text-danger">{{ $message }}</small>
@@ -105,7 +103,7 @@
                                 <div class="input-group input-group-static flex-nowrap flex-column @error('invoice_currency') is-invalid @enderror mt-3">
                                     <label class="form-label">{{ __('invoice.form.fields.currency') }}</label>
                                     <div class="d-flex flex-nowrap">
-                                    <select class="form-control" name="invoice_currency" value="{{ old('invoice_currency') }}">
+                                    <select class="form-control" name="invoice_currency" value="{{ old('invoice_currency') ?? $invoice['currency'] }}">
                                         <option value="IDR">IDR - INDONESIA</option>
                                         <option value="USD">USD - USA</option>
                                     </select>
@@ -139,8 +137,8 @@
                                         <div class="col-12 col-md-8 pe-1">
                                             <div class="input-group input-group-static @error('invoice_items.0.value') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control item-name" name="invoice_items[0][name]" value="{{ old('invoice_items.0.name') }}">
-                                                <input type="text" class="d-none" name="invoice_items[0][value]" value="{{ old('invoice_items.0.value') }}">
+                                                <input type="text" class="form-control item-name" name="invoice_items[0][name]" value="{{ old('invoice_items.0.name') ?? $invoice['products'][0]['product_name'] }}">
+                                                <input type="text" class="d-none" name="invoice_items[0][value]" value="{{ old('invoice_items.0.value') ?? $invoice['products'][0]['id'] }}">
                                             </div>
                                             @error('invoice_items.0.value')
                                                 <small class="text-danger">{{ $message }}</small>
@@ -149,42 +147,50 @@
                                         <div class="col-12 col-md-2 px-1">
                                             <div class="input-group input-group-static @error('invoice_items.0.total') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
-                                                <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[0][total]" value="{{ old('invoice_items.0.value') }}">
+                                                <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[0][total]" value="{{ old('invoice_items.0.value') ?? $invoice['products'][0]['pivot']['quantity'] }}">
                                             </div>
                                         </div>
                                         {{-- <div class="col-12 col-md-2 ps-1">
                                             <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
                                         </div> --}}
                                     </div>
-
+                                    @php
+                                        $itemCount = count($invoice['products']);
+                                    @endphp
                                     @if (!empty(old('invoice_items')) && count(old('invoice_items')) > 1)
-                                        
-                                        @for ($i=1;$i<=count(old('invoice_items'));$i++)
-                                            <div class="row align-items-baseline">
-                                                <div class="col-12 col-md-6 pe-1">
-                                                    <div class="input-group input-group-static @error('invoice_items.'.$i.'.value') is-invalid @enderror mt-3">
-                                                        <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control item-name" name="invoice_items[{{ $i }}][name]" value="{{ old('invoice_items.'.$i.'.name') }}">
-                                                        <input type="text" class="d-none" name="invoice_items[{{ $i }}][value]" value="{{ old('invoice_items.'.$i.'.value') }}">
-                                                    </div>
-                                                    @error('invoice_items.'.$i.'.value')
-                                                        <small class="text-danger">{{ $message }}</small>
-                                                    @enderror
+                                        @if (count(old('invoice_items')) > count($invoice['products']))
+                                            @php($itemCount = count(old('invoice_items')));
+                                        @endif
+                                    @endif
+                                    @if ($itemCount > 1)
+                                        @for ($i=1;$i<=$itemCount;$i++)
+                                        <div class="row align-items-baseline">
+                                            <div class="col-12 col-md-6 pe-1">
+                                                <div class="input-group input-group-static @error('invoice_items.'.$i.'.value') is-invalid @enderror mt-3">
+                                                    <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control item-name" name="invoice_items[{{ $i }}][name]" 
+                                                    value="{{ old('invoice_items.'.$i.'.name') ?? $invoice['products'][$i]['product_name'] }}">
+                                                    <input type="text" class="d-none" name="invoice_items[{{ $i }}][value]" 
+                                                    value="{{ old('invoice_items.'.$i.'.value') ?? $invoice['products'][$i]['id'] }}">
                                                 </div>
-                                                <div class="col-12 col-md-4 px-1">
-                                                    <div class="input-group input-group-static @error('invoice_items.'.$i.'.total') is-invalid @enderror mt-3">
-                                                        <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
-                                                        <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[{{ $i }}][total]" value="{{ old('invoice_items.'.$i.'.total') }}">
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 col-md-2 ps-1">
-                                                    <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
+                                                @error('invoice_items.'.$i.'.value')
+                                                    <small class="text-danger">{{ $message }}</small>
+                                                @enderror
+                                            </div>
+                                            <div class="col-12 col-md-4 px-1">
+                                                <div class="input-group input-group-static @error('invoice_items.'.$i.'.total') is-invalid @enderror mt-3">
+                                                    <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
+                                                    <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[{{ $i }}][total]" value="{{ old('invoice_items.'.$i.'.total') ?? $invoice['products'][$i]['pivot']['quantity'] }}">
                                                 </div>
                                             </div>
-    
-                                        @endfor
+                                            <div class="col-12 col-md-2 ps-1">
+                                                <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
+                                            </div>
+                                        </div>
 
+                                        @endfor
                                     @endif
+                                   
                                 </div>
                             </div>
                         </div>
@@ -207,8 +213,9 @@
                                         <div class="col-12 col-md-9 pe-1">
                                             <div class="input-group input-group-static @error('invoice_tax.0.value') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.tax') }}<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control tax-name" name="invoice_tax[0][name]" value="{{ old('invoice_tax.0.name') ?? 'PPN' }}">
-                                                <input type="number" name="invoice_tax[0][value]" value="{{ old('invoice_tax.0.value') ?? 1 }}" hidden>
+                                                <input type="text" class="form-control tax-name" name="invoice_tax[0][name]" 
+                                                value="{{ old('invoice_tax.0.name') ?? $invoice['taxes'][0]['tax_name'] ?? 'PPN' }}">
+                                                <input type="number" name="invoice_tax[0][value]" value="{{ old('invoice_tax.0.value') ?? $invoice['taxes'][0]['id'] ?? 1 }}" hidden>
                                             </div>
                                             @error('invoice_tax.0.value')
                                                 <small class="text-danger">{{ $message }}</small>
@@ -218,15 +225,22 @@
                                             <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
                                         </div>
                                     </div>
-
+                                    @php($taxCount = count($invoice['taxes']))
                                     @if (!empty(old('invoice_tax')) && count(old('invoice_tax')) > 1)
+                                        @if(count(old('invoice_tax')) > count($invoice['taxes']))
+                                            @php($taxCount = count(old('invoice_tax'))))
+                                        @endif
+                                    @endif
+                                    @if ($taxCount > 1)
                                         @for ($i=1;$i<=count(old('invoice_tax'));$i++)
                                             <div class="row align-items-baseline mt-3">
                                                 <div class="col-12 col-md-9 pe-1">
                                                     <div class="input-group input-group-static">
                                                         <label class="form-label">{{ __('invoice.form.fields.tax') }}<span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control tax-name" name="invoice_tax[{{ $i }}][name]" value="{{ old('invoice_tax.'.$i.'.name') }}">
-                                                        <input type="number" name="invoice_tax[{{ $i }}][value]" value="{{ old('invoice_tax.'.$i.'.value') }}" hidden>
+                                                        <input type="text" class="form-control tax-name" name="invoice_tax[{{ $i }}][name]" 
+                                                        value="{{ old('invoice_tax.'.$i.'.name') ?? $invoice['taxes'][$i]['tax_name']  }}">
+                                                        <input type="number" name="invoice_tax[{{ $i }}][value]" 
+                                                        value="{{ old('invoice_tax.'.$i.'.value') ?? $invoice['taxes'][$i]['id'] }}" hidden>
                                                     </div>
                                                     @error('invoice_tax.'.$i.'.value')
                                                         <small class="text-danger">{{ $message }}</small>
@@ -253,7 +267,11 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <textarea id="notes-editor" class="form-control" name="invoice_notes">{{ old('invoice_notes') }}</textarea>
+                            {{-- <textarea id="notes-editor" class="form-control" name="invoice_notes">
+                                {{ old('invoice_notes') ?? $invoice['notes'] }}
+                            </textarea> --}}
+                            <div id="notes-editor"></div>
+                            <textarea class="d-none" name="invoice_notes"></textarea>
                         </div>
                     </div>
                 </div>
@@ -269,7 +287,7 @@
                                 <div class="col-8">
                                     <div class="input-group input-group-static @error('invoice_discount') is-invalid @enderror">
                                         <label class="form-label">{{ __('invoice.form.fields.discount') }}</label>
-                                        <input type="number" min="0" class="form-control" name="invoice_discount" value="{{ old('invoice_discount') }}">
+                                        <input type="number" min="0" class="form-control" name="invoice_discount" value="{{ old('invoice_discount') ?? $invoice['discount_amount'] }}">
                                     </div>
                                     @error('invoice_discount')
                                         <small class="text-danger">{{ $message }}</small>
@@ -277,7 +295,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="input-group input-group-static">
-                                        <select class="form-control" name="discount_unit">
+                                        <select class="form-control" name="discount_unit" value="{{ old('discount_unit') ?? $invoice['discount_unit'] }}">
                                             <option value="percent">%</option>
                                             <option value="fixed">Rp.</option>
                                         </select>
@@ -312,7 +330,46 @@
                                     <th>{{ __('invoice.form.fields.additional.operation') }}</th>
                                     <th></th>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    <?php $addFieldCount = count($invoice['additional_field']) ?>
+                                    @if (!empty(old('additional_input')) && count(old('additional_input')) > 0)
+                                        @if(count($invoice['additional_field']) < count(old('additional_input')))
+                                            @php($addFieldCount = count(old('additional_input')))
+                                        @endif
+                                    @endif
+                                    @if ($addFieldCount > 0)
+                                        @for ($i=0;$i<$addFieldCount;$i++)
+                                        <tr>
+                                            <td>
+                                                <input type="text" name="additional_input[{{$i}}][name]" class="form-control form-control-sm border" 
+                                                value="{{ old('additional_input.'.$i.'.name') ?? $invoice['additional_field'][$i]['field_name'] }}">
+                                            </td>
+                                            <td>
+                                                <input type="number" name="additional_input[{{ $i }}][value]" class="form-control form-control-sm border" value="{{ old('additional_input.'.$i.'.value') ?? $invoice['additional_field'][$i]['field_value'] }}">
+                                            </td>
+                                            <td>
+                                                <select name="additional_input[{{ $i }}][unit]" class="form-select form-select-sm" 
+                                                        value="{{ old('additional_input.'.$i.'.unit') ?? $invoice['additional_field'][$i]['unit'] }}">
+                                                    <option value="fixed">Rp.</option>
+                                                    <option value="percent">%</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select name="additional_input[{{ $i }}][operation]" class="form-select form-select-sm" 
+                                                value="{{ old('additional_input.'.$i.'.operation') ?? $invoice['additional_field'][$i]['operation'] }}">
+                                                    <option value="+">+</option>
+                                                    <option value="-">-</option>
+                                                    <option value="x">x</option>
+                                                    <option value="/">/</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <button type="button" onclick="deleteAddtionalFieldRow(event)" class="btn btn-danger btn-circle p-0"><i class="fas fa-trash font-reset"></i></button>
+                                            </td>
+                                        </tr>
+                                        @endfor
+                                    @endif
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -722,6 +779,15 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     const editor = new Quill('#notes-editor', {
         theme: 'snow'
     });
+    @php($notes = old('invoice_notes') ?? $invoice['notes'])
+    @if (!empty($notes))
+        editor.root.innerHTML = `{!! $notes !!}`;
+        document.querySelector('textarea[name="invoice_notes"]').innerHTML = editor.root.innerHTML;
+    @endif
+
+    editor.on('text-change', (delta, oldDelta, source) => {
+        console.log(delta);
+    })
     // end editor group
 
 
@@ -846,7 +912,10 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     //             e.target.parentNode.closest('.input-group').classList.remove('is-filled');;
     //    });
 
-       form.addEventListener('submit', e => loading());
+       form.addEventListener('submit', e => {
+            document.querySelector('textarea[name="invoice_notes"]').innerHTML = editor.root.innerHTML;
+            loading();
+       });
 
     })();
 </script>

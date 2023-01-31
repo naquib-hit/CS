@@ -120,7 +120,7 @@ class Invoice extends Model
     /** */
     public function createInvoiceSummary($id): self
     {
-        self::invoiceSummary()->create(['invoice_id' => $id, 'total_summary' => self::setInvoiceSummary($id)]);
+        self::invoiceSummary()->updateOrCreate(['invoice_id' => $id], ['total_summary' => self::setInvoiceSummary($id)]);
 
         return $this;
     }
@@ -176,9 +176,12 @@ class Invoice extends Model
         if(!empty($fields))
         {
             collect($fields)->each(function ($field) use ($id) { 
-                self::additionalField()->create([
+                self::additionalField()->updateOrCreate(
+                [
                     'invoice_id'    => $id,
                     'field_name'    => $field['name'],
+                ],    
+                [
                     'field_value'   => $field['value'],
                     'unit'          => $field['unit'],
                     'operation'     => $field['operation']
@@ -238,6 +241,42 @@ class Invoice extends Model
     public static function createInvoice(array $valid): self
     {
         $invoice = new self;
+
+        $invoice->invoice_no = $valid['invoice_no'];
+        $invoice->customer_id  = $valid['invoice_customer'];
+        $invoice->create_date = (new \DateTime($valid['invoice_date']))->format('Y-m-d');
+        $invoice->due_date = (new \DateTime($valid['invoice_due']))->format('Y-m-d');
+        $invoice->discount_amount = $valid['invoice_discount'];
+        $invoice->discount_unit = $valid['discount_unit'];
+        $invoice->notes = $valid['invoice_notes'];
+        $invoice->po_no = $valid['invoice_po'];
+        $invoice->currency = $valid['invoice_currency'];
+        $invoice->user_id = (int) auth()->id();
+        $invoice->created_by = (int) auth()->id();
+
+        DB::transaction(function () use ($invoice, $valid) {
+            $invoice->save();
+
+            $invoice->createItems($valid['invoice_items'])
+                ->createTax($valid['invoice_tax'])
+                ->createInvoiceSummary($invoice->id);
+            
+            if(!empty($valid['additional_input']))
+                $invoice->createAdditionalFields($valid['additional_input'], $invoice->id);
+        });
+
+        return $invoice;
+    }
+    /**
+     * U For CRUD Invoice
+     *
+     * @param array $valid
+     * @param int $id
+     * @return self
+     */
+    public static function updateInvoice(array $valid, int $id): self
+    {
+        $invoice = self::find($id);
 
         $invoice->invoice_no = $valid['invoice_no'];
         $invoice->customer_id  = $valid['invoice_customer'];

@@ -250,7 +250,8 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <textarea id="notes-editor" class="form-control" name="invoice_notes">{{ old('invoice_notes') }}</textarea>
+                            <div id="notes-editor"></div>
+                            <textarea class="d-none" name="invoice_notes"></textarea>
                         </div>
                     </div>
                 </div>
@@ -274,7 +275,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="input-group input-group-static">
-                                        <select class="form-control" name="discount_unit">
+                                        <select class="form-control" name="discount_unit" value="{{ old('discount_unit') }}">
                                             <option value="percent">%</option>
                                             <option value="fixed">Rp.</option>
                                         </select>
@@ -747,9 +748,20 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     // End Items Group
 
     // editor
-    const editor = new Quill('#notes-editor', {
+       // editor
+       const editor = new Quill('#notes-editor', {
         theme: 'snow'
-    });
+        });
+        @php($notes = old('invoice_notes'))
+        @if (!empty($notes))
+            editor.root.innerHTML = `{!! $notes !!}`;
+            document.querySelector('textarea[name="invoice_notes"]').innerHTML = editor.root.innerHTML;
+        @endif
+
+    editor.on('text-changed', (delta, text, oldDelta) => {
+        console.log(delta);
+    })
+    // end editor group
     // end editor group
 
 
@@ -874,7 +886,10 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     //             e.target.parentNode.closest('.input-group').classList.remove('is-filled');;
     //    });
 
-       form.addEventListener('submit', e => loading());
+        form.addEventListener('submit', e => {
+            document.querySelector('textarea[name="invoice_notes"]').innerHTML = editor.root.innerHTML;
+            loading();
+       });
 
     })();
 </script>

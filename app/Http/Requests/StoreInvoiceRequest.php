@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
@@ -33,7 +34,7 @@ class StoreInvoiceRequest extends FormRequest
     {
         return [
             //
-            'invoice_no' => 'required|unique:invoices,invoice_no',
+            'invoice_no' => ['required', Rule::unique('invoices', 'invoice_no')->whereNull('deleted_at')],
             'invoice_customer_text' => 'required|exists:customers,customer_name',
             'invoice_customer' => 'required|exists:customers,id',
             'invoice_date'  => ['required', 'date'],

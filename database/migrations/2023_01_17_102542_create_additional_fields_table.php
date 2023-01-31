@@ -15,7 +15,7 @@ class CreateAdditionalFieldsTable extends Migration
     {
         Schema::create('additional_fields', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('invoice_id')->unique()->constrained('invoices')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('invoice_id')->constrained('invoices')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('field_name', 200);
             $table->integer('field_value');
             $table->string('unit', 100);
