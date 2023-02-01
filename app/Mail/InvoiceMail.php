@@ -39,7 +39,7 @@ class InvoiceMail extends Mailable
     public function build()
     {
         return $this->from('naquibalatas1987@outlook.com', 'Administrator')
-                    ->view('invoices.mails.1')
+                    ->view('invoices.mails.2')
                     ->with('invoice', $this->invoice);
     }
 }

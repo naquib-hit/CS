@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\View\View;
@@ -9,6 +8,9 @@ use App\Models\{Invoice, Customer, Product, Tax};
 use App\Http\Requests\{StoreInvoiceRequest, UpdateInvoiceRequest};
 use Illuminate\Http\{RedirectResponse, Request, Response, JsonResponse};
 use Knp\Snappy\Pdf;
+
+ini_set('max_execution_time', -1);
+ini_set('memory_limit', '4000M');
 
 class InvoiceController extends Controller
 {
@@ -53,7 +55,10 @@ class InvoiceController extends Controller
             $pdf = new Pdf(base_path(env('WKHTML_PDF_BINARY')));
             $pdfOption = [
                 'page-size' => 'Letter',
-                'margin-left' => '6mm'
+                'margin-left' => '6mm',
+                'enable-smart-shrinking' => TRUE,
+                'print-media-type' => TRUE,
+                'user-style-sheet' => asset('css/app.css')
             ];
             $pdf->generateFromHtml($render, public_path('files/invoices/'.$invoice->id.'.pdf'), $pdfOption, TRUE);
 
@@ -106,11 +111,14 @@ class InvoiceController extends Controller
             $valid = $request->validated();
             $invoice = Invoice::updateInvoice($valid, $id);
 
-            $render = view('invoices.mails.1')->with('invoice', $invoice->getInvoiceByID($invoice->id))->render();
+            $render = view('invoices.mails.2')->with('invoice', $invoice->getInvoiceByID($invoice->id))->render();
             $pdf = new Pdf(base_path(env('WKHTML_PDF_BINARY')));
             $pdfOption = [
                 'page-size' => 'Letter',
-                'margin-left' => '6mm'
+                'margin-left' => '6mm',
+                'enable-smart-shrinking' => TRUE,
+                'print-media-type' => TRUE,
+                'user-style-sheet' => asset('css/app.css')
             ];
             $pdf->generateFromHtml($render, public_path('files/invoices/'.$invoice->id.'.pdf'), $pdfOption, TRUE);
 
@@ -168,26 +176,27 @@ class InvoiceController extends Controller
      * @param integer $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function mail(int $id): RedirectResponse
+    public function mail(int $id)
     {
         try 
         {
             $invoice = Invoice::getInvoiceByID($id);
-            Mail::to($invoice['customers']['customer_email'])->send(new \App\Mail\InvoiceMail($invoice));
+            // Mail::to($invoice['customers']['customer_email'])->send(new \App\Mail\InvoiceMail($invoice));
 
-            if(count(Mail::failures()) > 0) 
-            {
-                Invoice::find($id)->update([
-                    'invoice_status' => 2
-                ]);
-                return redirect()->back()->with('error', __('Email Gagal Terkirim'));
-            }
+            // if(count(Mail::failures()) > 0) 
+            // {
+            //     Invoice::find($id)->update([
+            //         'invoice_status' => 2
+            //     ]);
+            //     return redirect()->back()->with('error', __('Email Gagal Terkirim'));
+            // }
 
-            Invoice::find($id)->update([
-                'invoice_status' => 1
-            ]);
+            // Invoice::find($id)->update([
+            //     'invoice_status' => 1
+            // ]);
 
-            return redirect()->route('invoices.index')->with('success', __('Email berhasil dikirim'));
+            // return redirect()->route('invoices.index')->with('success', __('Email berhasil dikirim'));
+            return new \App\Mail\InvoiceMail($invoice);
         }
         catch(\Throwable $e)
         {

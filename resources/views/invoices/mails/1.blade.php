@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <base href="{{ url('/') }}">
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="{{ public_path('vendor/bootstrap-4/css/bootstrap.min.css') }}" media="all">  
+        <link rel="stylesheet" href="css/app.css" media="all">  
         <style>
             .table-print,
             .table-print-footer {
@@ -98,65 +99,62 @@
                 font-size: var(--fas-custom-size) !important;
             }
 
+            .text-bold {
+                    font-weight: bold;
+                }
+
             @media print {
                 .w-100 {
                     width: 100%;
                 }
+                .text-bold {
+                    font-weight: bold;
+                }
             }
         </style>
     </head>
-    <body class="vh-100 vw-100 container-fluid py-2">
-        <table id="header" class="w-100">
-            <tr class="pb-1 w-100">
-                <td>
-                    <img src="{{ public_path('img/New-HIT-Resize12.png') }}" style="height: 74px">
-                </td>
-                <td>
-                    <h3 class="d-block mx-auto">INVOICE</h3>
-                </td>
-                
-                <td>
-                    <span class="text-decoration-underline fs-6 d-print-block"><strong>HITCorporation</strong></span><br/>
-                    <small>Gandaria 8 Office Tower, 7th floor. Unit I-J</small><br/>
-                    <small>Telp. 021-99835304</small><br/>
-                </td>
-            </tr>
-        </table>
+    <body class="vh-100 vw-100 container py-2">
+        <header class="row">
+            <div class="col-3"><img src="img/New-HIT-Resize12.png" style="height: 74px"></div>
+            <div class="col-5 align-self-center">
+                <h3 class=" mx-auto">INVOICE</h3>
+            </div>
+            <div class="col-4 ml-auto">
+                <span class="text-decoration-underline fs-6 d-print-block"><strong>HITCorporation</strong></span><br/>
+                <small>Gandaria 8 Office Tower, 7th floor. Unit I-J</small><br/>
+                <small>Telp. 021-99835304</small><br/>
+            </div>
+        </header>
         <hr class="border-bottom"/>
                
-        <table id="invoice-body" class="w-100">
-            <tr class="w-100">
-                <td class="col-5">
-                    <table>
-                        <tr>
-                            <td>Bill To :</td>
-                            <td class="ml-3">
-                                <h6 class="mb-0 text-bold text-decoration-underline">{{ $invoice['customers']['customer_name'] }}</h6>
-                                <small>{{ $invoice['customers']['customer_address'] }}</small>
-                            </td>
-                        </tr>
-                        
-                    </table>
-                </td>
-                <td class="col-4 ml-auto">
+        <div id="invoice-body" class="w-100">
+            <div class="row mb-3">
+                <dl class="col-8 d-flex flex-nowrap">
+                    <dt>Bill To :</dt>
+                    <dd class="ml-3">
+                        <h6 class="mb-0 text-bold text-decoration-underline">{{ $invoice['customers']['customer_name'] }}</h6>
+                        <small>{{ $invoice['customers']['customer_address'] }}</small>
+                    </dd>
+                </dl>
+                <div class="col-4 ml-auto">
                     <table class="w-100 table-header">
                         <tbody>
                             <tr>
-                                <td class="fw-bold">No. Invoice</td>
+                                <td><strong>No. Invoice</strong></td>
                                 <td>: {{ $invoice['invoice_no'] }}</td>
                             </tr>
                             <tr>
-                                <td class="fw-bold">Tanggal Invoice</td>
+                                <td><strong>Tanggal Invoice</strong></td>
                                 <td>: {{ $invoice['create_date'] }}</td>
                             </tr>
                             <tr>
-                                <td class="fw-bold">No. PO</td>
+                                <td><strong>No. PO</strong></td>
                                 <td>: {{ $invoice['po_no'] }}</td>
                             </tr>
                         <tbody>
                     </table>
-                </td>
-            </tr>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-8 mr-0 pr-0">
                     <table class="table-print">
@@ -169,7 +167,7 @@
                             
                         </thead>
                         <tbody>
-                            @for ($i=0;$i<11;$i++)
+                            @for ($i=0;$i<9;$i++)
                                 @if(!empty($invoice['products'][$i]))
                                 @php($product = $invoice['products'][$i])
                                 <tr>
@@ -198,7 +196,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for ($i=0;$i<10;$i++)
+                            @for ($i=0;$i<8;$i++)
                             @if(!empty($invoice['products'][$i]))
                             @php($product = $invoice['products'][$i])
                             <tr>
@@ -216,24 +214,6 @@
                             <td class="text-bold">Sub Total</td>
                             <td class="text-bold">{{  number_format($invoice['invoice_summary']['total_summary'], 0, NULL, '.') }}</td>
                         </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div class="d-print-flex">
-                <div class="col-8">
-                    @if(!empty($invoice['notes']))
-                    <div id="description" class="mt-2">
-                        <h6 class="mb-0">Deskripsi</h6>
-                        <div class="border rounded w-100">
-                            {!! $invoice['notes'] !!}
-                        </div>
-                    </div>
-                    @endif
-                </div>
-                <div class="col-4 ml-auto">
-                    <table class="table-print-footer ml-auto">
                         @foreach ($invoice['taxes'] as $tax)
                         <tr class="taxes">
                             <td class="text-bold">{{ $tax['tax_name'] }}&nbsp;{{ $tax['tax_amount'] }}%</td>
@@ -258,7 +238,24 @@
                             <td class="text-bold">{{ __('Total') }}</td>
                             <td class="text-bold">{{  number_format($invoice['last_result'], 0, NULL, '.') }}</td>
                         </tr>
+                        </tbody>
                     </table>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-8">
+                    @if(!empty($invoice['notes']))
+                    <div id="description" class="mt-2">
+                        <h6 class="mb-0">Deskripsi</h6>
+                        <div class="border rounded w-100">
+                            {!! $invoice['notes'] !!}
+                        </div>
+                    </div>
+                    @endif
+                </div>
+                <div class="col-4 ml-auto">
+                    
                 </div>
             </div>
         </table>
