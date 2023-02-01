@@ -50,7 +50,12 @@ class InvoiceController extends Controller
             $invoice = Invoice::createInvoice($valid);
 
             $render = view('invoices.mails.1')->with('invoice', $invoice->getInvoiceByID($invoice->id))->render();
-            (new Pdf(base_path(env('WKHTML_PDF_BINARY'))))->generateFromHtml($render, public_path('files/invoices/'.$invoice->id.'.pdf'), [], TRUE);
+            $pdf = new Pdf(base_path(env('WKHTML_PDF_BINARY')));
+            $pdfOption = [
+                'page-size' => 'Letter',
+                'margin-left' => '6mm'
+            ];
+            $pdf->generateFromHtml($render, public_path('files/invoices/'.$invoice->id.'.pdf'), $pdfOption, TRUE);
 
             return redirect()->route('invoices.show', ['invoice' => $invoice])->with('success', __('validation.success.create'));
         } 
@@ -102,7 +107,12 @@ class InvoiceController extends Controller
             $invoice = Invoice::updateInvoice($valid, $id);
 
             $render = view('invoices.mails.1')->with('invoice', $invoice->getInvoiceByID($invoice->id))->render();
-            (new Pdf(base_path(env('WKHTML_PDF_BINARY'))))->generateFromHtml($render, public_path('files/invoices/'.$invoice->id.'.pdf'), [], TRUE);
+            $pdf = new Pdf(base_path(env('WKHTML_PDF_BINARY')));
+            $pdfOption = [
+                'page-size' => 'Letter',
+                'margin-left' => '6mm'
+            ];
+            $pdf->generateFromHtml($render, public_path('files/invoices/'.$invoice->id.'.pdf'), $pdfOption, TRUE);
 
             return redirect()->route('invoices.show', ['invoice' => $invoice])->with('success', __('validation.success.create'));
         }
