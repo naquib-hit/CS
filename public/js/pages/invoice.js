@@ -11,6 +11,7 @@ const intToCurrency = angka => {
     const lokal = new Intl.NumberFormat('id', { style: 'currency', currency: 'IDR'}).format(angka);
     return lokal;
 }
+const offcanvas = new bootstrap.Offcanvas('#filter-offcanvas');
 
 let selectedRows = [],
     data = null,
@@ -42,6 +43,10 @@ const getData = async (url, options) => {
     await setTable(data);
     document.getElementById('loading-table').classList.add('d-none');
 
+
+     // Products
+     await setSearchProductOption(await getProducts());
+
     // // check all table
     // checkAll.addEventListener('click', checkAllRows);
     // // delete all table
@@ -49,13 +54,24 @@ const getData = async (url, options) => {
     // seacrh
     const frmSearch = document.forms['search-form'];
 
-    frmSearch.addEventListener('submit', async e => await filterData(e));
+    frmSearch.addEventListener('submit', async e => { 
+        offcanvas.hide();
+        document.getElementById('loading-table').classList.remove('d-none');
+        await filterData(e); 
+        document.getElementById('loading-table').classList.add('d-none');
+    });
 
     frmSearch.addEventListener('reset', async e => {
-        fetchUrl = `${window.location.origin}/customers/get`;
+        offcanvas.hide();
+
+        document.getElementById('loading-table').classList.remove('d-none');
+        
+        fetchUrl = `${window.location.origin}/invoices/get`;
         data = await getData(fetchUrl);
-        checkAll.checked = false;
+        //checkAll.checked = false;
         await setTable(data);
+
+        document.getElementById('loading-table').classList.add('d-none');
     }); 
 
     document.getElementById('previous-page').addEventListener('click', async e => {
@@ -78,6 +94,10 @@ const getData = async (url, options) => {
         data = await getData(data.next_page_url);
         await setTable(data);
         document.getElementById('loading-table').classList.add('d-none');
+    });
+
+    document.querySelector('#btn-refresh').addEventListener('click', e => {
+        frmSearch.reset();
     });
 
 })();
@@ -153,6 +173,43 @@ const setTable = async data => {
     await setPagination(data);
 }
 
+const getProducts = async () => {
+    try
+    {
+        const f = await fetch(`${window.location.href}/products`);
+        const j = await f.json();
+
+        return j;
+    }
+    catch(err)
+    {
+        console.error(err);
+    }
+}
+
+/**
+ * set products for filter Selecttion
+ * 
+ * @param Promise[] data 
+ */
+const setSearchProductOption = async (data) => {
+    const products = data;
+    const element = document.getElementsByName('s_invoice_product')[0];
+
+    const option0 = document.createElement('option');
+    option0.text = '--------------';
+    option0.value = '';
+    element.add(option0);
+
+    Array.from(products, item => {
+        const option = document.createElement('option');
+        option.text = item.product_name;
+        option.value = item.id;
+        element.add(option);
+    });
+}
+
+
 const setPagination = async data => {
     var pageNo = document.getElementById('page_no'),
         totalPage = document.getElementById('total_pages');
@@ -180,7 +237,7 @@ const deleteConfirmation = e => {
         if(!t.value) return;
 
         loading();
-        fetch(`${window.location.origin}/customers/${props.id}`, {
+        fetch(`${window.location.origin}/invoices/${props.id}`, {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector("meta[name='csrf-token']").content
@@ -218,7 +275,7 @@ const filterData = async e => {
 
     try 
     {
-        fetchUrl = `${window.location.origin}/customers/get?` + params;
+        fetchUrl = `${window.location.origin}/invoices/get?` + params;
         data = await getData(fetchUrl);
         await setTable(data);
     } 

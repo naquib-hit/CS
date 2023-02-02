@@ -1,13 +1,14 @@
 <?php
 namespace App\Http\Controllers;
 
+use Knp\Snappy\Pdf;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Log, Auth};
 use App\Models\{Invoice, Customer, Product, Tax};
 use App\Http\Requests\{StoreInvoiceRequest, UpdateInvoiceRequest};
 use Illuminate\Http\{RedirectResponse, Request, Response, JsonResponse};
-use Knp\Snappy\Pdf;
 
 ini_set('max_execution_time', -1);
 ini_set('memory_limit', '4000M');
@@ -51,7 +52,7 @@ class InvoiceController extends Controller
             $valid = $request->validated();
             $invoice = Invoice::createInvoice($valid);
 
-            $render = view('invoices.mails.1')->with('invoice', $invoice->getInvoiceByID($invoice->id))->render();
+            $render = view('invoices.mails.2')->with('invoice', $invoice->getInvoiceByID($invoice->id))->render();
             $pdf = new Pdf(base_path(env('WKHTML_PDF_BINARY')));
             $pdfOption = [
                 'page-size' => 'Letter',
@@ -164,10 +165,20 @@ class InvoiceController extends Controller
     public function get(Request $req)
     {
         $invoices = Invoice::with(['customers', 'products', 'taxes', 'invoiceSummary'])
-                    ->orderBy('created_at', 'desc')->orderBy('id', 'desc')
-                    ->paginate(8);
+                    ->orderBy('created_at', 'desc')->orderBy('id', 'desc');
 
-        return $invoices;
+        if(!empty($req->input('s_invoice_no')))
+            $invoices = $invoices->whereRaw('LOWER(invoice_no) LIKE ?', ['%'.strtolower($req->input('s_invoice_no')).'%']);           
+        if(!empty($req->input('s_invoice_customer')))           
+            $invoices = $invoices->whereHas('customers', fn (Builder $q) =>
+                $q->whereRaw('LOWER(customers.customer_name) LIKE ?', ['%'.strtolower($req->input('s_invoice_customer')).'%'])
+            );
+        if(!empty($req->input('s_invoice_product')))
+            $invoices = $invoices->whereHas('products', fn (Builder $q) => $q->where('products.id', '=', intval($req->input('s_invoice_product'))));
+        if(!is_null($req->input('s_invoice_status')))
+            $invoices = $invoices->where('invoice_status', '=', intval($req->input('s_invoice_status')));
+        
+        return $invoices->paginate(8);
     }
 
     /**
@@ -181,22 +192,22 @@ class InvoiceController extends Controller
         try 
         {
             $invoice = Invoice::getInvoiceByID($id);
-            // Mail::to($invoice['customers']['customer_email'])->send(new \App\Mail\InvoiceMail($invoice));
+            Mail::to($invoice['customers']['customer_email'])->send(new \App\Mail\InvoiceMail($invoice));
 
-            // if(count(Mail::failures()) > 0) 
-            // {
-            //     Invoice::find($id)->update([
-            //         'invoice_status' => 2
-            //     ]);
-            //     return redirect()->back()->with('error', __('Email Gagal Terkirim'));
-            // }
+            if(count(Mail::failures()) > 0) 
+            {
+                Invoice::find($id)->update([
+                    'invoice_status' => 2
+                ]);
+                return redirect()->back()->with('error', __('Email Gagal Terkirim'));
+            }
 
-            // Invoice::find($id)->update([
-            //     'invoice_status' => 1
-            // ]);
+            Invoice::find($id)->update([
+                'invoice_status' => 1
+            ]);
 
-            // return redirect()->route('invoices.index')->with('success', __('Email berhasil dikirim'));
-            return new \App\Mail\InvoiceMail($invoice);
+            return redirect()->route('invoices.index')->with('success', __('Email berhasil dikirim'));
+            //return new \App\Mail\InvoiceMail($invoice);
         }
         catch(\Throwable $e)
         {
@@ -205,7 +216,7 @@ class InvoiceController extends Controller
             Invoice::find($id)->update([
                 'invoice_status' => 2
             ]);
-            return redirect()->back()->with('error', __('Email Gagal Terkirim'));
+            return redirect()->route('invoices.show', ['invoice' => $invoice['id']])->with('error', __('Email Gagal Terkirim'));
         }
         
     }

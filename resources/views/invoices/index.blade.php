@@ -23,14 +23,18 @@
                             <i class="fas fa-plus-circle font-reset"></i>               
                             &nbsp;{{__('template.toolbar.add')}}
                         </a>
+                        <a role="button" id="btn-refresh" class="btn btn-primary btn-sm">
+                            <i class="fas fa-sync font-reset"></i>
+                            &nbsp;{{__('Segarkan')}}
+                        </a>
                         <a role="button" class="btn btn-primary btn-sm" href="#filter-offcanvas" data-bs-toggle="offcanvas">
                             <i class="fas fa-search font-reset"></i>
                             &nbsp;{{__('template.toolbar.filter')}}
                         </a>
-                        <a role="button" class="btn btn-primary btn-sm">
+                        {{-- <a role="button" class="btn btn-primary btn-sm d-none">
                             <i class="fas fa-download font-reset"></i>
                             &nbsp;{{__('template.toolbar.download')}}
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -84,22 +88,28 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        <form name="form-search">
-            <span class="input-group input-group-dynamic">
+        <form name="search-form">
+            <span class="input-group input-group-static">
                 <label class="form-label">{{ __('transaction.fields.code') }} </label>
-                <input type="text" class="form-control" name="trans_code" value="{{ old('trans_code') }}" />
+                <input type="text" class="form-control" name="s_invoice_no" value="{{ old('s_invoice_no') }}" />
             </span>
-            <span class="input-group input-group-dynamic mt-3">
+            <span class="input-group input-group-static mt-3">
                 <label class="form-label">{{ __('transaction.fields.customer') }} </label>
-                <input type="text" class="form-control" name="trans_customer" value="{{ old('trans_customer') }}" />
+                <input type="text" class="form-control" name="s_invoice_customer" />
             </span>
-            <span class="input-group input-group-dynamic mt-3">
+            <span class="input-group input-group-static mt-3">
                 <label class="form-label">{{ __('transaction.fields.product') }} </label>
-                <input type="text" class="form-control" name="trans_product" value="{{ old('trans_product') }}" />
+                <select class="form-control" name="s_invoice_product">
+                </select>
             </span>
-            <span class="input-group input-group-dynamic mt-3">
+            <span class="input-group input-group-static mt-3">
                 <label class="form-label">{{ __('transaction.fields.sales') }} </label>
-                <input type="text" class="form-control" name="trans_sales" value="{{ old('trans_sales') }}" />
+                <select class="form-control" name="s_invoice_status">
+                    <option value="">------------</option>
+                    <option value="0">DRAFT</option>
+                    <option value="1">SENT</option>
+                    <option value="2">FAILED</option>
+                </select>
             </span>
             <span class="mt-5 d-flex flex-nowrap justify-content-end w-100 ps-3">
                 <button type="reset" class="btn btn-secondary" id="reset-search">

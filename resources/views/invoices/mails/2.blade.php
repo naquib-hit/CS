@@ -9,9 +9,11 @@
             .table-print,
             .table-print-footer {
                 width: 100%;
-                border-collapse: collapse; 
+                border-collapse: separate; 
                 font-weight: 400;
                 font-size: 14px;
+                border-spacing: 0;
+                border: 1px solid lightgray;
             }
         
             .table-print thead {
@@ -46,36 +48,13 @@
                 border: 1px solid lightgray;
             }
         
-            /*
-            .table-print tr td:nth-child(4),
-            .table-print tr th:nth-child(4),
-             #subtotal-row td:nth-child(2),
-            .table-print-footer .summary td:nth-child(1),
-            .table-print-footer .taxes td:nth-child(1),
-            .table-print-footer .discount td:nth-child(1),
-            .table-print-footer .additional-field td:nth-child(1) {
-                width: 244px;
-            }
-        
-            .table-print tr td:nth-child(5),
-            .table-print tr th:nth-child(5),
-             #subtotal-row td:nth-child(2),
-            .table-print-footer .summary td:nth-child(2),
-            .table-print-footer .taxes td:nth-child(2),
-            .table-print-footer .discount td:nth-child(2),
-            .table-print-footer .additional-field td:nth-child(2)
-            {
-                width: 174px;
-            }
-            */
-        
             .table-print tr
              {
                 border-left: 1px solid lightgray !important;
                 border-right: 1px solid lightgray !important;
             }
         
-            #subtotal-row td,
+            .subtotal-row td,
             .table-print-footer .summary td {
                 border: 1px solid lightgray !important;
             }
@@ -128,15 +107,27 @@
                 }
 
                 .table-print tbody > tr.t-content:last-child > td {
-                    border-bottom: 1px solid lightgray !important;
+                    border-bottom: 1px solid lightgrey !important;
                 }
 
-                .table-print tbody > tr > td {
-                    border-left: 1px solid lightgray !important;
-                    border-right: 1px solid lightgray !important;
+                .table-print tbody > tr > td:not(:last-child) {
+                    /* border-left: 1px solid lightgrey !important; */
+                    border-right: 1px solid lightgrey !important;
+                }
+
+                .subtotal-row {
+                    border: 3px solid lightgrey;
+                }
+
+                .table-print tr.summary td {
+                    border: 3px solid lightgray;
                 }
 
             @media print {
+                .subtotal-row {
+                    border: 1px solid lightgrey;
+                }
+
                 .w-100 {
                     width: 100%;
                 }
@@ -166,21 +157,58 @@
                     border-style: hidden;
                 }
 
-                .table-print tbody > tr.t-content:not(:last-child) > td {
-                    border-bottom-style: hidden;
+                .table-print thead {
+                    background-color: gray; 
+                    color: white;
+                    
+                }
+            
+                .table-print th {
+                    padding-top: .4rem;
+                    padding-bottom: .4rem;
+                    border-bottom: 1px solid lightgray;
+                    text-align: left;
+                }
+                
+                .table-print td,
+                .table-print th,
+                .table-print-footer th,
+                .table-print-footer td {
+                    padding-left: .6rem;
                 }
 
-                .table-print tbody > tr.t-content:last-child > td {
-                    border-bottom: 1px solid lightgray !important;
+                .table-print th:not(:last-child) {
+                    border-right: 1px solid lightgray;
+                }
+
+                .table-print tbody > tr.t-content:not(:last-child) > td {
+                    border-bottom-style: hidden !important;
+                }
+
+                .table-print tbody > tr.t-content:last-child td {
+                    border-bottom: 3px solid lightgray !important;
                 }
 
                 .table-print tr.subtotal-row td {
-                    border: 1px solid lightgray !important;
+                    border-top: 1px solid lightgray !important;
+                    border-bottom: 1px solid lightgray !important;
                 }
 
-                .table-print tbody > tr > td {
-                    border-left: 1px solid lightgray !important;
+                /* .table-print tr.subtotal-row td:not(:last-child) {
+                    border-right: 1px solid lightgray;
+                } */
+
+                .table-print tr.summary td {
+                    border-top: 1px solid lightgray !important;
+                }
+
+                .table-print tbody > tr > td:not(:last-child) {
                     border-right: 1px solid lightgray !important;
+                }
+
+                hr 
+                {
+                    border: 1px solid lightgray;
                 }
             }
         </style>
@@ -243,7 +271,7 @@
             </tr>
             <tr>
                 <td colspan="3" class="col-12">
-                    <table class="table table-print">
+                    <table class="table table-borderless table-print">
                         <thead>
                             <tr>
                                 <th class="text-left" style="width: 40px">No.</th>

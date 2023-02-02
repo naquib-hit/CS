@@ -103,13 +103,15 @@
         <div class="card fadeIn3 fadeInBottom h-100">
             <div class="card-header border-bottom">
                 <div class="btn-group btn-group-sm mb-0">
+                    @if($invoice['invoice_status'] !== 1)
                     <a id="send-mail" class="btn btn-primary" href="{{ route('invoices.mail', ['id' => $invoice['id']]) }}">
                         <i class="fas fa-envelope font-reset"></i>
-                        {{ __('Send') }}
+                        {{ __('Kirim') }}
                     </a>
+                    @endif
                     <a class="btn btn-primary" href="{{ route('invoices.index') }}">
-                        <i class="fas fa-save font-reset"></i>
-                        {{ __('Save as Draft') }}
+                        <i class="fas fa-hand-point-left font-reset"></i>
+                        {{ __('Kembali') }}
                     </a>
                 </div>
             </div>
