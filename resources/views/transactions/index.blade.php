@@ -31,7 +31,7 @@
                             <label class="form-label">{{ __('transaction.fields.filtered_by') }}</label>
                             <select class="form-control">
                                 <option value="product">{{ __('product.title') }}</option>
-                                <option value="">{{ __('product.title') }}</option>
+                                <option value="customer">{{ __('customer.title') }}</option>
                             </select>
                         </div>
                     </div>
