@@ -50,7 +50,7 @@ class InvoiceController extends Controller
         try 
         {
             $valid = $request->validated();
-            $invoice = Invoice::createInvoice($valid);
+            $invoice = Invoice::createInvoice($valid, FALSE);
 
             $render = view('invoices.mails.2')->with('invoice', $invoice->getInvoiceByID($invoice->id))->render();
             $pdf = new Pdf(base_path(env('WKHTML_PDF_BINARY')));
@@ -61,13 +61,13 @@ class InvoiceController extends Controller
                 'print-media-type' => TRUE,
                 'user-style-sheet' => asset('css/app.css')
             ];
-            $pdf->generateFromHtml($render, public_path('files/invoices/'.$invoice->id.'.pdf'), $pdfOption, TRUE);
+            $pdf->generateFromHtml($render, public_path('files/invoices/'.str_replace('-', trim(''), $invoice->id).'.pdf'), $pdfOption, TRUE);
 
             return redirect()->route('invoices.show', ['invoice' => $invoice])->with('success', __('validation.success.create'));
         } 
         catch (\Throwable $e) 
         {
-            Log::error($e->getMessage());
+            Log::error($e->__toString());
             return redirect()->back()->with('error', __('validation.failed.create'));
         }
     }
@@ -101,16 +101,16 @@ class InvoiceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateInvoiceRequest  $request
-     * @param  int $id
+     * @param  string $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateInvoiceRequest $request, int $id): RedirectResponse
+    public function update(UpdateInvoiceRequest $request, string $id): RedirectResponse
     {
         //
         try
         {
             $valid = $request->validated();
-            $invoice = Invoice::updateInvoice($valid, $id);
+            $invoice = Invoice::updateInvoice($valid, $id, FALSE);
 
             $render = view('invoices.mails.2')->with('invoice', $invoice->getInvoiceByID($invoice->id))->render();
             $pdf = new Pdf(base_path(env('WKHTML_PDF_BINARY')));
@@ -121,13 +121,13 @@ class InvoiceController extends Controller
                 'print-media-type' => TRUE,
                 'user-style-sheet' => asset('css/app.css')
             ];
-            $pdf->generateFromHtml($render, public_path('files/invoices/'.$invoice->id.'.pdf'), $pdfOption, TRUE);
+            $pdf->generateFromHtml($render, public_path('files/invoices/'.str_replace('-', trim(''), $invoice->id).'.pdf'), $pdfOption, TRUE);
 
             return redirect()->route('invoices.show', ['invoice' => $invoice])->with('success', __('validation.success.create'));
         }
         catch(\Throwable $e)
         {
-            Log::error($e->getMessage());
+            Log::error($e->__toString());
             return redirect()->back()->with('error', __('validation.failed.create'));
         }
         
@@ -165,7 +165,9 @@ class InvoiceController extends Controller
     public function get(Request $req)
     {
         $invoices = Invoice::with(['customers', 'products', 'taxes', 'invoiceSummary'])
-                    ->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+                    ->where('is_reccuring', '=', 0)
+                    ->orderBy('created_at', 'desc')
+                    ->orderBy('id', 'desc');
 
         if(!empty($req->input('s_invoice_no')))
             $invoices = $invoices->whereRaw('LOWER(invoice_no) LIKE ?', ['%'.strtolower($req->input('s_invoice_no')).'%']);           
@@ -187,7 +189,7 @@ class InvoiceController extends Controller
      * @param integer $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function mail(int $id)
+    public function mail(string $id)
     {
         try 
         {
@@ -211,7 +213,7 @@ class InvoiceController extends Controller
         }
         catch(\Throwable $e)
         {
-            Log::error($e->getMessage());
+            Log::error($e->__toString());
             
             Invoice::find($id)->update([
                 'invoice_status' => 2

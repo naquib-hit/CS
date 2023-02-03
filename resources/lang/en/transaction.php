@@ -14,8 +14,10 @@ return [
         'product'           => 'Product',
         'sales'             => 'Salesperson',
         'code'              => 'Transaction No.',
-        'start_date'        => 'Payment\'s Date',
-        'expiration_date'   => 'Expired Date',
+        'create_date'       => 'Create Date',
+        'due_date'          => 'Due Date',
+        'status'            => 'Delivery Status',
+        'delivery_date'     => 'Delivery Date',
         'opt'               => 'Operation'
     ],
     'fields'  => [

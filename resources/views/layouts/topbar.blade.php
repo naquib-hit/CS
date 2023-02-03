@@ -16,11 +16,19 @@
       <div class="mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
         <!-- UL -->
         <ul class="navbar-nav  justify-content-end">
-
             <li class="nav-item d-lg-none">
               <a role="button" data-bs-toggle="offcanvas" data-bs-target="#filter-panel"><i class="fas fa-search"></i></a>
             </li>
-           
+            <li class="nav-item">
+              <a href="{{ route('users.edit', ['user' => auth()->id()]) }}">
+                <i class="fas fa-user-circle"></i>
+              </a>
+            </li>
+            <li class="nav-item ms-2">
+              <a href="{{ route('logout') }}">
+                <i class="fas fa-power-off"></i>
+              </a>
+            </li>
           </ul>
         <!-- END UL -->
       </div>

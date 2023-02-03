@@ -34,8 +34,7 @@ class InvoiceMail extends Mailable
         return $this->from('naquibalatas1987@outlook.com', 'Naquib Alatas')
                     ->markdown('invoices.email')
                     ->with('invoice', $this->invoice)
-                    ->attach(public_path('files/invoices/'.$this->invoice['id'].'.pdf'), [
-                        'as' => 'invoice_'.(new \DateTime)->format('YmdHiS').'.pdf',
+                    ->attach(public_path('files/invoices/'.str_replace('-', trim(''), $this->invoice['id']).'.pdf'), [
                         'mime'  => 'application/pdf' 
                     ]);
     }

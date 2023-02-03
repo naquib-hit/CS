@@ -28,7 +28,7 @@ return [
     'fields' => [
       'no'        => 'No. Faktur',
       'date'      => 'Tanggal',
-      'due_date'  => 'batas Waktu',
+      'due_date'  => 'Batas Waktu',
       'customer'  => 'Pelanggan',
       'po'        => 'No. PO',
       'currency'  => 'Mata Uang',
@@ -37,6 +37,8 @@ return [
       'tax'       => 'Pajak',
       'discount'  => 'Diskon',
       'notes'     => 'Catatan',
+      'interval'  => 'Interval',
+      'next'      => 'Pengiriman Berikutnya',
       'additional' => [
         'title'       => 'Bidang Tambahan',
         'name'        => 'Nama',

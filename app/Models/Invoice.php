@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasOne};
-use App\Traits\CalculationHelperTrait;
+use App\Traits\{ CalculationHelperTrait, UUIDTrait };
 
 class Invoice extends Model
 {
-    use HasFactory, SoftDeletes, CalculationHelperTrait;
+    use HasFactory, SoftDeletes, CalculationHelperTrait, UUIDTrait;
 
     // private const AuthID = \Illuminate\Support\Facades\Auth::id();
 
@@ -107,7 +107,7 @@ class Invoice extends Model
      * @param array $items
      * @return int
      */
-    public function setInvoiceSummary(int $id): int
+    public function setInvoiceSummary(string $id): int
     {
         $summary = self::find($id)->products()
                         ->get()
@@ -196,7 +196,7 @@ class Invoice extends Model
      *
      * @return array
      */
-    public static function getInvoiceByID(int $id): array
+    public static function getInvoiceByID(string $id): array
     {
         $invoice = self::with(['products', 'customers', 'taxes', 'additionalField', 'invoiceSummary'])->find($id)->toArray();
         $summary = $invoice['invoice_summary']['total_summary'];
@@ -238,14 +238,13 @@ class Invoice extends Model
      * @param array $valid
      * @return self
      */
-    public static function createInvoice(array $valid): self
+    public static function createInvoice(array $valid, bool $isReccuring = false): self
     {
         $invoice = new self;
 
         $invoice->invoice_no = $valid['invoice_no'];
         $invoice->customer_id  = $valid['invoice_customer'];
         $invoice->create_date = (new \DateTime($valid['invoice_date']))->format('Y-m-d');
-        $invoice->due_date = (new \DateTime($valid['invoice_due']))->format('Y-m-d');
         $invoice->discount_amount = $valid['invoice_discount'];
         $invoice->discount_unit = $valid['discount_unit'];
         $invoice->notes = $valid['invoice_notes'];
@@ -253,6 +252,18 @@ class Invoice extends Model
         $invoice->currency = $valid['invoice_currency'];
         $invoice->user_id = (int) auth()->id();
         $invoice->created_by = (int) auth()->id();
+
+        if($isReccuring)
+        {
+            $invoice->next_date = (new \DateTime($valid['invoice_next']))->format('Y-m-d');
+            $invoice->frequency = $valid['invoice_interval'];
+            $invoice->is_reccuring = 1;
+        }
+        else
+        {
+            $invoice->due_date = (new \DateTime($valid['invoice_due']))->format('Y-m-d');
+            $invoice->is_reccuring = 0;
+        }
 
         DB::transaction(function () use ($invoice, $valid) {
             $invoice->save();
@@ -274,14 +285,13 @@ class Invoice extends Model
      * @param int $id
      * @return self
      */
-    public static function updateInvoice(array $valid, int $id): self
+    public static function updateInvoice(array $valid, string $id, bool $isReccuring = false): self
     {
         $invoice = self::find($id);
 
         $invoice->invoice_no = $valid['invoice_no'];
         $invoice->customer_id  = $valid['invoice_customer'];
         $invoice->create_date = (new \DateTime($valid['invoice_date']))->format('Y-m-d');
-        $invoice->due_date = (new \DateTime($valid['invoice_due']))->format('Y-m-d');
         $invoice->discount_amount = $valid['invoice_discount'];
         $invoice->discount_unit = $valid['discount_unit'];
         $invoice->notes = $valid['invoice_notes'];
@@ -289,6 +299,18 @@ class Invoice extends Model
         $invoice->currency = $valid['invoice_currency'];
         $invoice->user_id = (int) auth()->id();
         $invoice->created_by = (int) auth()->id();
+
+        if($isReccuring)
+        {
+            $invoice->next_date = (new \DateTime($valid['invoice_next']))->format('Y-m-d');
+            $invoice->frequency = $valid['invoice_interval'];
+            $invoice->is_reccuring = 1;
+        }
+        else
+        {
+            $invoice->due_date = (new \DateTime($valid['invoice_due']))->format('Y-m-d');
+            $invoice->is_reccuring = 0;
+        }
 
         DB::transaction(function () use ($invoice, $valid) {
             $invoice->save();

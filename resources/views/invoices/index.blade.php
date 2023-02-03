@@ -103,7 +103,7 @@
                 </select>
             </span>
             <span class="input-group input-group-static mt-3">
-                <label class="form-label">{{ __('transaction.fields.sales') }} </label>
+                <label class="form-label">{{ __('Status') }} </label>
                 <select class="form-control" name="s_invoice_status">
                     <option value="">------------</option>
                     <option value="0">DRAFT</option>

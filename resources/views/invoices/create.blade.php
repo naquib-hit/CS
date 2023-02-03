@@ -9,6 +9,14 @@
         font-size: var(--fas-custom-size) !important;
     }
 
+    .input-group.input-group-static.is-focused .form-label, 
+    .input-group.input-group-static.is-filled.is-focused .form-label, 
+    .input-group.input-group-static.is-filled .form-label {
+        position: relative;
+        top: 0 !important;
+        font-size: .875rem !important;
+    }
+
     .input-group > input[type="date"]::before
     { 
         content: ' ';
@@ -30,6 +38,7 @@
 
 <link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/sweetalert2.min.css') }}"/>
 <link rel="stylesheet" href="{{ asset('vendor/quill/quill.snow.css') }}"/>
+<link rel="stylesheet" href="{{ asset('vendor/flatpickr/dist/flatpickr.min.css') }}"/>
 @endsection
 
 
@@ -83,7 +92,7 @@
                             <div class="col-12 col-lg-4">
                                 <div class="input-group input-group-static @error('invoice_date') is-invalid @enderror mt-3">
                                     <label class="form-label">{{ __('invoice.form.fields.date') }} <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="invoice_date" value="{{ old('invoice_date') }}">
+                                    <input type="text" class="form-control" name="invoice_date" value="{{ old('invoice_date') }}">
                                 </div>
                                 @error('invoice_date')
                                     <small class="text-danger">{{ $message }}</small>
@@ -92,7 +101,7 @@
                             <div class="col-12 col-lg-4">
                                 <div class="input-group input-group-static @error('invoice_due') is-invalid @enderror mt-3">
                                     <label class="form-label">{{ __('invoice.form.fields.due_date') }}<span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" name="invoice_due" value="{{ old('invoice_due') }}">
+                                    <input type="text" class="form-control" name="invoice_due" value="{{ old('invoice_due') }}">
                                 </div>
                                 @error('invoice_due')
                                     <small class="text-danger">{{ $message }}</small>
@@ -361,6 +370,8 @@
 @section('js')
 <script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
 <script src="{{ asset('vendor/quill/quill.min.js') }}"></script>
+<script src="{{ asset('vendor/flatpickr/dist/flatpickr.min.js') }}"></script>
+
 <script defer>
     const deleteItemRow = e => {
         e = e || window.event;
@@ -387,6 +398,12 @@ Swal.fire({
 });
 @endif
 
+flatpickr(document.querySelector('input[name="invoice_date"]'), {
+    defaultDate: new Date("{{ old('invoice_date') }}")
+});
+flatpickr(document.querySelector('input[name="invoice_due"]'), {
+    defaultDate: new Date("{{ old('invoice_due') }}")
+});
 </script>
 
 <script type="application/json" id="currency-codes">

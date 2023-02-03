@@ -78,9 +78,9 @@ const setTable = async data => {
         cell_0.innerHTML = item.id;
         cell_0.classList.add('d-none');
         cell_0.dataset.name = 'id'
-        // cell 1 = Transaction Code
-        cell_1.innerText = item.transaction_code;
-        cell_1.dataset.name = 'transanction_code';
+        // cell 1 = Transaction No
+        cell_1.innerText = item.invoice_no;
+        cell_1.dataset.name = 'invoice_no';
         // cell 2 = Customer ID
         cell_2.innerText = item.customer_id;
         cell_2.classList.add('d-none');

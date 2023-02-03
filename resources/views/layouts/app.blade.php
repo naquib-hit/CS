@@ -65,6 +65,7 @@
 
     .input-group.input-group-static > .form-select:focus {
       width: 100%;
+      
     }
   </style>
 

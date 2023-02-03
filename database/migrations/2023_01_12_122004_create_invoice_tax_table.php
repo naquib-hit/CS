@@ -15,7 +15,7 @@ class CreateInvoiceTaxTable extends Migration
     {
         Schema::create('invoice_tax', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('invoice_id')->constrained('invoices')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignUuId('invoice_id')->constrained('invoices')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('tax_id')->constrained('taxes')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });

@@ -5,10 +5,14 @@ use App\Http\Controllers\{
     ProductUnitController,
     ProductController,
     CustomerController,
+    HomeController,
     InvoiceController,
+    RecurringInvoiceController,
     TaxController,
-    TransactionController
+    TransactionController,
+    UserController
 };
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,9 +52,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('invoices/get', [InvoiceController::class, 'get'])->name('invoices.get');
     Route::get('invoices/mail/{id}', [InvoiceController::class, 'mail'])->name('invoices.mail');
     Route::resource('invoices', InvoiceController::class);
+    // Reccuring INvoices
+    Route::get('reccuringInvoices/get', [RecurringInvoiceController::class, 'get'])->name('reccuringInvoices.get');
+    Route::resource('reccuringInvoices', RecurringInvoiceController::class);
     // Transactions
     Route::get('transactions/get', [TransactionController::class, 'get'])->name('transactions.get');
     Route::resource('transactions', TransactionController::class)->only(['index']);
+    //Users
+    Route::get('users/get', [UserController::class, 'get'])->name('users.get');
+    Route::resource('users', UserController::class);
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('logout/', [HomeController::class, 'logout'])->name('logout');
 });

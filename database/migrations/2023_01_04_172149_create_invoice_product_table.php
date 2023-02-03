@@ -15,7 +15,7 @@ class CreateInvoiceProductTable extends Migration
     {
         Schema::create('invoice_product', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('invoice_id')->constrained('invoices')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignUuId('invoice_id')->constrained('invoices')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained('products')->cascadeOnUpdate()->cascadeOnDelete();
             $table->integer('quantity');
             $table->integer('total_price');

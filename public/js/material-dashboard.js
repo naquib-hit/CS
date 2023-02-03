@@ -553,20 +553,20 @@ window.onload = function() {
 
   for (var i = 0; i < inputs.length; i++) {
 
-    if(inputs[i].type === 'date')
-    {
-       inputs[i].addEventListener('blur', e => {
-          if(e.target.value)
-            e.target.classList.add('text-secondary');
-       });
+    // if(inputs[i].type === 'date')
+    // {
+    //    inputs[i].addEventListener('blur', e => {
+    //       if(e.target.value)
+    //         e.target.classList.add('text-secondary');
+    //    });
 
-       inputs[i].addEventListener('focusout', e => {
-        if(e.target.value)
-        e.target.classList.add('text-secondary');
-       });
-    }
+    //    inputs[i].addEventListener('focusout', e => {
+    //     if(e.target.value)
+    //     e.target.classList.add('text-secondary');
+    //    });
+    // }
 
-    if(inputs[i].parentElement.classList.contains('input-group-static')) continue;
+    // if(inputs[i].parentElement.classList.contains('input-group-static')) continue;
 
     inputs[i].addEventListener('focus', function(e) {
       this.parentElement.classList.add('is-focused');

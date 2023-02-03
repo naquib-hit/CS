@@ -96,7 +96,7 @@ class TransactionController extends Controller
     public function get(Request $req): \Illuminate\Pagination\LengthAwarePaginator
     {
         //
-        $trans = Transaction::getAll();
+        $trans = Transaction::query()->orderBy('created_at', 'desc');
         $page = $trans->paginate(6);
 
         return $page;

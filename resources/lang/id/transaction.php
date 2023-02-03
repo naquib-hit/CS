@@ -14,8 +14,10 @@ return [
         'product'           => 'Produk',
         'sales'             => 'Sales',
         'code'              => 'No. Transaksi',
-        'start_date'        => 'Tanggal Pelunasan',
-        'expiration_date'   => 'Kadaluarsa',
+        'create_date'       => 'Tanggal Terbit',
+        'due_date'          => 'Jatuh Tempo',
+        'delivery_date'     => 'Tanggal Kirim',
+        'status'            => 'Status Kirim',
         'opt'               => 'Operasi'
     ],
     'fields'  => [

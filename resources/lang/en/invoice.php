@@ -37,6 +37,8 @@ return [
       'tax'       => 'Tax',
       'discount'  => 'Discount',
       'notes'     => 'Notes',
+      'interval'  => 'Interval',
+      'next'      => 'Next Date',
       'additional' => [
         'title'       => 'Additional Fields',
         'name'        => 'Name',
