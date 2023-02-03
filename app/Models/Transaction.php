@@ -17,16 +17,4 @@ class Transaction extends Model
     protected $guarded = ['id'];
 
 
-    /**
-     * Get All Data
-     *
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public static function getAll(array $filter = NULL): \Illuminate\Database\Query\Builder
-    {
-        $trans = DB::table('transactions')
-                 ->select(DB::raw());
-
-        return $trans;
-    }
 }

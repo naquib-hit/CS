@@ -344,7 +344,7 @@
                 <td colspan="2">
                     @if(!empty($invoice['notes']))
                     <div id="description" class="mt-2">
-                        <h6 class="mb-0">Deskripsi</h6>
+                        <h6 class="mb-0">Catatan</h6>
                         <div class="border rounded w-100">
                             {!! $invoice['notes'] !!}
                         </div>

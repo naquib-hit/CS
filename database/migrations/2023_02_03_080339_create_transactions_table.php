@@ -15,6 +15,7 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->date('trans_date');
             $table->string('invoice_no', 40);
             $table->date('create_date');
             $table->date('date_send')->nullable();

@@ -71,8 +71,9 @@ const setTable = async data => {
         const cell_6 = row.insertCell(6);
         const cell_7 = row.insertCell(7);
         const cell_8 = row.insertCell(8);
-        const cell_9 = row.insertCell(9);
-        const cell_10 = row.insertCell(10);
+
+        const details = JSON.parse(item.details);
+        console.log(details);
 
         // insert cell 0 - ID
         cell_0.innerHTML = item.id;
@@ -82,34 +83,27 @@ const setTable = async data => {
         cell_1.innerText = item.invoice_no;
         cell_1.dataset.name = 'invoice_no';
         // cell 2 = Customer ID
-        cell_2.innerText = item.customer_id;
+        cell_2.innerText = details.customers.customer_id;
         cell_2.classList.add('d-none');
         cell_2.dataset.name = 'customer_id';
         // cell 3 = Customer Name
-        cell_3.innerText = item.customer_name;
+        cell_3.innerText = details.customers.customer_name;
         cell_3.dataset.name = 'customer_name';
-        // cell 4 = product ID
-        cell_4.innerText = item.product_id;
-        cell_4.dataset.name = 'product_id';
-        cell_4.classList.add('d-none');
-        // cell 5 = Product Name
-        cell_5.innerText = item.product_name;
-        cell_5.dataset.name = 'product_name';
-        // cell 6 = sales ID
-        cell_6.innerText = item.sales_id;
-        cell_6.dataset.name = 'sales_id';
-        cell_6.classList.add('d-none');
-        // cell 7 = sales Name
-        cell_7.innerText = item.sales_name;
-        cell_7.dataset.name = 'sales_name';
-        // cell 8 = Start Date
-        cell_8.innerText = item.start_date;
-        cell_8.dataset.name = 'start_date';
-        // cell 9 = Expiration Date
-        cell_9.innerText = item.expiration_date;
-        cell_9.dataset.name = 'expiration_date';
-        // cell 10 = Expiration Date
-        cell_10.innerHTML = '<button type="button" class="btn btn-info btn-circle p-0 m-0">' +
+        // cell 4 = Create Date
+        cell_4.innerText = item.create_date;
+        cell_4.dataset.name = 'create_date';
+        // cell 5 = Delivery Status
+        cell_5.innerHTML = setEmailStatus(item.delivery_status);
+        cell_5.dataset.name = 'delivery_status';
+        // cell 6 = Send Date
+        cell_6.innerText = item.send_date ? item.send_date : '';
+        cell_6.dataset.name = 'send_date';
+        // cell 7 = Due Date
+        cell_7.innerText = item.due_date ? item.due_date : '';
+        cell_7.dataset.name = 'due_date';
+        
+        // cell 8 = Expiration Date
+        cell_8.innerHTML = '<button type="button" class="btn btn-info btn-circle p-0 m-0">' +
                                 '<i class="fas fa-eye font-reset"></i>' +
                             '</button>';
     });
@@ -146,6 +140,23 @@ const filterData = async e => {
     {
 
     }
+}
+
+// Email Status Text
+
+const setEmailStatus = num => {
+    let text = null;
+    switch(num)
+    {
+        case 0:
+            return '<span class="bg-warning text-white px-1">DRAFT</span>';
+        case 1:
+            return '<span class="bg-success text-white px-1">SENT</span>';
+        case 2:
+            return '<span class="bg-danger text-white px-1">FAILED</span>';
+    }
+
+    return text;
 }
 
 

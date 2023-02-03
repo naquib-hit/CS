@@ -42,12 +42,10 @@
                                 <th>{{ __('transaction.table.code') }}</th>
                                 <th class="d-none">Customer ID</th>
                                 <th>{{ __('transaction.table.customer') }}</th>
-                                <th class="d-none">product ID</th>
-                                <th>{{ __('transaction.table.product') }}</th>
-                                <th class="d-none">Sales ID</th>
-                                <th>{{ __('transaction.table.sales') }}</th>
-                                <th>{{ __('transaction.table.start_date') }}</th>
-                                <th>{{ __('transaction.table.expiration_date') }}</th>
+                                <th>{{ __('transaction.table.create_date') }}</th>
+                                <th>{{ __('transaction.table.status') }}</th>
+                                <th>{{ __('transaction.table.delivery_date') }}</th>
+                                <th>{{ __('transaction.table.due_date') }}</th>
                                 <th>{{ __('transaction.table.opt') }}</th>
                             </tr>
                         </thead>

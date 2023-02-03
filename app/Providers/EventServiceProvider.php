@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Events\After;
 use App\Models\Invoice;
 use App\Observers\InvoiceObserver;
+use App\Events\InvoiceEmailSentEvent;
+use App\Listeners\UpdateStatusAfterSentListener;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -21,7 +23,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        
+        // InvoiceEmailSentEvent::class => [
+        //     UpdateStatusAfterSentListener::class
+        // ]
     ];
 
     /**
