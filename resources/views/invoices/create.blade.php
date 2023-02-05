@@ -9,13 +9,13 @@
         font-size: var(--fas-custom-size) !important;
     }
 
-    .input-group.input-group-static.is-focused .form-label, 
+    /* .input-group.input-group-static.is-focused .form-label, 
     .input-group.input-group-static.is-filled.is-focused .form-label, 
     .input-group.input-group-static.is-filled .form-label {
         position: relative;
         top: 0 !important;
         font-size: .875rem !important;
-    }
+    } */
 
     .input-group > input[type="date"]::before
     { 
@@ -399,11 +399,12 @@ Swal.fire({
 @endif
 
 flatpickr(document.querySelector('input[name="invoice_date"]'), {
-    defaultDate: new Date("{{ old('invoice_date') }}")
+    defaultDate: @if(!empty(old('invoice_date'))) new Date("{{ old('invoice_date') }}") @else Date.now() @endif
 });
 flatpickr(document.querySelector('input[name="invoice_due"]'), {
-    defaultDate: new Date("{{ old('invoice_due') }}")
+    defaultDate: @if(!empty(old('invoice_due'))) new Date("{{ old('invoice_due') }}") @else Date.now() @endif
 });
+
 </script>
 
 <script type="application/json" id="currency-codes">

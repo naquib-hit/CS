@@ -17,4 +17,13 @@ class Transaction extends Model
     protected $guarded = ['id'];
 
 
+
+    public function getByProducts(\DateTime $from, \DateTime $to) {
+        $return = DB::table('transaction')
+                    ->select(DB::raw('details->products->id as product_id, details->products->product_name, SUM()'))
+                    ->join('invoice_product', 'invoice_product.invoice_id=details->id')
+                    ->groupBy('products.id', 'products.product_name');
+        return $return;
+    }
+
 }

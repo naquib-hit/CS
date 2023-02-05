@@ -549,7 +549,7 @@ function getEventTarget(e) {
 
 window.onload = function() {
   // Material Design Input function
-  var inputs = document.querySelectorAll('input, textarea');
+  var inputs = document.querySelectorAll('input, textarea, select, select-one');
 
   for (var i = 0; i < inputs.length; i++) {
 
@@ -568,11 +568,17 @@ window.onload = function() {
 
     // if(inputs[i].parentElement.classList.contains('input-group-static')) continue;
 
+    if(inputs[i].type == 'select' || inputs[i].type == 'select-one')
+    {
+      inputs[i].addEventListener('change', e => {
+        e.target.parentNode.closest('.input-group').classList.add('is-focused');
+      }, false);
+    }
+
     inputs[i].addEventListener('focus', function(e) {
       this.parentElement.classList.add('is-focused');
     }, false);
 
- 
 
     inputs[i].onkeyup = function(e) {
       if (this.value != "") {

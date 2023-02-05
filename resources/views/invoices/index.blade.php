@@ -99,12 +99,12 @@
             </span>
             <span class="input-group input-group-static mt-3">
                 <label class="form-label">{{ __('transaction.fields.product') }} </label>
-                <select class="form-control" name="s_invoice_product">
+                <select class="form-select" name="s_invoice_product">
                 </select>
             </span>
             <span class="input-group input-group-static mt-3">
                 <label class="form-label">{{ __('Status') }} </label>
-                <select class="form-control" name="s_invoice_status">
+                <select class="form-select" name="s_invoice_status">
                     <option value="">------------</option>
                     <option value="0">DRAFT</option>
                     <option value="1">SENT</option>
