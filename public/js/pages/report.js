@@ -1,6 +1,7 @@
 'use strict';
 
 const table = document.getElementById('tbl-main');
+const thead = table.tHead;
 const tbody = table.tBodies[0];
 const searchForm = document.forms['form-search'];
 const dateFrom = flatpickr(document.querySelector('input[name="periode_from"]'), { defaultDate: Date.now() });
@@ -23,22 +24,24 @@ const getData =  async (url, opt={}) => {
 } 
 
 (async () => {
-   
-    var dateF
+    searchForm.addEventListener('submit', async e => await filterData(e));
 
-    searchForm.addEventListener('submit', e => {
-
-    });
-
-    
 })();
 
 // Set Table
 const setTable = async data => {
+    thead.innerHTML = null;
     tbody.innerHTML = null;
+    //set thead
+    const hRow = thead.insertRow(0);
+    const h1 = hRow.insertCell(0);
+    const h2 = hRow.insertCell(1);
+    const h3 = hRow.insertCell(2);
+    // thead 
     
-    document.getElementById('loading-table').classList.remove('d-none');
 
+    document.getElementById('loading-table').classList.remove('d-none');
+    // set tbody
     Array.from(data.data, (item, idx) => {
         const row = tbody.insertRow(idx);
 
@@ -71,7 +74,8 @@ const filterData = async e => {
     {
         fetchUrl = `${window.location.href}/get?` + param.toString();
         let data = await getData(fetchUrl);
-        await setTable(data);
+        console.log(data);
+        //await setTable(data);
     }
     catch(err)
     {

@@ -3,88 +3,38 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
-use App\Http\Requests\StoreReportRequest;
-use App\Http\Requests\UpdateReportRequest;
-use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
+use App\Http\Requests\FilterReportRequest;
+use Illuminate\Http\{JsonResponse, Request};
 
 class ReportController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index(): View
     {
         //
-        $report = Report::getByProducts();
-        return view('reports.index', ['reports' => $report]);
+        return view('reports.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function getByPeriods(FilterReportRequest $request): \Illuminate\Pagination\LengthAwarePaginator
     {
-        //
-    }
+        // Rqeuest 
+        $valid = $request->validated();
+        $dateFrom = new \DateTime($valid['periode_from']);
+        $dateTo = new \DateTime($valid['periode_to']);
+        // Paging Needs
+        $currentPage = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage();
+        $perPage = 8;
+        $offset = $perPage * ($currentPage - 1);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreReportRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreReportRequest $request)
-    {
-        //
-    }
+        $data = Report::getFilteredReports($request->input('selected_by'), $dateFrom, $dateTo, $perPage, $offset);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Report  $report
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Report $report)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Report  $report
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Report $report)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateReportRequest  $request
-     * @param  \App\Models\Report  $report
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateReportRequest $request, Report $report)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Report  $report
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Report $report)
-    {
-        //
+        $paging = new \Illuminate\Pagination\LengthAwarePaginator($data, count($data), $perPage, $currentPage);
+        $paging->appends('filter_type', $valid['selected_by']);
+        return $paging;
     }
 }

@@ -60,7 +60,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('transactions/get', [TransactionController::class, 'get'])->name('transactions.get');
     Route::resource('transactions', TransactionController::class)->only(['index']);
     // Report
-    Route::resource('reports', ReportController::class);
+    Route::get('reports/get', [ReportController::class, 'getByPeriods'])->name('reports.filter');
+    Route::resource('reports', ReportController::class)->only(['index']);
     //Users
     Route::get('users/get', [UserController::class, 'get'])->name('users.get');
     Route::resource('users', UserController::class);

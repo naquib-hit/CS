@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateReportRequest extends FormRequest
+class FilterReportRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class UpdateReportRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +25,9 @@ class UpdateReportRequest extends FormRequest
     {
         return [
             //
+            'selected_by'   => 'required',
+            'periode_from'  => 'required|date',
+            'periode_to'    => 'required|date'
         ];
     }
 }
