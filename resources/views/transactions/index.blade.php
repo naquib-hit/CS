@@ -32,7 +32,7 @@
                     <p class="fs-6 mb-1">{{ __('transaction.fields.filtered_by') }}</p>
                     <div class="col-12">
                         <div class="form-check mb-1">
-                            <input type="radio" name="selected_by" class="form-check-input" value="product">
+                            <input type="radio" name="selected_by" class="form-check-input" value="product" checked>
                             <label class="form-check-label mb-1">{{ __('product.title') }}</label>
                         </div>
                         <div class="form-check">
@@ -44,14 +44,14 @@
                 <div class="row mt-4">
                     <p class="mb-1">Periode</p>
                     <div class="col-5">
-                        <div class="input-group input-group-outline">
+                        <div class="input-group input-group-outline is-filled">
                             <label class="form-label">Dari</label>
                             <input type="text" class="form-control" name="periode_from">
                         </div>
                     </div>
                     <div class="d-none d-lg-flex col-2 justify-content-center align-items-center">-</div>
                     <div class="col-5">
-                        <div class="input-group input-group-outline">
+                        <div class="input-group input-group-outline is-filled">
                             <label class="form-label">Sampai</label>
                             <input type="text" class="form-control" name="periode_to">
                         </div>
@@ -59,8 +59,8 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col-12 d-flex flex-nowrap justify-content-end pt-3">
-                        <button type="reset" class="btn btn-secondary me-1"><i class="fas fa-undo"></i> {{ __('template.form.reset') }} </button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('template.form.save') }}</button>
+                        <button type="reset" class="btn btn-secondary me-1"><i class="fas fa-undo"></i> {{ __('transaction.button.reset') }} </button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('transaction.button.generate') }}</button>
                     </div>
                 </div>
             </form>
@@ -84,7 +84,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 px-3 mt-2 d-flex flex-nowrap justify-content-end align-items-center">
+                    <div class="col-12 pe-4 mt-2 d-flex flex-nowrap justify-content-end align-items-center">
                         <a type="button" href="javascript:void(0);" class="btn btn-sm btn-primary mb-0 btn-circle" id="previous-page">
                             <i class="fas fa-arrow-left font-reset"></i>
                         </a>

@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Invoice;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -17,16 +18,16 @@ class InvoiceEmailSentEvent
     /**
      * Define Invoice
      *
-     * @var array
+     * @var \App\Models\Invoice
      */
-    public array $invoice;
+    public Invoice $invoice;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(array $invoice)
+    public function __construct(Invoice $invoice)
     {
         //
 

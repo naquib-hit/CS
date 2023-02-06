@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Events\InvoiceEmailSentEvent;
 use Knp\Snappy\Pdf;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
@@ -207,6 +208,8 @@ class InvoiceController extends Controller
             Invoice::find($id)->update([
                 'invoice_status' => 1
             ]);
+
+           InvoiceEmailSentEvent::dispatch(Invoice::find($id));
 
             return redirect()->route('invoices.index')->with('success', __('Email berhasil dikirim'));
             //return new \App\Mail\InvoiceMail($invoice);

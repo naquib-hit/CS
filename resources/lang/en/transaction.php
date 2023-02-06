@@ -29,5 +29,9 @@ return [
         'start_date'    => 'Start Date',
         'end_date'      => 'End Date',
         'filtered_by'   => 'Filter By'
+    ],
+    'button' => [
+        'generate'  => 'Filter',
+        'reset'     => 'Reset'
     ]
 ];

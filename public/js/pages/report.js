@@ -3,6 +3,8 @@
 const table = document.getElementById('tbl-main');
 const tbody = table.tBodies[0];
 const searchForm = document.forms['form-search'];
+const dateFrom = flatpickr(document.querySelector('input[name="periode_from"]'), { defaultDate: Date.now() });
+const dateTo = flatpickr(document.querySelector('input[name="periode_to"]'), { defaultDate: Date.now() });
 let fetchUrl = `${window.location.href}/get`;
 
 // INIT
@@ -22,6 +24,11 @@ const getData =  async (url, opt={}) => {
 
 (async () => {
    
+    var dateF
+
+    searchForm.addEventListener('submit', e => {
+
+    });
 
     
 })();

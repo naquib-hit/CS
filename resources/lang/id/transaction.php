@@ -29,5 +29,9 @@ return [
         'start_date'     => 'Tanggal Awal',
         'end_date'       => 'Tanggal Akhir',
         'filtered_by'    => 'Saring Berdasarkan'
-    ] 
+    ],
+    'button' => [
+        'generate'  => 'Saring',
+        'reset'     => 'Pulihkan'
+    ]
 ];

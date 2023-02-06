@@ -16,3 +16,4 @@ yarn-error.log
 /resources/views/layouts/app1.blade.php
 /resources/views/auth/login1.blade.php
 /public/scss
+/public/files

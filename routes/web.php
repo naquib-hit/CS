@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     HomeController,
     InvoiceController,
     RecurringInvoiceController,
+    ReportController,
     TaxController,
     TransactionController,
     UserController
@@ -58,6 +59,8 @@ Route::middleware(['auth'])->group(function () {
     // Transactions
     Route::get('transactions/get', [TransactionController::class, 'get'])->name('transactions.get');
     Route::resource('transactions', TransactionController::class)->only(['index']);
+    // Report
+    Route::resource('reports', ReportController::class);
     //Users
     Route::get('users/get', [UserController::class, 'get'])->name('users.get');
     Route::resource('users', UserController::class);

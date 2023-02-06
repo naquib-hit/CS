@@ -2,9 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\User;
-use App\Models\Invoice;
-use App\Models\Transaction;
+use App\Models\{ User, Report, Invoice, Transaction };
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class InvoiceObserver
@@ -29,16 +28,30 @@ class InvoiceObserver
         try
         {
             $valid = $invoice->getInvoiceByID($invoice->id);
-            Transaction::create([
-                'invoice_no'        => $valid['invoice_no'],
-                'create_date'       => (new \DateTime($valid['create_date']))->format('Y-m-d'),
-                'delivery_status'   => intval($valid['invoice_status']),
-                'due_date'          => !empty($valid['due_date']) ? (new \DateTime($valid['due_date']))->format('Y-m-d') : NULL,
-                'customer_id'       => $valid['customers']['id'],
-                'customer_name'     => $valid['customers']['customer_name'],
-                'details'           => json_encode($valid),
-                'create_by'         => User::find(auth()->id())->fullname
-            ]);
+            DB::transaction(function () use($valid) {
+                Transaction::create([
+                    'invoice_no'        => $valid['invoice_no'],
+                    'trans_date'        => (new \DateTime())->format('Y-m-d'),
+                    'create_date'       => (new \DateTime($valid['create_date']))->format('Y-m-d'),
+                    'delivery_status'   => intval($valid['invoice_status']),
+                    'due_date'          => !empty($valid['due_date']) ? (new \DateTime($valid['due_date']))->format('Y-m-d') : NULL,
+                    'customer_id'       => $valid['customers']['id'],
+                    'customer_name'     => $valid['customers']['customer_name'],
+                    'details'           => json_encode($valid),
+                    'create_by'         => auth()->id()
+                ]);
+
+                Report::updateOrCreate(
+                    [
+                        'invoice_id' => $valid['id']
+                    ], 
+                    [
+                        'invoice_no'    => $valid['invoice_no'],
+                        'sent_status'   => $valid['invoice_status'],
+                        'deskripsi'     => json_encode($valid)
+                    ]
+                );
+            });
         }
         catch(\Throwable $e)
         {
