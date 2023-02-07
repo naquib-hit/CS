@@ -28,6 +28,8 @@ const getData =  async (url, opt={}) => {
     searchForm.addEventListener('reset', e => resetTable());
 
     document.getElementById('to_pdf').addEventListener('click', e => generateReport(e, 'pdf'));
+    document.getElementById('to_excel').addEventListener('click', e => generateReport(e, 'excel'));
+    document.getElementById('to_csv').addEventListener('click', e => generateReport(e, 'csv'));
 
 })();
 

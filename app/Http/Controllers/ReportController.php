@@ -24,17 +24,12 @@ class ReportController extends Controller
     {
         // Rqeuest 
         $valid = $request->validated();
-        $dateFrom = new \DateTime($valid['periode_from']);
-        $dateTo = new \DateTime($valid['periode_to']);
-        // Paging Needs
-        $currentPage = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage();
-        $perPage = 8;
-        $offset = $perPage * ($currentPage - 1);
+        $dateFrom = new \DateTime($valid['periode_from'].' 00:00:00');
+        $dateTo = new \DateTime($valid['periode_to'].' 23:59:59');
 
-        $data = Report::getFilteredReports($request->input('selected_by'), $dateFrom, $dateTo, $perPage, $offset);
+        $data = Report::getFilteredReports($request->input('selected_by'), $dateFrom, $dateTo);
 
-        $paging = new \Illuminate\Pagination\LengthAwarePaginator($data, count($data), $perPage, $currentPage);
-        $paging->withPath(route('reports.filter'));
+        $paging = $data->paginate(8);
         $paging->appends('filter_type', $valid['selected_by']);
         return $paging;
     }
@@ -45,10 +40,10 @@ class ReportController extends Controller
         // Needs For Generate Report File
         $fileType = $valid['file_type'];
         $itemType = $valid['selected_by'];
-        $dateFrom = new \DateTime($valid['periode_from']);
-        $dateTo   = new \DateTime($valid['periode_to']);
+        $dateFrom = new \DateTime($valid['periode_from'].' 00:00:00');
+        $dateTo = new \DateTime($valid['periode_to'].' 23:59:59');
 
         $report = Report::generateReport($fileType, $itemType, $dateFrom, $dateTo);
-        $report->download('report_'.$itemType.'_'.(new \DateTime)->format('YmdHis'));
+        return $report->download('report_'.$itemType.'_'.(new \DateTime)->format('YmdHis'));
     }
 }

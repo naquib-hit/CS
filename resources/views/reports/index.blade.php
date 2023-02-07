@@ -81,8 +81,8 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" role="button" id="to_pdf" href="javascript:void(0);">PDF</a></li>
-                                <li><a class="dropdown-item" role="button" href="javascript:void(0);">Excel</a></li>
-                                <li><a class="dropdown-item" role="button" href="javascript:void(0);">CSV</a></li>
+                                <li><a class="dropdown-item" role="button" id="to_excel" href="javascript:void(0);">Excel</a></li>
+                                <li><a class="dropdown-item" role="button" id="to_csv" href="javascript:void(0);">CSV</a></li>
                               </ul>
                         </div>
                     </div>

@@ -26,39 +26,39 @@ class Report extends Model
      * 
      * @param \DateTime $from
      * @param \DateTime $to
-     * @return array
+     * @return \Illuminate\Database\Query\Builder
      */
-    public static function getByProducts(\DateTime $from, \DateTime $to, ?int $limit=NULL, ?int $offset=NULL): array
+
+    //   SELECT a.element_id::int, a.element_name::text, SUM(a.element_value::int) as element_value
+    //       FROM (
+    //                 SELECT 
+    //                 (obj ->> 'id')::int as element_id, 
+    //                 (obj -> 'product_name')::text as element_name, 
+    //                 (obj -> 'pivot' ->> 'total_price')::text::int as element_value,
+    //                 created_at
+    //             FROM 
+    //                 (SELECT r.id, r.created_at, obj FROM reports r, json_array_elements(r.deskripsi#>'{products}') obj) produk
+    //             ) a
+    //   WHERE a.created_at BETWEEN :from AND :to
+    //   GROUP BY a.element_id, a.element_name
+
+
+    public static function getByProducts(\DateTime $from, \DateTime $to): \Illuminate\Database\Query\Builder
     {
-       $stmt = "SELECT a.element_id::int, a.element_name::text, SUM(a.element_value::int) as element_value
-                FROM (
-                    SELECT 
-                    (obj ->> 'id')::int as element_id, 
-                    (obj -> 'product_name')::text as element_name, 
-                    (obj -> 'pivot' ->> 'total_price')::text::int as element_value,
-                    created_at
-                FROM 
-                    (SELECT r.id, r.created_at, obj FROM reports r, json_array_elements(r.deskripsi#>'{products}') obj) produk
-                ) a
-                WHERE a.created_at BETWEEN :from AND :to
-                GROUP BY a.element_id, a.element_name";
-
+        $reports = DB::table(function ($sub) {
+                        $sub->select(DB::raw("(obj ->> 'id')::int as element_id, 
+                                        (obj -> 'product_name')::text as element_name, 
+                                        (obj -> 'pivot' ->> 'total_price')::text::int as element_value,
+                                        created_at"))
+                        ->from(function ($sub) {
+                            $sub->select(DB::raw('r.id, r.created_at, obj'))
+                                ->from(DB::raw("reports r, json_array_elements(r.deskripsi#>'{products}') obj"));
+                        }, 'p');
+                    }, 'items')
+        ->select(DB::raw("element_id::int, REPLACE(element_name, '\"','') as element_name, SUM(element_value::int) as element_value"))
+        ->whereBetween('created_at', [$from->format('Y-m-d H:i:s'), $to->format('Y-m-d H:i:s')])
+        ->groupBy('element_id', 'element_name');
         
-        $_params = ['from' => $from->format('Y-m-d H:i:s'), 'to' => $to->format('Y-m-d H:i:s')];
-
-        if(!empty($limit) )
-        {
-            $stmt .= " LIMIT :limit";
-            $_params['limit'] = $limit;
-        }
-
-        if(!is_null($offset))
-        {
-            $stmt .= " OFFSET :offset";
-            $_params['offset'] = $offset;
-        }
-
-        $reports = DB::select($stmt, $_params);
         return $reports;
     }
     
@@ -68,10 +68,11 @@ class Report extends Model
      * 
      * @param \DateTime $from
      * @param \DateTime $to
-     * @return array
+     * @return \Illuminate\Database\Query\Builder
      */
-    public function getByCustomers(\DateTime $from, \DateTime $to, ?int $limit=NULL, ?int $offset=NULL) : array
-    {
+
+    /*
+    
         $stmt = "WITH items AS (
                     SELECT 
                         (r.deskripsi -> 'customers' ->> 'id')::int as element_id,
@@ -84,22 +85,21 @@ class Report extends Model
                 FROM items a
                 WHERE a.created_at BETWEEN :from AND :to
                 GROUP BY a.element_id, a.element_name";
+     */
 
-        $_params = ['from' => $from->format('Y-m-d H:i:s'), 'to' => $to->format('Y-m-d H:i:s')];
-
-        if(!empty($limit))
-        {
-            $stmt .= " LIMIT :limit";
-            $_params['limit'] = $limit;
-        }
-
-        if(!is_null($offset))
-        {
-            $stmt .= " OFFSET :offset";
-            $_params['offset'] = $offset;
-        }
-
-        $reports = DB::select($stmt, $_params);
+    public function getByCustomers(\DateTime $from, \DateTime $to, ?int $limit=NULL, ?int $offset=NULL) : \Illuminate\Database\Query\Builder
+    {
+       
+        $reports = DB::table(function ($sub) {
+                        $sub->select(DB::raw("(r.deskripsi -> 'customers' ->> 'id')::int as element_id,
+                                              (r.deskripsi -> 'customers' ->> 'customer_name')::text as element_name,
+                                              (r.deskripsi -> 'invoice_summary' ->> 'total_summary')::int as element_value,
+                                              r.created_at"))
+                            ->from(DB::raw('reports r'));
+                    }, 'a')
+                    ->select(DB::raw('a.element_id, REPLACE(a.element_name, \'"\', \'\') as element_name, SUM(a.element_value) as element_value'))
+                    ->whereBetween('created_at', [$from->format('Y-m-d H:i:s'), $to->format('Y-m-d H:i:s')])
+                    ->groupBy('element_id', 'element_name');
         return $reports;
     }
 
@@ -109,22 +109,18 @@ class Report extends Model
      * @param string $type
      * @param \DateTime $from
      * @param \DateTime $to
-     * @return Collection
+     * @return \Illuminate\Database\Query\Builder
      */
-    public static function getFilteredReports(string $type, \DateTime $from, \DateTime $to, ?int $limit=NULL, ?int $offset=NULL): Collection
+    public static function getFilteredReports(string $type, \DateTime $from, \DateTime $to): \Illuminate\Database\Query\Builder
     {
-        $arr = [];
+        $arr = NULL;
         switch($type)
         {
             case 'product':
-                $arr = self::getByProducts($from, $to, $limit, $offset);
-                break;
+                return self::getByProducts($from, $to);
             case 'customer':
-                $arr = self::getByCustomers($from, $to, $limit, $offset);
-                break;
+                return self::getByCustomers($from, $to);
         }
-
-        return collect($arr);
     }
 
     /**
