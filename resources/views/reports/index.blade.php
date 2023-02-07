@@ -45,14 +45,14 @@
                 </div>
                 <div class="row mt-4">
                     <p class="mb-1">Periode</p>
-                    <div class="col-5">
+                    <div class="col-5 pe-1">
                         <div class="input-group input-group-outline is-filled">
                             <label class="form-label">Dari</label>
                             <input type="text" class="form-control" name="periode_from">
                         </div>
                     </div>
-                    <div class="d-none d-lg-flex col-2 justify-content-center align-items-center">-</div>
-                    <div class="col-5">
+                    <div class="d-none d-lg-flex col-2 justify-content-center align-items-center px-0 mx-0">-</div>
+                    <div class="col-5 ps-1">
                         <div class="input-group input-group-outline is-filled">
                             <label class="form-label">Sampai</label>
                             <input type="text" class="form-control" name="periode_to">
@@ -72,8 +72,23 @@
     <div class="col-8">
         <div class="card px-0">
             <div class="card-body px-0">
+                <div id="download-row" class="row px-3 d-none">
+                    <div class="col-12">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-download font-reset"></i>
+                                {{ __('transaction.button.download') }}
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" role="button" id="to_pdf" href="javascript:void(0);">PDF</a></li>
+                                <li><a class="dropdown-item" role="button" href="javascript:void(0);">Excel</a></li>
+                                <li><a class="dropdown-item" role="button" href="javascript:void(0);">CSV</a></li>
+                              </ul>
+                        </div>
+                    </div>
+                </div>
                 <div class="table-responsive">
-                    <table id="tbl-main" class="table table-sm">
+                    <table id="tbl-main" class="table table-striped">
                         <thead></thead>
                         <tbody></tbody>
                     </table>

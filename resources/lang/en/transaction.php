@@ -32,6 +32,8 @@ return [
     ],
     'button' => [
         'generate'  => 'Filter',
-        'reset'     => 'Reset'
+        'reset'     => 'Reset',
+        'download'  => 'Download',
+        'export'    => 'Export'
     ]
 ];

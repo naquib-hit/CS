@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Report;
 use Illuminate\View\View;
-use App\Http\Requests\FilterReportRequest;
-use Illuminate\Http\{JsonResponse, Request};
+use App\Http\Requests\{ FilterReportRequest, GenerateReportRequest };
+//use Illuminate\Http\{JsonResponse, Request};
 
 class ReportController extends Controller
 {
@@ -34,7 +34,21 @@ class ReportController extends Controller
         $data = Report::getFilteredReports($request->input('selected_by'), $dateFrom, $dateTo, $perPage, $offset);
 
         $paging = new \Illuminate\Pagination\LengthAwarePaginator($data, count($data), $perPage, $currentPage);
+        $paging->withPath(route('reports.filter'));
         $paging->appends('filter_type', $valid['selected_by']);
         return $paging;
+    }
+
+    public function generate(GenerateReportRequest $request) 
+    {
+        $valid = $request->validated();
+        // Needs For Generate Report File
+        $fileType = $valid['file_type'];
+        $itemType = $valid['selected_by'];
+        $dateFrom = new \DateTime($valid['periode_from']);
+        $dateTo   = new \DateTime($valid['periode_to']);
+
+        $report = Report::generateReport($fileType, $itemType, $dateFrom, $dateTo);
+        $report->download('report_'.$itemType.'_'.(new \DateTime)->format('YmdHis'));
     }
 }

@@ -32,6 +32,8 @@ return [
     ],
     'button' => [
         'generate'  => 'Saring',
-        'reset'     => 'Pulihkan'
+        'reset'     => 'Pulihkan',
+        'download'  => 'Unduh',
+        'export'    => 'Ekspor'
     ]
 ];
