@@ -87,7 +87,7 @@ class Report extends Model
                 GROUP BY a.element_id, a.element_name";
      */
 
-    public function getByCustomers(\DateTime $from, \DateTime $to, ?int $limit=NULL, ?int $offset=NULL) : \Illuminate\Database\Query\Builder
+    public function getByCustomers(\DateTime $from, \DateTime $to) : \Illuminate\Database\Query\Builder
     {
        
         $reports = DB::table(function ($sub) {
@@ -113,7 +113,6 @@ class Report extends Model
      */
     public static function getFilteredReports(string $type, \DateTime $from, \DateTime $to): \Illuminate\Database\Query\Builder
     {
-        $arr = NULL;
         switch($type)
         {
             case 'product':

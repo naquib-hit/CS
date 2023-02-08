@@ -13,7 +13,10 @@ return [
             'general'   => 'Invoice',
             'reccuring' => 'Recurring Invoice',
         ],
-        'transaction'   => 'Transaction',
+        'report'        => [
+            'transaction'   => 'Transaction Log',
+            'report'        => 'Report'
+        ],
     ],
     // Toolbar
     'toolbar' => [

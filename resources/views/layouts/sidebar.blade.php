@@ -63,12 +63,24 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white " href="{{ route('transactions.index') }}">
+                <a class="nav-link text-white " data-bs-toggle="collapse" data-bs-target="#{{ __('template.menu.report.report') }}-children">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-list"></i>
                     </div>
-                    <span class="nav-link-text ms-1">{{ __('template.menu.transaction') }}</span>
+                    <span class="nav-link-text ms-1">{{ __('template.menu.report.report') }}</span>
                 </a>
+                <ul class="navbar-nav collapse" id="{{__('template.menu.report.report')}}-children">
+                    <li class="nav-item">
+						<a class="nav-link text-white" href="{{ route('transactions.index') }}">
+							<span class="nav-link-text ms-3">{{ __('template.menu.report.transaction') }}</span>
+						</a>
+					</li>
+                    <li class="nav-item">
+						<a class="nav-link text-white" href="{{ route('reports.index') }}">
+							<span class="nav-link-text ms-3">{{ __('template.menu.report.report') }}</span>
+						</a>
+					</li>
+                </ul>
             </li>
         </ul>
     </div>

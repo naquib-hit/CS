@@ -14,6 +14,10 @@ return [
             'general'   => 'Faktur',
             'reccuring' => 'Faktur Berkala',
         ],
+        'report'        => [
+            'transaction'   => 'Log Transaksi',
+            'report'        => 'Laporan'
+        ],
     ],
     // Toolbar
     'toolbar' => [
