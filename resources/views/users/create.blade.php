@@ -24,7 +24,7 @@
                 </div>
               </div>
             <div class="card-body">
-                <form name="form-input" action="{{ route('users.store') }}" class="d-flex flex-column" method="post">
+                <form name="form-input" action="{{ route('register') }}" class="d-flex flex-column" method="post">
                     @csrf
                     <span class="input-group input-group-outline @error('username') is-invalid @enderror">
                         <label class="form-label">{{ __('Username') }} <span class="text-danger">*</span></label>

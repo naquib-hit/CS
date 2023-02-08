@@ -29,7 +29,7 @@ class UpdateUserRequest extends FormRequest
         return [
             //
             'username'  => ['required', Rule::unique('users')->where(fn ($q) => $q->where('id', '<>', $id))],
-            'password'  => 'required|not_regex:/(\*\*\*)/|confirmed',
+            'password'  => 'required|confirmed',
             'email'     => 'email',
             'fullname'  => 'nullable'
         ];

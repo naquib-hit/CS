@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\StoreSalesRequest;
 use App\Http\Requests\UpdateSalesRequest;
 
@@ -17,8 +18,11 @@ class SalesController extends Controller
      */
     public function index()
     {
+        echo '<pre>';
+        echo Hash::make('admin').' - '.auth()->user()->password;
+        echo '</pre>';
         //
-        return view('sales.index');
+        //return view('sales.index');
     }
 
     /**

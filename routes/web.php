@@ -26,9 +26,7 @@ use App\Models\User;
 |
 */
 
-Auth::routes([
-    'registration' => false
-]);
+Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
     // Product
@@ -47,6 +45,8 @@ Route::middleware(['auth'])->group(function () {
     // // Sales
     // Route::delete('sales/truncate', [SalesController::class, 'clean'])->name('sales.truncate');
     // Route::get('sales/get', [SalesController::class, 'get'])->name('sales.get');
+    //Route::resource('sales', SalesController::class);
+    // Invoice
     Route::get('invoices/products', [InvoiceController::class, 'getProducts'])->name('invoices.products');
     Route::get('invoices/customers', [InvoiceController::class, 'getCustomers'])->name('invoices.customers');
     Route::get('invoices/taxes', [InvoiceController::class, 'getTaxes'])->name('invoices.taxes');
