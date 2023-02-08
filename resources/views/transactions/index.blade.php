@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => __('transaction.title')])
+@extends('layouts.app')
 
 @section('css')
 <style>
@@ -121,3 +121,4 @@
 @section('js')
 <script src="{{ asset('js/pages/transaction.js') }}"></script>
 @endsection
+
