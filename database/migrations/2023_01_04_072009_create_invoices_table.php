@@ -16,6 +16,7 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('invoice_no', 40);
+            $table->string('po_no');
             $table->date('create_date')->useCurrent();
             $table->date('due_date')->nullable();
             $table->date('next_date')->nullable();
@@ -23,12 +24,11 @@ class CreateInvoicesTable extends Migration
             $table->string('discount_unit', 100)->nullable();
             $table->text('notes')->nullable();
             $table->smallInteger('invoice_status')->default(0);
-            $table->string('po_no');
             $table->smallInteger('is_reccuring')->default(0);
             $table->string('currency', 10)->nullable();
             $table->string('frequency', 120)->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('customer_id')->constrained('customers')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('project_id')->constrained('projects')->cascadeOnUpdate()->cascadeOnDelete();
             $table->integer('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes('deleted_at');
