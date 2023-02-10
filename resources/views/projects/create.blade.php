@@ -21,7 +21,7 @@
             <div class="card fadeIn3 fadeInBottom">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                     <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                      <h4 class="text-white font-weight-bolder text-center my-0">{{ __('product.form.title') }}</h4>
+                      <h4 class="text-white font-weight-bolder text-center my-0">{{ __('project.form.title') }}</h4>
                     </div>
                   </div>
                 <div class="card-body">

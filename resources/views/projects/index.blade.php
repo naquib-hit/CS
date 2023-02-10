@@ -98,7 +98,7 @@
                         <label class="form-label">{{ __('project.filter.fields.name') }} </label>
                         <input type="text" class="form-control" name="s_project_name" value="{{ old('s_project_name') }}" />
                     </span>
-                    <span class="input-group input-group-dynamic">
+                    <span class="input-group input-group-dynamic mt-3">
                         <label class="form-label">{{ __('project.filter.fields.customer') }} </label>
                         <input type="text" class="form-control" name="s_project_customer" value="{{ old('s_project_customer') }}" />
                     </span>
