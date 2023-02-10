@@ -14,5 +14,6 @@ class ProjectSeeder extends Seeder
     public function run()
     {
         //
+        \App\Models\Project::factory()->count(10)->create();
     }
 }

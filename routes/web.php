@@ -11,7 +11,8 @@ use App\Http\Controllers\{
     ReportController,
     TaxController,
     TransactionController,
-    UserController
+    UserController,
+    ProjectController
 };
 use App\Models\User;
 
@@ -42,6 +43,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('taxes/truncate', [TaxController::class, 'truncate'])->name('taxes.truncate');
     Route::get('taxes/get', [TaxController::class, 'get'])->name('taxes.get');
     Route::resource('taxes', TaxController::class);
+    // Projects
+    Route::get('projects/get', [ProjectController::class, 'get'])->name('projects.get');
+    Route::resource('projects', ProjectController::class);
     // // Sales
     // Route::delete('sales/truncate', [SalesController::class, 'clean'])->name('sales.truncate');
     // Route::get('sales/get', [SalesController::class, 'get'])->name('sales.get');

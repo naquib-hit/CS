@@ -11,11 +11,12 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return  \Illuminate\View\View
      */
-    public function index()
+    public function index() : \Illuminate\View\View
     {
         //
+        return view('projects.index');
     }
 
     /**
@@ -82,5 +83,17 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         //
+    }
+
+    /**
+     * Get All List Data And Paging
+     * 
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function get(): \Illuminate\Pagination\LengthAwarePaginator
+    {
+        $project = Project::query()->orderBy('id', 'desc')->orderBy('created_at', 'desc');
+
+        return $project->paginate(8);
     }
 }
