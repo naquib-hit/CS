@@ -7,7 +7,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Log, Auth};
-use App\Models\{Invoice, Customer, Product, Tax};
+use App\Models\{Invoice, Project, Product, Tax};
 use App\Http\Requests\{StoreInvoiceRequest, UpdateInvoiceRequest};
 use Illuminate\Http\{RedirectResponse, Request, Response, JsonResponse};
 
@@ -22,10 +22,18 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index(): View
+    public function index()
     {
         //
-        return view('invoices.index');
+        $invoice = Invoice::find('e347aa0a-d634-401a-85d9-ce500d607ffd')->products()->get()
+                            ->tap(function($coll) {
+                                $gross = $coll->column;
+                            });
+
+        echo '<pre>';
+        print_r($invoice->toArray());
+        echo '</pre>';
+        //return view('invoices.index');
     }
 
     /**
@@ -165,7 +173,7 @@ class InvoiceController extends Controller
      */
     public function get(Request $req)
     {
-        $invoices = Invoice::with(['customers', 'products', 'taxes', 'invoiceSummary'])
+        $invoices = Invoice::with(['projects', 'projects.customers', 'products', 'taxes', 'invoiceSummary'])
                     ->where('is_reccuring', '=', 0)
                     ->orderBy('created_at', 'desc')
                     ->orderBy('id', 'desc');
@@ -231,9 +239,9 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCustomers(): JsonResponse
+    public function getProjects(): JsonResponse
     {
-        return response()->json(Customer::cursor(), 200, ['Content-Type' => 'application/json']);
+        return response()->json(Project::cursor(), 200, ['Content-Type' => 'application/json']);
     }
 
     /**

@@ -102,17 +102,17 @@ const setTable = async data => {
         // Column 3
         const cell_2 = row.insertCell(2);
         cell_2.dataset.name = 'project_name';
-        cell_2.innerText = item['projects_name'];
+        cell_2.innerText = item['project_name'];
         cell_2.classList.add('ps-1');
         // Column 4
         const cell_3 = row.insertCell(3);
         cell_3.dataset.name = 'customer_id';
-        cell_3.innerText = item['customer_id'];
+        cell_3.innerText = item['customers']['id'];
         cell_3.classList.add('d-none');
         // Column 5
         const cell_4 = row.insertCell(4);
         cell_4.dataset.name = 'customer_name';
-        cell_4.innerText = item['customer_name'];
+        cell_4.innerText = item['customers']['customer_name'];
         cell_4.classList.add('ps-1');
         // Column 6
         const cell_5 = row.insertCell(5);
@@ -205,8 +205,7 @@ const checkRow = e => {
         selectedRows.push(e.target.value);
     else 
         selectedRows.splice(selectedRows.indexOf(e.target.value), 1);
-    
-    console.log(selectedRows);
+        
 }
 // end block
 
@@ -285,12 +284,10 @@ const deleteAllRows = async (e, opt) => {
     
         const filter = Object.fromEntries((new URL(fetchUrl).searchParams).entries());
     
-        if(filter.s_customer_name)
-            params.customer_name = filter.s_customer_name;
-        if(filter.s_customer_email)
-            params.customer_email = filter.s_customer_email;
-        if(filter.s_customer_phone)
-            params.customer_phone  = filter.s_customer_phone;
+        if(filter.s_project_name)
+            params.s_project_name = filter.s_project_name;
+        if(filter.s_project_customer)
+            params.s_project_customer = filter.s_project_customer;
     
         uri += '?' + new URLSearchParams(params); 
 

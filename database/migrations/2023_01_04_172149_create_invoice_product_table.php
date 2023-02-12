@@ -17,8 +17,10 @@ class CreateInvoiceProductTable extends Migration
             $table->id();
             $table->foreignUuId('invoice_id')->constrained('invoices')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained('products')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->integer('gross_price');
             $table->integer('quantity');
-            $table->integer('total_price');
+            $table->integer('total_net');
+            $table->integer('total_gross');
             $table->integer('created_by')->nullable();
             $table->timestamps();
         });

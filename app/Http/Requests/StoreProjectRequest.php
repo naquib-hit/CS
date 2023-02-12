@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProjectRequest extends FormRequest
@@ -13,7 +14,7 @@ class StoreProjectRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +26,8 @@ class StoreProjectRequest extends FormRequest
     {
         return [
             //
+            'project_name'      => ['required', Rule::unique('projects')->whereNull('deleted_at')],
+            'project_customer'  => ['required', 'exists:customers,id']
         ];
     }
 }

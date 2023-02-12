@@ -115,35 +115,40 @@ const setTable = async data => {
               cell_3 = row.insertCell(3),
               cell_4 = row.insertCell(4),
               cell_5 = row.insertCell(5),
-              cell_6 = row.insertCell(6);
+              cell_6 = row.insertCell(6),
+              cell_7 = row.insertCell(7);
         
         // Column 0
         cell_0.innerText = item['id'];
         cell_0.dataset.name = 'id';
         cell_0.classList.add('d-none');
         // Column 1
-        cell_1.innerText = item['invoice_no'];
-        cell_1.dataset.name = 'invoice_no';
-        cell_1.classList.add('ps-2');
+        cell_1.innerText = item['projects']['id'];
+        cell_1.dataset.name = 'project_id';
+        cell_1.classList.add('d-none');
         // Column 2
-        cell_2.innerText = item['customers']['id'];
-        cell_2.dataset.name = 'customer_id';
-        cell_2.classList.add('d-none');
+        cell_2.innerText = item['projects']['project_name'];
+        cell_2.dataset.name = 'project_name';
+        cell_2.classList.add('ps-2');
         // Column 3
-        cell_3.innerText = item['customers']['customer_name'];
-        cell_3.dataset.name = 'customer_name';
-        cell_3.classList.add('ps-2');
+        cell_3.innerText = item['projects']['customers']['id'];
+        cell_3.dataset.name = 'customer_id';
+        cell_3.classList.add('d-none');
         // Column 4
-        cell_4.innerHTML = setEmailStatus(+item['invoice_status']);
-        cell_4.dataset.name = 'invoice_status';
+        cell_4.innerText = item['projects']['customers']['customer_name'];
+        cell_4.dataset.name = 'customer_name';
         cell_4.classList.add('ps-2');
         // Column 5
-        cell_5.innerHTML= item['products'].map(x => x.product_name).join(',');
-        cell_5.dataset.name = 'product_name';
+        cell_5.innerHTML = setEmailStatus(+item['invoice_status']);
+        cell_5.dataset.name = 'invoice_status';
         cell_5.classList.add('ps-2');
         // Column 6
+        cell_6.innerHTML= item['products'].map(x => x.product_name).join(',');
+        cell_6.dataset.name = 'product_name';
+        cell_6.classList.add('ps-2');
+        // Column 7
         if(item['invoice_status'] !== 1) 
-            cell_6.innerHTML += `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
+            cell_7.innerHTML += `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
                                 `<a type="button" class="btn btn-sm btn-success btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="${window.location.origin}/invoices/${item.id}">` + 
                                     `<i class="fas fa-eye font-reset"></i>` +
                                 `</a>` +
@@ -152,12 +157,12 @@ const setTable = async data => {
                                 `</a>` +
                                 `<button type="button" class="btn btn-sm btn-danger btn-circle p-0 m-0 ms-1 delete_data" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="deleteConfirmation(event)"><i class="fas fa-trash font-reset"></i></button>`;
         else
-        cell_6.innerHTML += `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
+        cell_7.innerHTML += `<span class="d-flex flex-nowrap flex-grow-0 align-items-center">` +
                                 `<a type="button" class="btn btn-sm btn-success btn-circle p-0 m-0 edit_data" data-bs-toggle="tooltip" data-bs-title="Edit" href="${window.location.origin}/invoices/${item.id}">` + 
                                     `<i class="fas fa-eye font-reset"></i>` +
                                 `</a>`;
-        cell_6.innerHTML += `</span>`;
-        cell_6.classList.add('ps-2');
+        cell_7.innerHTML += `</span>`;
+        cell_7.classList.add('ps-2');
 
         // Column 6
         // const cell_5 = row.insertCell(5);

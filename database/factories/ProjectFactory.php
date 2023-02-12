@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Project;
+use App\Models\{ Customer, User };
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProjectFactory extends Factory
@@ -17,7 +17,8 @@ class ProjectFactory extends Factory
         return [
             //
             'project_name' => $this->faker->unique->word(),
-            'customer_id'  => $this->faker->randomElement(Project::cursor()->get()->pluck('id'))
+            'customer_id'  => $this->faker->randomElement(Customer::cursor()->pluck('id')->toArray()),
+            'created_by'   => User::find(1)->fullname
         ];
     }
 }

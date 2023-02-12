@@ -34,9 +34,11 @@
                         @error('project_name')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
-                        <span class="input-group input-group-outline @error('project_customer') is-invalid @enderror mt-4">
+                        <span id="customer-input" class="input-group input-group-outline @error('project_customer') is-invalid @enderror mt-4">
                             <label class="form-label">{{ __('project.form.fields.customer') }} <span class="text-danger">*</span></label>
-                            <input type="customer" class="form-control" name="project_customer" value="{{ old('project_customer') }}" @error('project_customer') autofocus @enderror/>
+                            <input type="text" class="form-control pe-3" name="project_customer_text" value="{{ old('project_customer_text') }}" @error('project_customer_text')  @enderror/>
+                            <button type="button" class="bg-transparent input-group-text pe-1" data-bs-toggle="dropdown" data-bs-target="#customer-input"><i class="fas fa-caret-down"></i></button>
+                            <input type="number" class="d-none" name="project_customer" value="{{ old('project_customer') }}" @error('project_customer') @enderror/>
                         </span>
                         @error('project_customer')
                             <small class="text-danger">{{ $message }}</small>
@@ -92,5 +94,38 @@ Swal.fire({
     document.getElementById('btn-submit').addEventListener('click', e => {
         loading();
     });
+</script>
+
+<script type="module">
+    import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}";
+    
+    // Autocomplte
+    const customerElement = document.getElementsByName('project_customer_text')[0];
+    const autocomplete = new Autocomplete(customerElement, {
+        threshold: 1,
+        onSelectItem: e => {
+            document.querySelector('input[name="project_customer"]').value = e.value;
+        }
+    });
+
+    const customers = async () => {
+        try
+        {
+            const f = await fetch("{{ route('projects.customer') }}");
+            const j = await f.json();
+            
+            return j.map(x => ({'label': x.customer_name, 'value': x.id}));
+        }
+        catch(err)
+        {
+            console.log(err);
+        }
+    }
+
+    (async() => {
+        autocomplete.setData(await customers());
+
+    })();
+    // end autcomplte
 </script>
 @endsection

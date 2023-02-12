@@ -44,7 +44,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('taxes/get', [TaxController::class, 'get'])->name('taxes.get');
     Route::resource('taxes', TaxController::class);
     // Projects
+    Route::get('projects/customers', [ProjectController::class, 'getCustomers'])->name('projects.customer');
     Route::get('projects/get', [ProjectController::class, 'get'])->name('projects.get');
+    Route::delete('projects/truncate', [ProjectController::class, 'truncate'])->name('projects.truncate');
     Route::resource('projects', ProjectController::class);
     // // Sales
     // Route::delete('sales/truncate', [SalesController::class, 'clean'])->name('sales.truncate');
@@ -52,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
     //Route::resource('sales', SalesController::class);
     // Invoice
     Route::get('invoices/products', [InvoiceController::class, 'getProducts'])->name('invoices.products');
-    Route::get('invoices/customers', [InvoiceController::class, 'getCustomers'])->name('invoices.customers');
+    Route::get('invoices/projects', [InvoiceController::class, 'getProjects'])->name('invoices.projects');
     Route::get('invoices/taxes', [InvoiceController::class, 'getTaxes'])->name('invoices.taxes');
     Route::get('invoices/get', [InvoiceController::class, 'get'])->name('invoices.get');
     Route::get('invoices/mail/{id}', [InvoiceController::class, 'mail'])->name('invoices.mail');

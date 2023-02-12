@@ -28,7 +28,7 @@
                 <div class="row ">
                     <div class="col-12 px-4">
                         <div class="btn-group btn-group-sm btn-group-primary">
-                            <a href="{{ route('customers.create') }}" class="btn btn-primary">
+                            <a href="{{ route('projects.create') }}" class="btn btn-primary">
                                 <i class="fas fa-plus-circle font-reset"></i>&nbsp;
                                 {{__('template.toolbar.add')}}
                             </a>
@@ -51,7 +51,7 @@
                                 </th>
                                 <th class="d-none">ID</th>
                                 <th class="ps-1">{{__('project.table.name')}}</th>
-                                <th class="d-none"></th>
+                                <th class="d-none">CUstomer ID</th>
                                 <th class="ps-1">{{__("project.table.customer")}}</th>
                                 <th class="ps-1">{{__("project.table.option")}}</th>
                             </tr>

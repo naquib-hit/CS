@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\{Model, SoftDeletes};
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasOne};
 use App\Traits\{ CalculationHelperTrait, UUIDTrait };
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\{Model, SoftDeletes, Collection};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasOne};
 
 class Invoice extends Model
 {
@@ -26,7 +26,8 @@ class Invoice extends Model
      */
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'invoice_product', 'invoice_id', 'product_id')->withPivot('quantity', 'total_price');
+        return $this->belongsToMany(Product::class, 'invoice_product', 'invoice_id', 'product_id')
+                    ->withPivot('quantity', 'total_net', 'total_gross');
     }
 
     /**
@@ -44,9 +45,9 @@ class Invoice extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function customers(): BelongsTo
+    public function projects(): BelongsTo
     {
-        return $this->belongsTo(Customer::class, 'customer_id', 'id');
+        return $this->belongsTo(Project::class, 'project_id', 'id');
     }
 
     /**
@@ -104,24 +105,32 @@ class Invoice extends Model
     /**
      * Insert Invoice's Summary
      *
-     * @param array $items
-     * @return int
+     * @param string $id
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function setInvoiceSummary(string $id): int
+    public function setInvoiceSummary(string $id): Collection
     {
-        $summary = self::find($id)->products()
-                        ->get()
-                        ->pluck('pivot')
-                        ->pluck('total_price')
-                        ->reduce(fn ($sum, $curr) => $sum + $curr);
+        $summary = self::find($id)->products()->get();
+        $summary->tap(function($coll) {
+            $gross = $coll->pluck('pivot')
+                            ->pluck('total_gross')
+                            ->sum();
+            data_set($summary, 'gross_sum', $gross);
+        })
+        ->tap(function($coll) {
+            $net = $coll->pluck('pivot')
+                        ->pluck('total_net')
+                        ->sum();
+            data_set($summary, 'net_sum', $net);
+        });
         return $summary;
     }
 
     /** */
     public function createInvoiceSummary($id): self
     {
-        self::invoiceSummary()->updateOrCreate(['invoice_id' => $id], ['total_summary' => self::setInvoiceSummary($id)]);
-
+        $sum = self::setInvoiceSummary($id);
+        self::invoiceSummary()->updateOrCreate(['invoice_id' => $id], ['net_summary' => $sum->get('net_sum'), 'gross_summary' => $sum->get('gross_summary')]);
         return $this;
     }
 
@@ -136,8 +145,10 @@ class Invoice extends Model
         $_items = collect($items)->reduce(function ($summary, $item) {
             $summary[$item['value']] =
                 [
+                    'gross_price'   => $item['price'],
                     'quantity'      => $item['total'],
-                    'total_price'   => (Product::find($item['value']))->product_price * $item['total']
+                    'total_net'     => self::arithmethic((Product::find($item['value']))->product_price, $item['total'], 'x'),
+                    'total_gross'   => self::arithmethic($item['price'], $item['total'], 'x')
                 ];
             return $summary;
         }, []);
@@ -242,16 +253,17 @@ class Invoice extends Model
     {
         $invoice = new self;
 
-        $invoice->invoice_no = $valid['invoice_no'];
-        $invoice->customer_id  = $valid['invoice_customer'];
+        //$invoice->invoice_no = $valid['invoice_no'];
+        //$invoice->po_no = $valid['invoice_po'];
+
+        $invoice->project_id  = $valid['invoice_project'];
         $invoice->create_date = (new \DateTime($valid['invoice_date']))->format('Y-m-d');
         $invoice->discount_amount = $valid['invoice_discount'];
         $invoice->discount_unit = $valid['discount_unit'];
         $invoice->notes = $valid['invoice_notes'];
-        $invoice->po_no = $valid['invoice_po'];
         $invoice->currency = $valid['invoice_currency'];
-        $invoice->user_id = (int) auth()->id();
-        $invoice->created_by = (int) auth()->id();
+        $invoice->user_id = (int) auth()->id() ?? 1;
+        $invoice->created_by = (int) auth()->id() ?? 1;
 
         if($isReccuring)
         {
@@ -289,13 +301,14 @@ class Invoice extends Model
     {
         $invoice = self::find($id);
 
-        $invoice->invoice_no = $valid['invoice_no'];
-        $invoice->customer_id  = $valid['invoice_customer'];
+        //$invoice->invoice_no = $valid['invoice_no'];
+        //$invoice->po_no = $valid['invoice_po'];
+
+        $invoice->project_id  = $valid['invoice_project'];
         $invoice->create_date = (new \DateTime($valid['invoice_date']))->format('Y-m-d');
         $invoice->discount_amount = $valid['invoice_discount'];
         $invoice->discount_unit = $valid['discount_unit'];
         $invoice->notes = $valid['invoice_notes'];
-        $invoice->po_no = $valid['invoice_po'];
         $invoice->currency = $valid['invoice_currency'];
         $invoice->user_id = (int) auth()->id();
         $invoice->created_by = (int) auth()->id();

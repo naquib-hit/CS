@@ -19,6 +19,7 @@ class CreateProjectsTable extends Migration
             $table->foreignId('customer_id')->constrained('customers')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('created_by', 150);
             $table->timestamps();
+            $table->softDeletes('deleted_at');
         });
     }
 

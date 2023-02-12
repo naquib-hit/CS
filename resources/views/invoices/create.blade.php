@@ -9,14 +9,6 @@
         font-size: var(--fas-custom-size) !important;
     }
 
-    /* .input-group.input-group-static.is-focused .form-label, 
-    .input-group.input-group-static.is-filled.is-focused .form-label, 
-    .input-group.input-group-static.is-filled .form-label {
-        position: relative;
-        top: 0 !important;
-        font-size: .875rem !important;
-    } */
-
     .input-group > input[type="date"]::before
     { 
         content: ' ';
@@ -61,31 +53,13 @@
                         </div>
                         <div class="card-body row">
                             <div class="col-12 col-lg-4">
-                                <div class="input-group input-group-static @error('invoice_no') is-invalid @enderror mt-3">
-                                    <label class="form-label">{{ __('invoice.form.fields.no') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="invoice_no" value="{{ old('invoice_no') }}">
-                                </div>
-                                @error('invoice_no')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="input-group input-group-static @error('invoice_po') is-invalid @enderror mt-3">
-                                    <label class="form-label">{{ __('invoice.form.fields.po') }}<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="invoice_po" value="{{ old('invoice_po') }}">
-                                </div>
-                                @error('invoice_po')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="input-group input-group-static @error('invoice_customer') is-invalid @enderror mt-3">
-                                    <label class="form-label">{{ __('invoice.form.fields.customer') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="invoice_customer_text" id="customer_input"  value="{{ old('invoice_customer_text') }}">
+                                <div class="input-group input-group-static @error('invoice_project') is-invalid @enderror mt-3">
+                                    <label class="form-label">{{ __('invoice.form.fields.project') }} <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="invoice_project_text" id="project_input"  value="{{ old('invoice_project_text') }}">
                                     <button class="input-group-text px-2 btn-open-customer" type="button"><i class="fas fa-caret-down"></i></button>
-                                    <input type="text" name="invoice_customer" value="{{ old('invoice_customer') }}" hidden>
+                                    <input type="text" name="invoice_project" value="{{ old('invoice_project') }}" hidden>
                                 </div>
-                                @error('invoice_customer')
+                                @error('invoice_project')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
@@ -142,7 +116,7 @@
                                 </div>
                                 <div class="card-body" id="items-container">
                                     <div class="row align-items-end">
-                                        <div class="col-12 col-md-8 pe-1">
+                                        <div class="col-12 col-md-6 pe-1">
                                             <div class="input-group input-group-static @error('invoice_items.0.value') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.item') }}<span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control item-name" name="invoice_items[0][name]" value="{{ old('invoice_items.0.name') }}">
@@ -153,14 +127,18 @@
                                             @enderror
                                         </div>
                                         <div class="col-12 col-md-2 px-1">
+                                            <div class="input-group input-group-static @error('invoice_items.0.price') is-invalid @enderror">
+                                                <label class="form-label">{{ __('invoice.form.fields.price') }}<span class="text-danger">*</span></label>
+                                                <input type="number" min="{{ old('invoice_items.0.price') }}" step="0.01" class="form-control item-price"  name="invoice_items[0][price]" value="{{ old('invoice_items.0.price') }}">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-12 col-md-2 px-1">
                                             <div class="input-group input-group-static @error('invoice_items.0.total') is-invalid @enderror mt-3">
                                                 <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
                                                 <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[0][total]" value="{{ old('invoice_items.0.value') }}">
                                             </div>
                                         </div>
-                                        {{-- <div class="col-12 col-md-2 ps-1">
-                                            <button type="button" class="btn btn-circle btn-danger m-0 p-0 clear-row" onclick="deleteItemRow(event)"><i class="fas fa-trash font-reset"></i></button>
-                                        </div> --}}
                                     </div>
 
                                     @if (!empty(old('invoice_items')) && count(old('invoice_items')) > 1)
@@ -177,7 +155,15 @@
                                                         <small class="text-danger">{{ $message }}</small>
                                                     @enderror
                                                 </div>
-                                                <div class="col-12 col-md-4 px-1">
+                                                <div class="col-12 col-md-2 px-1">
+                                                    <div class="input-group input-group-static @error('invoice_items.'.$i.'.price') is-invalid @enderror">
+                                                        <label class="form-label">{{ __('invoice.form.fields.price') }}<span class="text-danger">*</span></label>
+                                                        <input type="number" min="{{ old('invoice_items.'.$i.'.price') }}" step="0.01" class="form-control item-price" 
+                                                        name="invoice_items[{{$i}}][price]" 
+                                                        value="{{ old('invoice_items.'.$i.'.price') }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-2 px-1">
                                                     <div class="input-group input-group-static @error('invoice_items.'.$i.'.total') is-invalid @enderror mt-3">
                                                         <label class="form-label">{{ __('invoice.form.fields.total') }}<span class="text-danger">*</span></label>
                                                         <input type="number" min="0" step="1" class="form-control item-total"  name="invoice_items[{{ $i }}][total]" value="{{ old('invoice_items.'.$i.'.total') }}">
@@ -433,22 +419,20 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
     // });
 
     // Customers
-    const customerElement = document.getElementById('customer_input');
+    const customerElement = document.getElementById('project_input');
     const autocomplete = new Autocomplete(customerElement, {
         threshold: 1,
         onSelectItem: e => {
-            document.querySelector('input[name="invoice_customer"]').value = e.value;
+            document.querySelector('input[name="invoice_project"]').value = e.value;
         }
     });
 
-    const getCustomers = async () => {
+    const getProjects = async () => {
         try
         {
-            const f = await fetch(`{{ route('invoices.customers') }}`);
-            const customers = await f.json();
-            const cs = customers.map(x => ({'label': x.customer_name, 'value': x.id}));
-
-            return cs;
+            const f = await fetch(`{{ route('invoices.projects') }}`);
+            const projects = await f.json();
+            return projects;
         }
         catch(err)
         {
@@ -456,10 +440,11 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         }
     }
 
+    // bukan customer tapi project
     const setListCustomers = async () => {
-        let customers = await getCustomers();
+        let projects = await getProjects();
 
-        autocomplete.setData(customers);
+        autocomplete.setData(projects.map(x => ({'label':x.project_name, 'value': x.id})));
     }
     // End autompolete
 
@@ -470,7 +455,7 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
             const f = await fetch("{{ route('invoices.products') }}");
             const j = await f.json();
 
-            return j.map(x => ({'label': x.product_name, 'value': x.id}));
+            return j;
 
         } 
         catch (error) 
@@ -491,10 +476,11 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         
         Array.from(names, (item, idx) => {
 
-            const value = document.querySelector('input[name="invoice_items['+idx+'][value]"]');
+            const value = document.querySelector('input[name="invoice_items['+idx+'][value]"]'),
+                  price = document.querySelector('input[name="invoice_items['+idx+'][price]"]');
             
             new Autocomplete(item, {
-                data: datas,
+                data: datas.map(x => ({'label': x.product_name, 'value': x.id})),
                 threshold: 1,
                 onInput: str => {
                     if(str.length == 0)
@@ -502,6 +488,10 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
                 },
                 onSelectItem: val => {
                     value.value = val.value;
+
+                    let product = datas.find(x => x.id == val.value);
+                    price.value = product.product_price;
+                    price.min = product.product_price;
                 }
             });
         });
@@ -568,27 +558,32 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
 
     // Items Group
     let lastIndex = document.getElementsByClassName('item-name').length - 1;
-    
-    
+
     const createItem = () => {
         // new row
         const row = document.createElement('div');
         row.classList.add('row', 'mt-3', 'align-items-center');
         // col-left 
         const colLeft = document.createElement('div');
-        colLeft.classList.add('col-12', 'col-md-8', 'pe-1');
+        colLeft.classList.add('col-12', 'col-md-6', 'pe-1');
         // col-middle
         const colMiddle = document.createElement('div');
         colMiddle.classList.add('col-12', 'col-md-2','px-1');
         // col-right
         const colRight = document.createElement('div');
-        colRight.classList.add('col-12', 'col-md-2', 'ps-1');
+        colRight.classList.add('col-12', 'col-md-2', 'px-1');
+        // col-button
+        const colBtn = document.createElement('div');
+        colBtn.classList.add('col-12', 'col-md-2', 'ps-1');
         // input-group-left
         const inputGroupLeft = document.createElement('div');
         inputGroupLeft.classList.add('input-group', 'input-group-static');
         // input-group-middlw (sengaja beda biar classListNya beda)
         const inputGroupMiddle = document.createElement('div');
         inputGroupMiddle.classList.add('input-group', 'input-group-static');
+        // input-group-right (sengaja beda biar classList Nya beda)
+        const inputGroupRight = document.createElement('div');
+        inputGroupRight.classList.add('input-group', 'input-group-static');
         // clear-row 
         const clearRow = document.createElement('button');
         clearRow.type = 'button';
@@ -600,6 +595,9 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         // label buat number
         const labelMiddle = document.createElement('label');
         labelMiddle.classList.add('form-label');
+        // label buat number
+        const labelRight = document.createElement('label');
+        labelRight.classList.add('form-label');
        // input text
         const inputText = document.createElement('input');
         inputText.type = 'text';
@@ -608,6 +606,11 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         const inputTextValue = document.createElement('input');
         inputTextValue.type = 'text';
         inputTextValue.classList.add('d-none', 'item-name-value');
+        // input price
+        const inputPrice = document.createElement('input');
+        inputPrice.type = 'number';
+        inputPrice.step = 0.01;
+        inputPrice.classList.add('form-control');
         // input number
         const inputNumber = document.createElement('input');
         inputNumber.type = 'number';
@@ -622,30 +625,34 @@ import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}
         labelLeft.innerHTML = "{{ __('invoice.form.fields.item') }} <span class=\"text-danger\">*</span>";
         inputText.name = "invoice_items["+ (+lastIndex + 1) +"][name]";
         inputTextValue.name = 'invoice_items['+ (+lastIndex + 1) +'][value]'
-        // inputText.onfocus = async e => await inputOnFocus(e);
-        // inputText.onblur = async e => await inputOnFocusOut(e);
-        // inputText.onkeyup = async e => await inputOnKeyup(e);
         inputGroupLeft.appendChild(labelLeft);
         inputGroupLeft.appendChild(inputText);
         inputGroupLeft.appendChild(inputTextValue);
         colLeft.appendChild(inputGroupLeft);
         row.appendChild(colLeft);
+
         // MIDDLE
-        //labelMiddle.innerText = '';
-        labelMiddle.innerHTML = "{{ __('invoice.form.fields.total') }} <span class=\"text-danger\">*</span>";
-        inputNumber.name= "invoice_items["+ (+lastIndex + 1) +"][total]";
-        // inputNumber.onfocus = async e => await inputOnFocus(e);
-        // inputNumber.onblur = async e => await inputOnFocusOut(e);
-        // inputNumber.onkeyup = async e => await inputOnKeyup(e);
-        inputNumber.min = 0;
+        labelMiddle.innerHTML = "{{ __('invoice.form.fields.price') }} <span class=\"text-danger\">*</span>";
+        inputPrice.name= "invoice_items["+ (+lastIndex + 1) +"][price]";
+        inputPrice.min = 0.01;
         inputGroupMiddle.appendChild(labelMiddle);
-        inputGroupMiddle.appendChild(inputNumber);
+        inputGroupMiddle.appendChild(inputPrice);
         colMiddle.appendChild(inputGroupMiddle);
         row.appendChild(colMiddle);
+
         // RIGHT
-        clearRow.appendChild(faTrash);
-        colRight.appendChild(clearRow);
+        labelRight.innerHTML = "{{ __('invoice.form.fields.total') }} <span class=\"text-danger\">*</span>";
+        inputNumber.name= "invoice_items["+ (+lastIndex + 1) +"][total]";
+        inputNumber.min = 0;
+        inputGroupRight.appendChild(labelRight);
+        inputGroupRight.appendChild(inputNumber);
+        colRight.appendChild(inputGroupRight);
         row.appendChild(colRight);
+
+        // BUTTON
+        clearRow.appendChild(faTrash);
+        colBtn.appendChild(clearRow);
+        row.appendChild(colBtn);
 
         return row;
     }

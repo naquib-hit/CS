@@ -43,7 +43,8 @@
                         <thead class="bg-danger text-white">
                             <tr>
                                 <th class="d-none">ID</th>
-                                <th>{{ __('invoice.table.invoice_no') }}</th>
+                                <th class="d-none">Project ID</th>
+                                <th>{{ __('invoice.table.project') }}</th>
                                 <th class="d-none">Customer ID</th>
                                 <th>{{ __('invoice.table.customer') }}</th>
                                 <th>{{ __('invoice.table.email_status') }}</th>
