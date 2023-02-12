@@ -24,16 +24,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        //
-        $invoice = Invoice::find('e347aa0a-d634-401a-85d9-ce500d607ffd')->products()->get()
-                            ->tap(function($coll) {
-                                $gross = $coll->column;
-                            });
-
-        echo '<pre>';
-        print_r($invoice->toArray());
-        echo '</pre>';
-        //return view('invoices.index');
+        return view('invoices.index');
     }
 
     /**

@@ -110,19 +110,20 @@ class Invoice extends Model
      */
     public function setInvoiceSummary(string $id): Collection
     {
-        $summary = self::find($id)->products()->get();
-        $summary->tap(function($coll) {
-            $gross = $coll->pluck('pivot')
-                            ->pluck('total_gross')
-                            ->sum();
-            data_set($summary, 'gross_sum', $gross);
-        })
-        ->tap(function($coll) {
-            $net = $coll->pluck('pivot')
-                        ->pluck('total_net')
-                        ->sum();
-            data_set($summary, 'net_sum', $net);
-        });
+        $summary = Invoice::find('e347aa0a-d634-401a-85d9-ce500d607ffd')->products()->get();
+        $summary->tap(function($coll) use ($summary) {
+                    $gross = $coll->pluck('pivot')
+                                    ->pluck('total_gross')
+                                    ->reduce(fn ($sum, $curr) => $curr + $sum);
+                    $summary->put('gross_summ', $gross);
+                })
+                ->tap(function($coll) use ($summary) {
+                    $net = $coll->pluck('pivot')
+                                    ->pluck('total_net')
+                                    ->reduce(fn ($sum, $curr) => $curr + $sum);
+                    $summary->put('net_summ', $net);
+                });
+
         return $summary;
     }
 
@@ -130,7 +131,7 @@ class Invoice extends Model
     public function createInvoiceSummary($id): self
     {
         $sum = self::setInvoiceSummary($id);
-        self::invoiceSummary()->updateOrCreate(['invoice_id' => $id], ['net_summary' => $sum->get('net_sum'), 'gross_summary' => $sum->get('gross_summary')]);
+        self::invoiceSummary()->updateOrCreate(['invoice_id' => $id], ['net_summary' => $sum->get('net_summ'), 'gross_summary' => $sum->get('gross_summ')]);
         return $this;
     }
 
@@ -209,8 +210,8 @@ class Invoice extends Model
      */
     public static function getInvoiceByID(string $id): array
     {
-        $invoice = self::with(['products', 'customers', 'taxes', 'additionalField', 'invoiceSummary'])->find($id)->toArray();
-        $summary = $invoice['invoice_summary']['total_summary'];
+        $invoice = self::with(['products', 'projects', 'projects.customers', 'taxes', 'additionalField', 'invoiceSummary'])->find($id)->toArray();
+        $summary = $invoice['invoice_summary']['gross_summary'];
 
         for($i=0;$i<count($invoice['taxes']);$i++)
         {

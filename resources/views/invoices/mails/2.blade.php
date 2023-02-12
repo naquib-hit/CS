@@ -244,8 +244,8 @@
                     <dl class="d-print-block">
                         <dt class="float-left"><strong>Bill To :</strong><dt>
                         <dd class="ms-2 clearfix">
-                            <h6 class="mb-0 text-bold text-decoration-underline">{{ $invoice['customers']['customer_name'] }}</h6>
-                            <small>{{ $invoice['customers']['customer_address'] }}</small>
+                            <h6 class="mb-0 text-bold text-decoration-underline">{{ $invoice['projects']['customers']['customer_name'] }}</h6>
+                            <small>{{ $invoice['projects']['customers']['customer_address'] }}</small>
                         </dd>
                     </dl>
                 </td>
@@ -254,17 +254,10 @@
                     <table class="w-100 table table-borderless table-header">
                         <tbody class="p-0">
                             <tr>
-                                <td class="align-top"><strong>No. Invoice</strong></td>
-                                <td class="align-top">: {{ $invoice['invoice_no'] }}</td>
-                            </tr>
-                            <tr>
                                 <td><strong>Tanggal Invoice</strong></td>
                                 <td>: {{ $invoice['create_date'] }}</td>
                             </tr>
-                            <tr>
-                                <td><strong>No. PO</strong></td>
-                                <td>: {{ $invoice['po_no'] }}</td>
-                            </tr>
+                           
                         <tbody>
                     </table>
                 </td>
@@ -289,9 +282,9 @@
                                 <tr class="t-content border-left border-right">
                                     <td style="width: 40px">{{ !empty($product['product_name']) ?  $i + 1  : ''}}</td>
                                     <td>{{ $product['product_name'] ?? '' }}</td>
-                                    <td>{{ number_format($product['product_price'], 0, NULL, '.') ?? ''}}</td>
+                                    <td>{{ number_format($product['pivot']['gross_price'], 0, NULL, '.') ?? ''}}</td>
                                     <td>{{ $product['pivot']['quantity'] ?? '' }}</td>
-                                    <td>{{ number_format($product['pivot']['total_price'], 0, NULL, '.') ?? ''}}</td>
+                                    <td>{{ number_format($product['pivot']['total_gross'], 0, NULL, '.') ?? ''}}</td>
                                 </tr>
                                 @else
                                 <tr class="t-content">
@@ -306,7 +299,7 @@
                             <tr class="subtotal-row">
                                 <td colspan="3"></td>
                                 <td class="border text-bold">Sub Total</td>
-                                <td class="border text-bold">{{  number_format($invoice['invoice_summary']['total_summary'], 0, NULL, '.') }}</td>
+                                <td class="border text-bold">{{  number_format($invoice['invoice_summary']['gross_summary'], 0, NULL, '.') }}</td>
                             </tr>
                             @foreach ($invoice['taxes'] as $tax)
                             <tr class="taxes">
