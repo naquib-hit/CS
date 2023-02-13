@@ -305,7 +305,7 @@
                             <tr class="taxes">
                                 <td colspan="3"></td>
                                 <td class="text-bold">{{ $tax['tax_name'] }}&nbsp;{{ $tax['tax_amount'] }}%</td>
-                                <td class="text-bold">{{  number_format(($invoice['invoice_summary']['total_summary'] * $tax['tax_amount']) / 100, 0, NULL, '.') }}</td>
+                                <td class="text-bold">{{  number_format(($invoice['invoice_summary']['gross_summary'] * $tax['tax_amount']) / 100, 0, NULL, '.') }}</td>
                             </tr>
                             @endforeach
                             @if (!empty($invoice['discount_amount']) )

@@ -27,7 +27,7 @@ class Invoice extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'invoice_product', 'invoice_id', 'product_id')
-                    ->withPivot('quantity', 'total_net', 'total_gross');
+                    ->withPivot('quantity', 'gross_price', 'total_net', 'total_gross');
     }
 
     /**
@@ -110,17 +110,17 @@ class Invoice extends Model
      */
     public function setInvoiceSummary(string $id): Collection
     {
-        $summary = Invoice::find('e347aa0a-d634-401a-85d9-ce500d607ffd')->products()->get();
+        $summary = Invoice::find($id)->products()->get();
         $summary->tap(function($coll) use ($summary) {
                     $gross = $coll->pluck('pivot')
                                     ->pluck('total_gross')
-                                    ->reduce(fn ($sum, $curr) => $curr + $sum);
+                                    ->reduce(fn ($sum, $curr) => $sum + $curr);
                     $summary->put('gross_summ', $gross);
                 })
                 ->tap(function($coll) use ($summary) {
                     $net = $coll->pluck('pivot')
                                     ->pluck('total_net')
-                                    ->reduce(fn ($sum, $curr) => $curr + $sum);
+                                    ->reduce(fn ($sum, $curr) => $sum + $curr);
                     $summary->put('net_summ', $net);
                 });
 
@@ -215,14 +215,14 @@ class Invoice extends Model
 
         for($i=0;$i<count($invoice['taxes']);$i++)
         {
-            $sum = self::setFixedOrPercent('percent', $invoice['taxes'][$i]['tax_amount'],  $invoice['invoice_summary']['total_summary']);
+            $sum = self::setFixedOrPercent('percent', $invoice['taxes'][$i]['tax_amount'],  $invoice['invoice_summary']['gross_summary']);
             data_set($invoice, 'taxes.'.$i.'.tax_sum', $sum);
 			$summary += $sum;
         }
         //Check discount
         if(!empty($invoice['discount_amount']))
         {
-            $discount = self::setFixedOrPercent($invoice['discount_unit'], $invoice['discount_amount'], $invoice['invoice_summary']['total_summary']);
+            $discount = self::setFixedOrPercent($invoice['discount_unit'], $invoice['discount_amount'], $invoice['invoice_summary']['gross_summary']);
             data_fill($invoice, 'discount_sum', $discount);
 			$summary -= $discount;
         }
@@ -232,7 +232,7 @@ class Invoice extends Model
 			$afi=0;
 			foreach($invoice['additional_field'] as $af)
 			{
-                $be = self::setFixedOrPercent($af['unit'], $af['field_value'], $invoice['invoice_summary']['total_summary']);
+                $be = self::setFixedOrPercent($af['unit'], $af['field_value'], $invoice['invoice_summary']['gross_summary']);
                 data_set($invoice, 'additional_field.'.$afi.'.field_sum', $be);
 				$fieldNum = self::calculateAdditionalField($summary, $be, $af['operation']);
 				$summary = $fieldNum;

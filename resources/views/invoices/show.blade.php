@@ -130,25 +130,25 @@
                         <dl class="col-5 d-flex">
                             <dt>Bill To :</dt>
                             <dd class="ms-3">
-                                <h6 class="mb-0 text-bold text-decoration-underline">{{ $invoice['customers']['customer_name'] }}</h6>
-                                <small>{{ $invoice['customers']['customer_address'] }}</small>
+                                <h6 class="mb-0 text-bold text-decoration-underline">{{ $invoice['projects']['customers']['customer_name'] }}</h6>
+                                <small>{{ $invoice['projects']['customers']['customer_address'] }}</small>
                             </dd>
                         </dl>
                         <div class="col-4 ms-auto">
                             <table class="w-100 table-header">
                                 <tbody>
-                                    <tr>
+                                    {{-- <tr>
                                         <td class="fw-bold">No. Invoice</td>
                                         <td>: {{ $invoice['invoice_no'] }}</td>
-                                    </tr>
+                                    </tr> --}}
                                     <tr>
                                         <td class="fw-bold">Tanggal Invoice</td>
                                         <td>: {{ $invoice['create_date'] }}</td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <td class="fw-bold">No. PO</td>
                                         <td>: {{ $invoice['po_no'] }}</td>
-                                    </tr>
+                                    </tr> --}}
                                 <tbody>
                             </table>
                         </div>
@@ -171,7 +171,7 @@
                                         <tr>
                                             <td style="width: 40px">{{ !empty($product['product_name']) ?  $i + 1  : ''}}</td>
                                             <td>{{ $product['product_name'] ?? '' }}</td>
-                                            <td>{{ number_format($product['product_price'], 0, NULL, '.') ?? ''}}</td>
+                                            <td>{{ number_format($product['pivot']['gross_price'], 0, NULL, '.') ?? ''}}</td>
                                         </tr>
                                         @else
                                         <tr>
@@ -199,7 +199,7 @@
                                     @php($product = $invoice['products'][$i])
                                     <tr>
                                         <td class="w-50">{{ $product['pivot']['quantity'] ?? '' }}</td>
-                                        <td class="w-50">{{ number_format($product['pivot']['total_price'], 0, NULL, '.') ?? ''}}</td>
+                                        <td class="w-50">{{ number_format($product['pivot']['total_gross'], 0, NULL, '.') ?? ''}}</td>
                                     </tr>
                                     @else
                                     <tr>
@@ -210,7 +210,7 @@
                                 @endfor
                                 <tr id="subtotal-row">
                                     <td class="text-bold w-50">Sub Total</td>
-                                    <td class="text-bold w-50">{{  number_format($invoice['invoice_summary']['total_summary'], 0, NULL, '.') }}</td>
+                                    <td class="text-bold w-50">{{  number_format($invoice['invoice_summary']['gross_summary'], 0, NULL, '.') }}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -233,7 +233,7 @@
                                 @foreach ($invoice['taxes'] as $tax)
                                 <tr class="taxes">
                                     <td class="text-bold w-50">{{ $tax['tax_name'] }}&nbsp;{{ $tax['tax_amount'] }}%</td>
-                                    <td class="text-bold w-50">{{  number_format(($invoice['invoice_summary']['total_summary'] * $tax['tax_amount']) / 100, 0, NULL, '.') }}</td>
+                                    <td class="text-bold w-50">{{  number_format(($invoice['invoice_summary']['gross_summary'] * $tax['tax_amount']) / 100, 0, NULL, '.') }}</td>
                                 </tr>
                                 @endforeach
                                 @if (!empty($invoice['discount_amount']) )

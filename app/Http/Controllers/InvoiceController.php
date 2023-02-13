@@ -194,7 +194,7 @@ class InvoiceController extends Controller
         try 
         {
             $invoice = Invoice::getInvoiceByID($id);
-            Mail::to($invoice['customers']['customer_email'])->send(new \App\Mail\InvoiceMail($invoice));
+            Mail::to($invoice['projects']['customers']['customer_email'])->send(new \App\Mail\InvoiceMail($invoice));
 
             if(count(Mail::failures()) > 0) 
             {

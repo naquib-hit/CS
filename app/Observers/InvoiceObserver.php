@@ -30,13 +30,13 @@ class InvoiceObserver
             $valid = $invoice->getInvoiceByID($invoice->id);
             DB::transaction(function () use($valid) {
                 Transaction::create([
-                    'invoice_no'        => $valid['invoice_no'],
+                    'invoice_id'        => $valid['id'],
                     'trans_date'        => (new \DateTime())->format('Y-m-d'),
                     'create_date'       => (new \DateTime($valid['create_date']))->format('Y-m-d'),
                     'delivery_status'   => intval($valid['invoice_status']),
                     'due_date'          => !empty($valid['due_date']) ? (new \DateTime($valid['due_date']))->format('Y-m-d') : NULL,
-                    'customer_id'       => $valid['customers']['id'],
-                    'customer_name'     => $valid['customers']['customer_name'],
+                    'customer_id'       => $valid['projects']['customers']['id'],
+                    'customer_name'     => $valid['projects']['customers']['customer_name'],
                     'details'           => json_encode($valid),
                     'create_by'         => auth()->id()
                 ]);
@@ -46,7 +46,6 @@ class InvoiceObserver
                         'invoice_id' => $valid['id']
                     ], 
                     [
-                        'invoice_no'    => $valid['invoice_no'],
                         'sent_status'   => $valid['invoice_status'],
                         'deskripsi'     => json_encode($valid)
                     ]

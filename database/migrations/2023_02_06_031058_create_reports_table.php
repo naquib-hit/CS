@@ -16,7 +16,7 @@ class CreateReportsTable extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('invoice_id')->unique();
-            $table->string('invoice_no', 24);
+            $table->string('invoice_no', 24)->nullable();
             $table->smallInteger('sent_status')->default(0);
             $table->json('deskripsi');
             $table->timestamps();
