@@ -10,6 +10,7 @@ return [
 
     'title'    => 'Transaksi Invoice',
     'table'    => [
+        'project'        => 'Proyek',
         'customer'       => 'Pelanggan',
         'product'        => 'Produk',
         'sales'          => 'Sales',

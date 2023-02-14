@@ -79,15 +79,15 @@ const setTable = async data => {
         cell_0.innerHTML = item.id;
         cell_0.classList.add('d-none');
         cell_0.dataset.name = 'id'
-        // cell 1 = Transaction No
-        cell_1.innerText = item.invoice_no;
-        cell_1.dataset.name = 'invoice_no';
-        // cell 2 = Customer ID
-        cell_2.innerText = details.customers.customer_id;
-        cell_2.classList.add('d-none');
-        cell_2.dataset.name = 'customer_id';
+        // cell 1 = Customer ID
+        cell_1.innerText = item.invoice_id;
+        cell_1.classList.add('d-none');
+        cell_1.dataset.name = 'invoice_id';
+        // cell 2 = project name
+        cell_2.innerText = details.projects.project_name;
+        cell_2.dataset.name = 'project_name';
         // cell 3 = Customer Name
-        cell_3.innerText = details.customers.customer_name;
+        cell_3.innerText = details.projects.customers.customer_name;
         cell_3.dataset.name = 'customer_name';
         // cell 4 = Create Date
         cell_4.innerText = item.create_date;

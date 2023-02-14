@@ -10,6 +10,7 @@ return [
 
     'title' => 'Invoice Transaction',
     'table'    => [
+        'project'       => 'Project',
         'customer'      => 'Customer',
         'product'       => 'Product',
         'sales'         => 'Salesperson',

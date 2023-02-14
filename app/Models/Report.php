@@ -48,7 +48,7 @@ class Report extends Model
         $reports = DB::table(function ($sub) {
                         $sub->select(DB::raw("(obj ->> 'id')::int as element_id, 
                                         (obj -> 'product_name')::text as element_name, 
-                                        (obj -> 'pivot' ->> 'total_price')::text::int as element_value,
+                                        (obj -> 'pivot' ->> 'total_net')::text::int as element_value,
                                         created_at"))
                         ->from(function ($sub) {
                             $sub->select(DB::raw('r.id, r.created_at, obj'))
@@ -91,9 +91,9 @@ class Report extends Model
     {
        
         $reports = DB::table(function ($sub) {
-                        $sub->select(DB::raw("(r.deskripsi -> 'customers' ->> 'id')::int as element_id,
-                                              (r.deskripsi -> 'customers' ->> 'customer_name')::text as element_name,
-                                              (r.deskripsi -> 'invoice_summary' ->> 'total_summary')::int as element_value,
+                        $sub->select(DB::raw("(r.deskripsi -> 'projects' ->> 'customers' ->> 'id')::int as element_id,
+                                              (r.deskripsi -> 'projects' ->> 'customers' ->> 'customer_name')::text as element_name,
+                                              (r.deskripsi -> 'invoice_summary' ->> 'net_summary')::int as element_value,
                                               r.created_at"))
                             ->from(DB::raw('reports r'));
                     }, 'a')

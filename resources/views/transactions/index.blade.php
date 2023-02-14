@@ -39,8 +39,8 @@
                         <thead class="bg-danger text-white">
                             <tr>
                                 <th class="d-none">ID</th>
-                                <th>{{ __('transaction.table.code') }}</th>
-                                <th class="d-none">Customer ID</th>
+                                <th class="d-none">Invoice ID</th>
+                                <th>{{ __('transaction.table.project') }}</th>
                                 <th>{{ __('transaction.table.customer') }}</th>
                                 <th>{{ __('transaction.table.create_date') }}</th>
                                 <th>{{ __('transaction.table.status') }}</th>
