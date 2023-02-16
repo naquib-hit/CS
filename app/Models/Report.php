@@ -91,8 +91,8 @@ class Report extends Model
     {
        
         $reports = DB::table(function ($sub) {
-                        $sub->select(DB::raw("(r.deskripsi -> 'projects' ->> 'customers' ->> 'id')::int as element_id,
-                                              (r.deskripsi -> 'projects' ->> 'customers' ->> 'customer_name')::text as element_name,
+                        $sub->select(DB::raw("(r.deskripsi -> 'projects' -> 'customers' ->> 'id')::int as element_id,
+                                              (r.deskripsi -> 'projects' -> 'customers' ->> 'customer_name')::text as element_name,
                                               (r.deskripsi -> 'invoice_summary' ->> 'net_summary')::int as element_value,
                                               r.created_at"))
                             ->from(DB::raw('reports r'));
