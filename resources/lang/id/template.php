@@ -9,6 +9,7 @@ return [
         'customer'      => 'Pelanggan',
         'sales'         => 'Sales',
         'tax'           => 'Pajak',
+        'project'       => 'Proyek',
         'transaction'   => 'Transaksi',
         'invoice'       => [
             'general'   => 'Faktur',

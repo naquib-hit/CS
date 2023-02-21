@@ -9,6 +9,7 @@ return [
         'customer'      => 'Customers',
         'sales'         => 'Salesperson',
         'tax'           => 'Tax',
+        'project'       => 'Projects',
         'invoice'       => [
             'general'   => 'Invoice',
             'reccuring' => 'Recurring Invoice',
