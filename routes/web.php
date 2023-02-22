@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     CustomerController,
     HomeController,
     InvoiceController,
+    NoteMailController,
     RecurringInvoiceController,
     ReportController,
     TaxController,
@@ -59,6 +60,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('invoices/get', [InvoiceController::class, 'get'])->name('invoices.get');
     Route::get('invoices/mail/{id}', [InvoiceController::class, 'mail'])->name('invoices.mail');
     Route::resource('invoices', InvoiceController::class);
+    // NoteMail
+    Route::resource('noteMails', NoteMailController::class);
     // Reccuring INvoices
     Route::get('reccuringInvoices/get', [RecurringInvoiceController::class, 'get'])->name('reccuringInvoices.get');
     Route::resource('reccuringInvoices', RecurringInvoiceController::class);

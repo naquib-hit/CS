@@ -15,6 +15,11 @@ class CreateNoteMailsTable extends Migration
     {
         Schema::create('note_mails', function (Blueprint $table) {
             $table->id();
+            $table->boolean('is_reccured', 120)->default(FALSE);
+            $table->string('interval', 230)->nullable();
+            $table->text('content')->nullable();
+            $table->string('to', 230)->nullable();
+            $table->string('from', 230)->nullable();
             $table->timestamps();
         });
     }

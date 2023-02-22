@@ -15,6 +15,7 @@ class NoteMailFactory extends Factory
     {
         return [
             //
+            
         ];
     }
 }
