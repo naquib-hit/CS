@@ -13,6 +13,7 @@ return [
         'invoice'       => [
             'general'   => 'Invoice',
             'reccuring' => 'Recurring Invoice',
+            'noteMails' => 'Notification'
         ],
         'report'        => [
             'transaction'   => 'Transaction Log',

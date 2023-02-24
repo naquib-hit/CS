@@ -14,6 +14,7 @@ return [
         'invoice'       => [
             'general'   => 'Faktur',
             'reccuring' => 'Faktur Berkala',
+            'noteMails' => 'Notifikasi'
         ],
         'report'        => [
             'transaction'   => 'Log Transaksi',

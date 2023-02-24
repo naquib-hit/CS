@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NoteMail;
+use Illuminate\View\View;
 use App\Http\Requests\StoreNoteMailRequest;
 use App\Http\Requests\UpdateNoteMailRequest;
 
@@ -11,11 +12,12 @@ class NoteMailController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(): View
     {
         //
+        return view('noteMails.index');
     }
 
     /**

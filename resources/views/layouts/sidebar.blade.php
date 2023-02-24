@@ -64,8 +64,8 @@
 						</a>
 					</li>
                     <li class="nav-item">
-						<a class="nav-link text-white" href="{{ route('reccuringInvoices.index') }}">
-							<span class="nav-link-text ms-3">{{ __('template.menu.invoice.reccuring') }}</span>
+						<a class="nav-link text-white" href="{{ route('noteMails.index') }}">
+							<span class="nav-link-text ms-3">{{ __('template.menu.invoice.noteMails') }}</span>
 						</a>
 					</li>
                 </ul>
