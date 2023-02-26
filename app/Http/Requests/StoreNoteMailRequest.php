@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreNoteMailRequest extends FormRequest
@@ -13,7 +14,7 @@ class StoreNoteMailRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +26,10 @@ class StoreNoteMailRequest extends FormRequest
     {
         return [
             //
+            'notice-id'     => 'sometimes',
+            'notice-name'   => ['required',  Rule::unique('note_mails', 'name')->whereNull('deleted_at')],
+            'note-project'  => 'required|exists:projects,id',
+            'notice-content' => 'nullable'
         ];
     }
 }

@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('invoices/mail/{id}', [InvoiceController::class, 'mail'])->name('invoices.mail');
     Route::resource('invoices', InvoiceController::class);
     // NoteMail
+    Route::get('noteMails/projects', [NoteMailController::class, 'projects'])->name('noteMails.projects');
     Route::resource('noteMails', NoteMailController::class);
     // Reccuring INvoices
     Route::get('reccuringInvoices/get', [RecurringInvoiceController::class, 'get'])->name('reccuringInvoices.get');

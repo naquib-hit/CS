@@ -15,12 +15,13 @@ class CreateNoteMailsTable extends Migration
     {
         Schema::create('note_mails', function (Blueprint $table) {
             $table->id();
-            $table->boolean('is_reccured', 120)->default(FALSE);
+            $table->boolean('is_reccured')->default(FALSE);
+            $table->string('name', 240);
             $table->string('interval', 230)->nullable();
             $table->text('content')->nullable();
-            $table->string('to', 230)->nullable();
-            $table->string('from', 230)->nullable();
+            $table->foreignId('project_id')->constrained('note_mails')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
+            $table->softDeletes('deleted_at');
         });
     }
 

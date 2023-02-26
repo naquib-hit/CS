@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateNoteMailRequest extends FormRequest
@@ -13,7 +14,7 @@ class UpdateNoteMailRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +26,8 @@ class UpdateNoteMailRequest extends FormRequest
     {
         return [
             //
+            'notice-name'   => ['required', Rule::unique('note_mails')],
+            'note-project'  => 'required|exists:projects,id'
         ];
     }
 }
