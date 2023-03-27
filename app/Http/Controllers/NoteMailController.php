@@ -41,25 +41,25 @@ class NoteMailController extends Controller
     public function store(StoreNoteMailRequest $request)
     {
         //
-        // try
-        // {
-        //     $valid = $request->validated();
+        try
+        {
+            $valid = $request->validated();
 
-        //     $item = !empty($valid['id']) ? NoteMail::find($valid['id']) : new NoteMail;
-        //     $item->name = $valid['note-name'];
-        //     $item->content = $valid['note-content'];
-        //     $item->project_id = $valid['note-project'];
-        //     $item->save();
+            $item = !empty($valid['id']) ? NoteMail::find($valid['notice-id']) : new NoteMail;
+            $item->name = $valid['note-name'];
+            $item->content = $valid['note-content'];
+            $item->project_id = $valid['note-project'];
 
-        //     return redirect()->route('noteMails.index')->with('success', __('validation.success.create'));
-        // }
-        // catch(\Throwable $e)
-        // {
-        //     Log::error($e->__toString());
-        //     return redirect()->back()->with('error', __('validation.failed.create'));
-        // }
-        $valid = $request->validated();
-        dd(session());
+            $item->save();
+
+            return redirect()->route('noteMails.index')->with('success', __('validation.success.create'));
+        }
+        catch(\Throwable $e)
+        {
+            Log::error($e->__toString());
+            return redirect()->back()->with('error', $e->__toString());
+        }
+
     }
 
     /**

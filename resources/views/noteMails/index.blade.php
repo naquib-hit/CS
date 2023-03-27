@@ -28,6 +28,9 @@
             </fieldset>
             <fieldset class="card-body">
                 <input type="number" class="d-none" name="notice-id" value="{{ old('notice-id') }}">
+                @error('notice-id')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
                 <div class="input-group input-group-dynamic @error('notice-name') is-invalid @enderror">
                     <label class="form-label">{{ __('Subjek') }}</label>
                     <input type="text" class="form-control font-weight-light" name="notice-name" value="{{ old('notice-name') }}">
