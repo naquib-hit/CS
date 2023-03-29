@@ -153,7 +153,7 @@ class InvoiceController extends Controller
 
     /**
      * *******************************************************************
-     *              CUSTOM FUNCTIONS
+     *                      CUSTOM FUNCTIONS
      * *******************************************************************
      */
 
@@ -174,6 +174,10 @@ class InvoiceController extends Controller
         if(!empty($req->input('s_invoice_customer')))           
             $invoices = $invoices->whereHas('customers', fn (Builder $q) =>
                 $q->whereRaw('LOWER(customers.customer_name) LIKE ?', ['%'.strtolower($req->input('s_invoice_customer')).'%'])
+            );
+        if(!empty($req->input('s_invoice_project')))
+            $invoices = $invoices->whereHas('projects', fn (Builder $q) => 
+                $q->whereRaw('LOWER(projects.project_name) LIKE ?', ['%'.strtolower($req->input('s_invoice_project')).'%'])
             );
         if(!empty($req->input('s_invoice_product')))
             $invoices = $invoices->whereHas('products', fn (Builder $q) => $q->where('products.id', '=', intval($req->input('s_invoice_product'))));

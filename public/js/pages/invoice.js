@@ -178,6 +178,7 @@ const setTable = async data => {
     await setPagination(data);
 }
 
+// Products
 const getProducts = async () => {
     try
     {
@@ -191,6 +192,7 @@ const getProducts = async () => {
         console.error(err);
     }
 }
+
 
 /**
  * set products for filter Selecttion
@@ -214,7 +216,11 @@ const setSearchProductOption = async (data) => {
     });
 }
 
-
+/**
+ * Paging
+ * 
+ * @param {*} data 
+ */
 const setPagination = async data => {
     var pageNo = document.getElementById('page_no'),
         totalPage = document.getElementById('total_pages');
@@ -291,7 +297,6 @@ const filterData = async e => {
 } 
 
 // Email Status Text
-
 const setEmailStatus = num => {
     let text = null;
     switch(num)
@@ -306,3 +311,4 @@ const setEmailStatus = num => {
 
     return text;
 }
+

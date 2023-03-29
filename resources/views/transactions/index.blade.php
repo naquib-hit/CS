@@ -96,6 +96,10 @@
                 <input type="text" class="form-control" name="trans_customer" value="{{ old('trans_customer') }}" />
             </span>
             <span class="input-group input-group-dynamic mt-3">
+                <label class="form-label">{{ __('transaction.fields.project') }} </label>
+                <input type="text" class="form-control" name="trans_project" value="{{ old('trans_project') }}" />
+            </span>
+            <span class="input-group input-group-dynamic mt-3">
                 <label class="form-label">{{ __('transaction.fields.product') }} </label>
                 <input type="text" class="form-control" name="trans_product" value="{{ old('trans_product') }}" />
             </span>

@@ -25,6 +25,7 @@ return [
         'title'          => 'Laporan',
         'customer'       => 'Pelanggan',
         'product'        => 'Produk',
+        'project'        => 'Proyek',
         'sales'          => 'Sales',
         'code'           => 'No. Transaksi',
         'start_date'     => 'Tanggal Awal',

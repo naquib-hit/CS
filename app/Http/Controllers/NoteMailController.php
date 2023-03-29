@@ -45,10 +45,10 @@ class NoteMailController extends Controller
         {
             $valid = $request->validated();
 
-            $item = !empty($valid['id']) ? NoteMail::find($valid['notice-id']) : new NoteMail;
-            $item->name = $valid['note-name'];
-            $item->content = $valid['note-content'];
-            $item->project_id = $valid['note-project'];
+            $item = !empty($valid['notice-id']) ? NoteMail::find($valid['notice-id']) : new NoteMail;
+            $item->name = $valid['notice-name'];
+            $item->content = $valid['notice-content'];
+            $item->project_id = $valid['notice-project'];
 
             $item->save();
 

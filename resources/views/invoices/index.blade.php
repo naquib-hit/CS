@@ -104,6 +104,10 @@
                 </select>
             </span>
             <span class="input-group input-group-static mt-3">
+                <label class="form-label">{{ __('transaction.fields.project') }} </label>
+                <input type="text" class="form-control" name="s_invoice_project" autocomplete="off"/>
+            </span>
+            <span class="input-group input-group-static mt-3">
                 <label class="form-label">{{ __('Status') }} </label>
                 <select class="form-select" name="s_invoice_status">
                     <option value="">------------</option>
@@ -139,9 +143,43 @@
         timer: 1200,
         timerProgressBar: true,
         showConfirmButton: false
-    })
+    });
 </script>
 @endif
 
 <script src="{{ asset('js/pages/invoice.js') }}"></script>
+
+<script type="module">
+    import { Autocomplete } from "{{ asset('vendor/autocomplete/autocomplete.js') }}";
+
+    const projectElement = document.querySelector('input[name="s_invoice_project"]');
+    const autocomplete = new Autocomplete(projectElement, {
+        threshold: 1,
+        onSelectItem: e => {
+            document.querySelector('input[name="s_invoice_project"]').value = e.label;
+        }
+    });
+
+    const getProjects = async () => {
+        try
+        {
+            const f = await fetch(`{{ route('invoices.projects') }}`);
+            const projects = await f.json();
+            return projects;
+        }
+        catch(err)
+        {
+            console.log(err);
+        }
+    }
+
+    // bukan customer tapi project
+    const setListCustomers = async () => {
+        let projects = await getProjects();
+
+        autocomplete.setData(projects.map(x => ({'label':x.project_name, 'value': x.id})));
+    }
+
+    await setListCustomers();
+</script>
 @endsection

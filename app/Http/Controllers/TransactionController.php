@@ -97,6 +97,10 @@ class TransactionController extends Controller
     {
         //
         $trans = Transaction::query()->orderBy('created_at', 'desc');
+
+        if(!empty($req->input('trans_code')))
+            $trasn->whereRaw('LOWER(invoice_id) LIKE ?', ['%'.strtotlower($req->input('trans-code')).'%']);
+
         $page = $trans->paginate(6);
 
         return $page;

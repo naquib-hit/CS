@@ -26,6 +26,7 @@ return [
         'code'          => 'Transaction No.',
         'customer'      => 'Customer',
         'product'       => 'Product',
+        'project'       => 'Project',
         'sales'         => 'Sales',
         'start_date'    => 'Start Date',
         'end_date'      => 'End Date',
