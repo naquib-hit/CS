@@ -37,7 +37,7 @@
                                     <i class="fas fa-download font-reset"></i> Download
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a role="button" class="dropdown-item">Unduh berkas excel</a>
+                                    <a role="button" class="dropdown-item" href="{{ asset('files/download/customer_template.xlsx') }}" download>Unduh berkas excel</a>
                                     <a role="button" class="dropdown-item">Unggah data dari excel</a>
                                 </div>
                             </div>
