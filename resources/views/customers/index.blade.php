@@ -32,6 +32,16 @@
                                 <i class="fas fa-plus-circle font-reset"></i>&nbsp;
                                 {{__('template.toolbar.add')}}
                             </a>
+                            <div class="btn-group btn-group-sm btn-group-primary">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                    <i class="fas fa-download font-reset"></i> Download
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a role="button" class="dropdown-item">Unduh berkas excel</a>
+                                    <a role="button" class="dropdown-item">Unggah data dari excel</a>
+                                </div>
+                            </div>
+                           
                             <button type="button" class="btn btn-primary" id="delete-all">
                                 <i class="fas fa-trash font-reset"></i>&nbsp;
                                 {{__('template.toolbar.delete_all')}}
