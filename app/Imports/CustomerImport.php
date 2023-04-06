@@ -3,9 +3,10 @@
 namespace App\Imports;
 
 use App\Models\Customer;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\{ ToModel, WithHeadingRow };
 
-class CustomerImport implements ToModel
+
+class CustomerImport implements ToModel, WithHeadingRow
 {
     /**
     * @param array $row
@@ -16,10 +17,10 @@ class CustomerImport implements ToModel
     {
         return new Customer([
             //
-            'customer_name'     => $row[0],
-            'customer_email'    => $row[1],
-            'customer_phone'    => $row[2],
-            'customer_address'  => $row[3]
+            'customer_name'     => $row['nama'],
+            'customer_email'    => $row['email'],
+            'customer_phone'    => $row['phone'],
+            'customer_address'  => $row['alamat']
         ]);
     }
 }

@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
     // Customers
     Route::delete('customers/truncate', [CustomerController::class, 'clean'])->name('customers.truncate');
     Route::get('customers/get', [CustomerController::class, 'get'])->name('customers.get');
+    Route::post('customer/import', [CustomerController::class, 'import'])->name('customers.import');
     Route::resource('customers', CustomerController::class);
     // Taxes
     Route::delete('taxes/truncate', [TaxController::class, 'truncate'])->name('taxes.truncate');

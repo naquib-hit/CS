@@ -38,7 +38,7 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     <a role="button" class="dropdown-item" href="{{ asset('files/download/customer_template.xlsx') }}" download>Unduh berkas excel</a>
-                                    <a role="button" class="dropdown-item">Unggah data dari excel</a>
+                                    <a role="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-import">Unggah data dari excel</a>
                                 </div>
                             </div>
                            
@@ -159,6 +159,30 @@
     </div>
 </div>
 
+<div id="modal-import" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white mb-0">Unggah Berkas Excel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="modal-body" method="POST" name="form-import" action="{{ route('customers.import') }}" enctype="multipart/form-data">
+                @csrf
+                <ul>
+                    <li>upload maksimal 4000</li>
+                </ul>
+                <div class="input-group">
+                    <input type="file" name="file-import" class="form-control form-control-sm" id="file-import">
+                </div>
+                <div class="mt-4 pt-2 border-top w-100 d-flex justify-content-end flex-nowrap">
+                    <button type="reset" class="btn btn-sm btn-secondary"><i class="fas fa-redo"></i>&nbsp;{{ __('template.form.reset') }}</button>
+                    <button type="submit" id="btn-submit" class="btn btn-sm btn-primary ms-1"><i class="fas fa-save"></i>&nbsp;{{ __('template.form.save') }}</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -189,5 +213,5 @@
 </script>
 @endif
 
-<script src="{{ asset('js/pages/customer.min.js') }}"></script>
+<script src="{{ asset('js/pages/customer.js') }}"></script>
 @endsection

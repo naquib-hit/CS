@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Imports\CustomerImport;
+use Maatwebsite\Excel\Excel as Excel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as Request;
-use Illuminate\Support\Facades\{ Log as Log, View };
-use Illuminate\Contracts\View\View as ViewContract;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View as ViewContract;
+use Illuminate\Support\Facades\{ Log as Log, View };
 
 class CustomerController extends Controller
 {
@@ -202,5 +204,26 @@ class CustomerController extends Controller
             Log::error($e->getMessage());
             return redirect()->back()->with('error' , __('validation.failed.delete'));       
         }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Request $req
+     * @return  \Illuminate\Http\RedirectResponse
+     */
+    public function import(Request $req): RedirectResponse {
+        $file = $req->file('file-import');
+
+       try
+       {
+            Excel::import(new CustomerImport(), $file);
+            return redirect()->back()->with('success' , __('File Berhasil Di Unggah'));
+       } 
+       catch(\Throwable $e)
+       {
+            Log::error($e->__toString());
+            return redirect()->back()->with('error' , __('File Gagal Di Unggah'));      
+       }
     }
 }
