@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Imports\CustomerImport;
-use Maatwebsite\Excel\Excel as Excel;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as Request;
 use App\Http\Requests\StoreCustomerRequest;
@@ -217,7 +217,7 @@ class CustomerController extends Controller
 
        try
        {
-            Excel::import(new CustomerImport(), $file);
+            Excel::import(new CustomerImport, $file);
             return redirect()->back()->with('success' , __('File Berhasil Di Unggah'));
        } 
        catch(\Throwable $e)
